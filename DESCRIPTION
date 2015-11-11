@@ -1,7 +1,10 @@
 Package: qwraps2
 Title: Quick Wraps 2
-Version: 0.1.1
-Authors@R: person("Peter", "DeWitt", , "dewittpe@gmail.com", role = c("aut", "cre"))
+Version: 0.1.2
+Authors@R: c(
+    person("Peter", "DeWitt", , "dewittpe@gmail.com", role = c("aut", "cre")),
+    person("Tell",  "Bennett", , "tell.bennett@ucdenver.edu", role = c("ctb"))
+    ) 
 Description: A collection of (wrapper) functions the creator found useful for 
     quickly placing data summaries and formatted regression results into .Rnw or
     .Rmd files.  Functions for generating commonly used graphics, such as receiver
@@ -14,10 +17,12 @@ Description: A collection of (wrapper) functions the creator found useful for
 Depends: R (>= 3.0.2)
 License: GPL-2
 LazyData: true
-Imports: dplyr, ggplot2
+Imports: dplyr, ggplot2, knitr
+Suggests: survival
 NeedsCompilation: no
-Packaged: 2015-04-20 06:27:34 UTC; dewittpe
-Author: Peter DeWitt [aut, cre]
+Packaged: 2015-11-10 19:27:41 UTC; dewittp
+Author: Peter DeWitt [aut, cre],
+  Tell Bennett [ctb]
 Maintainer: Peter DeWitt <dewittpe@gmail.com>
 Repository: CRAN
-Date/Publication: 2015-04-20 11:52:29
+Date/Publication: 2015-11-11 00:03:47
