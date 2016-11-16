@@ -12,7 +12,7 @@
 
 <meta name="author" content="Peter DeWitt" />
 
-<meta name="date" content="2016-09-26" />
+<meta name="date" content="2016-11-16" />
 
 <title>Formatted Summary Statistics and Data Summary Tables with qwraps2</title>
 
@@ -70,7 +70,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 
 <h1 class="title toc-ignore">Formatted Summary Statistics and Data Summary Tables with qwraps2</h1>
 <h4 class="author"><em>Peter DeWitt</em></h4>
-<h4 class="date"><em>2016-09-26</em></h4>
+<h4 class="date"><em>2016-11-16</em></h4>
 
 
 
@@ -296,6 +296,81 @@ mci
 </tr>
 </tbody>
 </table>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">summary_table</span>(mtcars2, our_summary1)</code></pre></div>
+<table>
+<thead>
+<tr class="header">
+<th align="left"></th>
+<th align="left">mtcars2 (N = 32)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left"><strong>Miles Per Gallon</strong></td>
+<td align="left">  </td>
+</tr>
+<tr class="even">
+<td align="left">   min</td>
+<td align="left">10.4</td>
+</tr>
+<tr class="odd">
+<td align="left">   max</td>
+<td align="left">33.9</td>
+</tr>
+<tr class="even">
+<td align="left">   mean (sd)</td>
+<td align="left">20.09 ± 6.03</td>
+</tr>
+<tr class="odd">
+<td align="left"><strong>Displacement</strong></td>
+<td align="left">  </td>
+</tr>
+<tr class="even">
+<td align="left">   min</td>
+<td align="left">71.1</td>
+</tr>
+<tr class="odd">
+<td align="left">   max</td>
+<td align="left">472</td>
+</tr>
+<tr class="even">
+<td align="left">   mean (sd)</td>
+<td align="left">230.72 ± 123.94</td>
+</tr>
+<tr class="odd">
+<td align="left"><strong>Weight (1000 lbs)</strong></td>
+<td align="left">  </td>
+</tr>
+<tr class="even">
+<td align="left">   min</td>
+<td align="left">1.513</td>
+</tr>
+<tr class="odd">
+<td align="left">   max</td>
+<td align="left">5.424</td>
+</tr>
+<tr class="even">
+<td align="left">   mean (sd)</td>
+<td align="left">3.22 ± 0.98</td>
+</tr>
+<tr class="odd">
+<td align="left"><strong>Forward Gears</strong></td>
+<td align="left">  </td>
+</tr>
+<tr class="even">
+<td align="left">   Three</td>
+<td align="left">15 (47)</td>
+</tr>
+<tr class="odd">
+<td align="left">   Four</td>
+<td align="left">12 (38)</td>
+</tr>
+<tr class="even">
+<td align="left">   Five</td>
+<td align="left">5 (16)</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div id="by-number-of-cylinders" class="section level3">
 <h3>By number of Cylinders</h3>
@@ -414,13 +489,14 @@ mci
 </tr>
 </tbody>
 </table>
-<p>If you want to change the column names do so via the <code>cnames</code> argument to <code>qable</code> via the print method for <code>qwraps2_summary_table</code> objects.</p>
+<p>If you want to change the column names do so via the <code>cnames</code> argument to <code>qable</code> via the print method for <code>qwraps2_summary_table</code> objects. Any argument that you want to send to <code>qable</code> can be sent there when explicitly using the <code>print</code> method for <code>qwraps2_summary_table</code> objects.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">print</span>(<span class="kw">summary_table</span>(dplyr::<span class="kw">group_by</span>(mtcars2, cyl_factor), our_summary1), 
+      <span class="dt">rtitle =</span> <span class="st">&quot;Summary Statistics&quot;</span>,
       <span class="dt">cnames =</span> <span class="kw">c</span>(<span class="st">&quot;Col 1&quot;</span>, <span class="st">&quot;Col 2&quot;</span>, <span class="st">&quot;Col 3&quot;</span>))</code></pre></div>
 <table>
 <thead>
 <tr class="header">
-<th align="left"></th>
+<th align="left">Summary Statistics</th>
 <th align="left">Col 1</th>
 <th align="left">Col 2</th>
 <th align="left">Col 3</th>
@@ -532,48 +608,48 @@ mci
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">tab_summary</span>(mtcars2$mpg)
 ## $min
 ## ~min(mtcars2$mpg)
-## &lt;environment: 0x4613ce0&gt;
+## &lt;environment: 0x2e3a178&gt;
 ## 
 ## $`median (IQR)`
 ## ~qwraps2::median_iqr(mtcars2$mpg)
-## &lt;environment: 0x4613ce0&gt;
+## &lt;environment: 0x2e3a178&gt;
 ## 
-## $`mead (sd)`
+## $`mean (sd)`
 ## ~qwraps2::mean_sd(mtcars2$mpg)
-## &lt;environment: 0x4613ce0&gt;
+## &lt;environment: 0x2e3a178&gt;
 ## 
 ## $max
 ## ~max(mtcars2$mpg)
-## &lt;environment: 0x4613ce0&gt;
+## &lt;environment: 0x2e3a178&gt;
 
 <span class="kw">tab_summary</span>(mtcars2$gear) <span class="co"># gear is a numeric vector!</span>
 ## $min
 ## ~min(mtcars2$gear)
-## &lt;environment: 0x34f9ff0&gt;
+## &lt;environment: 0x2d28ae0&gt;
 ## 
 ## $`median (IQR)`
 ## ~qwraps2::median_iqr(mtcars2$gear)
-## &lt;environment: 0x34f9ff0&gt;
+## &lt;environment: 0x2d28ae0&gt;
 ## 
-## $`mead (sd)`
+## $`mean (sd)`
 ## ~qwraps2::mean_sd(mtcars2$gear)
-## &lt;environment: 0x34f9ff0&gt;
+## &lt;environment: 0x2d28ae0&gt;
 ## 
 ## $max
 ## ~max(mtcars2$gear)
-## &lt;environment: 0x34f9ff0&gt;
+## &lt;environment: 0x2d28ae0&gt;
 <span class="kw">tab_summary</span>(<span class="kw">factor</span>(mtcars2$gear)) 
 ## $`3`
 ## ~qwraps2::n_perc0(factor(mtcars2$gear) == &quot;3&quot;)
-## &lt;environment: 0x330c978&gt;
+## &lt;environment: 0x2c37048&gt;
 ## 
 ## $`4`
 ## ~qwraps2::n_perc0(factor(mtcars2$gear) == &quot;4&quot;)
-## &lt;environment: 0x32f5fa8&gt;
+## &lt;environment: 0x2c32a50&gt;
 ## 
 ## $`5`
 ## ~qwraps2::n_perc0(factor(mtcars2$gear) == &quot;5&quot;)
-## &lt;environment: 0x32eb5a0&gt;</code></pre></div>
+## &lt;environment: 0x2c2d4d8&gt;</code></pre></div>
 <p>The <code>our_summary1</code> object can be recreated as follows. Some additional row groups are provided to show default behavior of <code>tab_summary</code>.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">our_summary2 &lt;-<span class="st"> </span>
 <span class="st">  </span><span class="kw">with</span>(mtcars2, 
@@ -607,7 +683,7 @@ whole</code></pre></div>
 <td align="left">33.9</td>
 </tr>
 <tr class="even">
-<td align="left">   mead (sd)</td>
+<td align="left">   mean (sd)</td>
 <td align="left">20.09 ± 6.03</td>
 </tr>
 <tr class="odd">
@@ -623,7 +699,7 @@ whole</code></pre></div>
 <td align="left">196.30 (120.83, 326.00)</td>
 </tr>
 <tr class="even">
-<td align="left">   mead (sd)</td>
+<td align="left">   mean (sd)</td>
 <td align="left">230.72 ± 123.94</td>
 </tr>
 <tr class="odd">
@@ -643,7 +719,7 @@ whole</code></pre></div>
 <td align="left">472</td>
 </tr>
 <tr class="odd">
-<td align="left">   mead (sd)</td>
+<td align="left">   mean (sd)</td>
 <td align="left">230.72 ± 123.94</td>
 </tr>
 <tr class="even">
@@ -663,7 +739,7 @@ whole</code></pre></div>
 <td align="left">5.424</td>
 </tr>
 <tr class="even">
-<td align="left">   mead (sd)</td>
+<td align="left">   mean (sd)</td>
 <td align="left">3.22 ± 0.98</td>
 </tr>
 <tr class="odd">
@@ -684,7 +760,7 @@ whole</code></pre></div>
 </tr>
 </tbody>
 </table>
-<p>Group by muliple factors:</p>
+<p>Group by multiple factors:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">grouped &lt;-<span class="st"> </span><span class="kw">summary_table</span>(dplyr::<span class="kw">group_by</span>(mtcars2, am, vs),  our_summary2)
 grouped</code></pre></div>
 <table>
@@ -727,7 +803,7 @@ grouped</code></pre></div>
 <td align="left">33.9</td>
 </tr>
 <tr class="even">
-<td align="left">   mead (sd)</td>
+<td align="left">   mean (sd)</td>
 <td align="left">15.05 ± 2.77</td>
 <td align="left">20.74 ± 2.47</td>
 <td align="left">19.75 ± 4.01</td>
@@ -755,7 +831,7 @@ grouped</code></pre></div>
 <td align="left">79.00 (77.20, 101.55)</td>
 </tr>
 <tr class="even">
-<td align="left">   mead (sd)</td>
+<td align="left">   mean (sd)</td>
 <td align="left">357.62 ± 71.82</td>
 <td align="left">175.11 ± 49.13</td>
 <td align="left">206.22 ± 95.23</td>
@@ -790,7 +866,7 @@ grouped</code></pre></div>
 <td align="left">121</td>
 </tr>
 <tr class="odd">
-<td align="left">   mead (sd)</td>
+<td align="left">   mean (sd)</td>
 <td align="left">357.62 ± 71.82</td>
 <td align="left">175.11 ± 49.13</td>
 <td align="left">206.22 ± 95.23</td>
@@ -825,7 +901,7 @@ grouped</code></pre></div>
 <td align="left">2.780</td>
 </tr>
 <tr class="even">
-<td align="left">   mead (sd)</td>
+<td align="left">   mean (sd)</td>
 <td align="left">4.10 ± 0.77</td>
 <td align="left">3.19 ± 0.35</td>
 <td align="left">2.86 ± 0.49</td>
@@ -909,7 +985,7 @@ both</code></pre></div>
 <td align="left">33.9</td>
 </tr>
 <tr class="even">
-<td align="left">   mead (sd)</td>
+<td align="left">   mean (sd)</td>
 <td align="left">20.09 ± 6.03</td>
 <td align="left">15.05 ± 2.77</td>
 <td align="left">20.74 ± 2.47</td>
@@ -941,7 +1017,7 @@ both</code></pre></div>
 <td align="left">79.00 (77.20, 101.55)</td>
 </tr>
 <tr class="even">
-<td align="left">   mead (sd)</td>
+<td align="left">   mean (sd)</td>
 <td align="left">230.72 ± 123.94</td>
 <td align="left">357.62 ± 71.82</td>
 <td align="left">175.11 ± 49.13</td>
@@ -981,7 +1057,7 @@ both</code></pre></div>
 <td align="left">121</td>
 </tr>
 <tr class="odd">
-<td align="left">   mead (sd)</td>
+<td align="left">   mean (sd)</td>
 <td align="left">230.72 ± 123.94</td>
 <td align="left">357.62 ± 71.82</td>
 <td align="left">175.11 ± 49.13</td>
@@ -1021,7 +1097,7 @@ both</code></pre></div>
 <td align="left">2.780</td>
 </tr>
 <tr class="even">
-<td align="left">   mead (sd)</td>
+<td align="left">   mean (sd)</td>
 <td align="left">3.22 ± 0.98</td>
 <td align="left">4.10 ± 0.77</td>
 <td align="left">3.19 ± 0.35</td>

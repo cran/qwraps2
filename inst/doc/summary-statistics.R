@@ -72,12 +72,14 @@ our_summary1 <-
 
 ## ---- results = "asis"---------------------------------------------------
 summary_table(mtcars2, our_summary1)
+summary_table(mtcars2, our_summary1)
 
 ## ---- results = "asis"---------------------------------------------------
 summary_table(dplyr::group_by(mtcars2, cyl_factor), our_summary1)
 
 ## ---- results = "asis"---------------------------------------------------
 print(summary_table(dplyr::group_by(mtcars2, cyl_factor), our_summary1), 
+      rtitle = "Summary Statistics",
       cnames = c("Col 1", "Col 2", "Col 3"))
 
 ## ------------------------------------------------------------------------
