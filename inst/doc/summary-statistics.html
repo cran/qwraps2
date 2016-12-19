@@ -12,7 +12,7 @@
 
 <meta name="author" content="Peter DeWitt" />
 
-<meta name="date" content="2016-11-16" />
+<meta name="date" content="2016-12-18" />
 
 <title>Formatted Summary Statistics and Data Summary Tables with qwraps2</title>
 
@@ -70,7 +70,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 
 <h1 class="title toc-ignore">Formatted Summary Statistics and Data Summary Tables with qwraps2</h1>
 <h4 class="author"><em>Peter DeWitt</em></h4>
-<h4 class="date"><em>2016-11-16</em></h4>
+<h4 class="date"><em>2016-12-18</em></h4>
 
 
 
@@ -604,53 +604,49 @@ mci
 </div>
 <div id="easy-building-of-the-summaries" class="section level2">
 <h2>Easy building of the summaries</h2>
-<p>The task building the <code>summaries</code> list-of-lists can be tedious. <code>tab_summary</code> is provided to help with that. For <code>numeric</code> variable, <code>tab_summary</code> will provide the <code>formula</code>e for the min, median (iqr), mean (sd), and max. <code>factor</code> and <code>character</code> vectors will have calls to <code>qwraps2::n_perc0</code> for all levels provided.</p>
+<p>The task building the <code>summaries</code> list-of-lists can be tedious. <code>tab_summary</code> is provided to help with that. For <code>numeric</code> variable, <code>tab_summary</code> will provide the <code>formula</code>e for the min, median (iqr), mean (sd), and max. <code>factor</code> and <code>character</code> vectors will have calls to <code>qwraps2::n_perc</code> for all levels provided.</p>
+<p>For version 0.2.3.9000 or beyond, arguments have been added to <code>tab_summary</code> to help control some of the formatting of counts and percentages. The original behavior of <code>tab_summary</code> used <code>n_perc0</code> to format the summary of categorical variables. Now, <code>n_perc</code> is called and the end user can specify formatting options via a <code>list</code> passed via the <code>n_perc_args</code> argument. The default settings for <code>tab_summary</code> is below.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">args</span>(tab_summary)
+## function (x, n_perc_args = list(digits = 0, show_symbol = FALSE), 
+##     envir = parent.frame()) 
+## NULL</code></pre></div>
+<p>These options will make the output look as if <code>n_perc0</code> had been called instead of <code>n_perc</code>. More importantly, these defaults <em>will not</em> honor the <code>options()$qwraps2_frmt_digits</code>.</p>
+<p>Examples for <code>tab_summary</code> follow:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">tab_summary</span>(mtcars2$mpg)
 ## $min
 ## ~min(mtcars2$mpg)
-## &lt;environment: 0x2e3a178&gt;
 ## 
 ## $`median (IQR)`
 ## ~qwraps2::median_iqr(mtcars2$mpg)
-## &lt;environment: 0x2e3a178&gt;
 ## 
 ## $`mean (sd)`
 ## ~qwraps2::mean_sd(mtcars2$mpg)
-## &lt;environment: 0x2e3a178&gt;
 ## 
 ## $max
 ## ~max(mtcars2$mpg)
-## &lt;environment: 0x2e3a178&gt;
 
 <span class="kw">tab_summary</span>(mtcars2$gear) <span class="co"># gear is a numeric vector!</span>
 ## $min
 ## ~min(mtcars2$gear)
-## &lt;environment: 0x2d28ae0&gt;
 ## 
 ## $`median (IQR)`
 ## ~qwraps2::median_iqr(mtcars2$gear)
-## &lt;environment: 0x2d28ae0&gt;
 ## 
 ## $`mean (sd)`
 ## ~qwraps2::mean_sd(mtcars2$gear)
-## &lt;environment: 0x2d28ae0&gt;
 ## 
 ## $max
 ## ~max(mtcars2$gear)
-## &lt;environment: 0x2d28ae0&gt;
 <span class="kw">tab_summary</span>(<span class="kw">factor</span>(mtcars2$gear)) 
 ## $`3`
-## ~qwraps2::n_perc0(factor(mtcars2$gear) == &quot;3&quot;)
-## &lt;environment: 0x2c37048&gt;
+## ~qwraps2::n_perc(factor(mtcars2$gear) == &quot;3&quot;, digits = 0, show_symbol = FALSE)
 ## 
 ## $`4`
-## ~qwraps2::n_perc0(factor(mtcars2$gear) == &quot;4&quot;)
-## &lt;environment: 0x2c32a50&gt;
+## ~qwraps2::n_perc(factor(mtcars2$gear) == &quot;4&quot;, digits = 0, show_symbol = FALSE)
 ## 
 ## $`5`
-## ~qwraps2::n_perc0(factor(mtcars2$gear) == &quot;5&quot;)
-## &lt;environment: 0x2c2d4d8&gt;</code></pre></div>
-<p>The <code>our_summary1</code> object can be recreated as follows. Some additional row groups are provided to show default behavior of <code>tab_summary</code>.</p>
+## ~qwraps2::n_perc(factor(mtcars2$gear) == &quot;5&quot;, digits = 0, show_symbol = FALSE)</code></pre></div>
+<p>The <code>our_summary1</code> object can be recreated as follows. Some additional row groups are provided to show default behavior of <code>tab_summary</code>. <strong>Important:</strong> Note that the <code>tab_summary</code> are made while using <code>with</code>. Further explanation for this follows.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">our_summary2 &lt;-<span class="st"> </span>
 <span class="st">  </span><span class="kw">with</span>(mtcars2, 
        <span class="kw">list</span>(<span class="st">&quot;Miles Per Gallon&quot;</span> =<span class="st"> </span><span class="kw">tab_summary</span>(mpg)[<span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">4</span>, <span class="dv">3</span>)],
@@ -1138,6 +1134,99 @@ both</code></pre></div>
 </tr>
 </tbody>
 </table>
+<div id="why-use-with-with-tab_summary" class="section level3">
+<h3>Why use <code>with</code> with <code>tab_summary</code>?</h3>
+<p><code>tab_summary</code> was written to help construct <code>formula</code>e to save the end user key strokes. There are plenty of reasons for <code>summary_table</code> to be used <em>without</em> <code>tab_summary</code>. However, when it is helpful to use <code>tab_summary</code> make sure you understand the results.</p>
+<p>For example, let’s look at a simple summary of the miles per gallon.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># tab_summary(mpg)[[3]] ## this errors</span>
+<span class="kw">tab_summary</span>(mtcars$mpg)[[<span class="dv">3</span>]]
+## ~qwraps2::mean_sd(mtcars$mpg)
+<span class="kw">with</span>(mtcars, <span class="kw">tab_summary</span>(mpg))[[<span class="dv">3</span>]]
+## ~qwraps2::mean_sd(mpg)
+## &lt;environment: 0x440f808&gt;</code></pre></div>
+<p>The first call errors because <code>mpg</code> is not in the global environment. The difference between the second and third calls is subtle. The second call generates a <code>formula</code> with <code>mtcars$mpg</code> as an argument whereas the third call generates a <code>formula</code> with only <code>mpg</code> as the argument. The difference will be seen in the summary tables if the <code>.data</code> is sub setted.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># The same tables:</span>
+<span class="kw">summary_table</span>(mtcars, <span class="kw">list</span>(<span class="st">&quot;MPG 1&quot;</span> =<span class="st"> </span><span class="kw">with</span>(mtcars, <span class="kw">tab_summary</span>(mpg)[[<span class="dv">3</span>]])))</code></pre></div>
+<table>
+<thead>
+<tr class="header">
+<th align="left"></th>
+<th align="left">mtcars (N = 32)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left"><strong>MPG 1</strong></td>
+<td align="left">  </td>
+</tr>
+<tr class="even">
+<td align="left">   qwraps2::mean_sd(mpg)</td>
+<td align="left">20.09 ± 6.03</td>
+</tr>
+</tbody>
+</table>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">summary_table</span>(mtcars, <span class="kw">list</span>(<span class="st">&quot;MPG 2&quot;</span> =<span class="st"> </span><span class="kw">tab_summary</span>(mtcars$mpg)[[<span class="dv">3</span>]]))</code></pre></div>
+<table>
+<thead>
+<tr class="header">
+<th align="left"></th>
+<th align="left">mtcars (N = 32)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left"><strong>MPG 2</strong></td>
+<td align="left">  </td>
+</tr>
+<tr class="even">
+<td align="left">   qwraps2::mean_sd(mtcars$mpg)</td>
+<td align="left">20.09 ± 6.03</td>
+</tr>
+</tbody>
+</table>
+<p>These two calls generate the same table because the <code>.data</code> and the implied data within the second call are the same.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Different tables</span>
+<span class="kw">summary_table</span>(dplyr::<span class="kw">filter</span>(mtcars, am ==<span class="st"> </span><span class="dv">0</span>), <span class="kw">list</span>(<span class="st">&quot;MPG 3&quot;</span> =<span class="st"> </span><span class="kw">with</span>(mtcars, <span class="kw">tab_summary</span>(mpg)[[<span class="dv">3</span>]])))</code></pre></div>
+<table>
+<thead>
+<tr class="header">
+<th align="left"></th>
+<th align="left">dplyr::filter(mtcars, am == 0) (N = 19)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left"><strong>MPG 3</strong></td>
+<td align="left">  </td>
+</tr>
+<tr class="even">
+<td align="left">   qwraps2::mean_sd(mpg)</td>
+<td align="left">17.15 ± 3.83</td>
+</tr>
+</tbody>
+</table>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">summary_table</span>(dplyr::<span class="kw">filter</span>(mtcars, am ==<span class="st"> </span><span class="dv">0</span>), <span class="kw">list</span>(<span class="st">&quot;MPG 4&quot;</span> =<span class="st"> </span><span class="kw">tab_summary</span>(mtcars$mpg)[[<span class="dv">3</span>]]))</code></pre></div>
+<table>
+<thead>
+<tr class="header">
+<th align="left"></th>
+<th align="left">dplyr::filter(mtcars, am == 0) (N = 19)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left"><strong>MPG 4</strong></td>
+<td align="left">  </td>
+</tr>
+<tr class="even">
+<td align="left">   qwraps2::mean_sd(mtcars$mpg)</td>
+<td align="left">20.09 ± 6.03</td>
+</tr>
+</tbody>
+</table>
+<p>Now, the result of the second call above is not correct, it is the same as for the first two calls. This is because <code>mtcars$</code> is part of the <code>formula</code> and the <code>.data</code> is ignored. The correct result is in the table with <code>MPG 3</code>.</p>
+<p>It is critical that you use <code>tab_summary</code> only as a took to help save you key strokes. I strongly encourage you, the end user, to use <code>summary_table</code> a lot, and use <code>tab_summary</code> as a quick tool for generating a script. It might be best if you use <code>tab_summary</code> to generate a template of the <code>formula</code>e you will want, copy the template into your script and editing accordingly.</p>
+</div>
 </div>
 </div>
 

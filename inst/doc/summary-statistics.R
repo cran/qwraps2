@@ -83,6 +83,9 @@ print(summary_table(dplyr::group_by(mtcars2, cyl_factor), our_summary1),
       cnames = c("Col 1", "Col 2", "Col 3"))
 
 ## ------------------------------------------------------------------------
+args(tab_summary)
+
+## ------------------------------------------------------------------------
 tab_summary(mtcars2$mpg)
 
 tab_summary(mtcars2$gear) # gear is a numeric vector!
@@ -110,4 +113,19 @@ grouped
 ## ---- results = "asis"---------------------------------------------------
 both <- cbind(whole, grouped)
 both
+
+## ------------------------------------------------------------------------
+# tab_summary(mpg)[[3]] ## this errors
+tab_summary(mtcars$mpg)[[3]]
+with(mtcars, tab_summary(mpg))[[3]]
+
+## ---- results = "asis"---------------------------------------------------
+# The same tables:
+summary_table(mtcars, list("MPG 1" = with(mtcars, tab_summary(mpg)[[3]])))
+summary_table(mtcars, list("MPG 2" = tab_summary(mtcars$mpg)[[3]]))
+
+## ---- results = "asis"---------------------------------------------------
+# Different tables
+summary_table(dplyr::filter(mtcars, am == 0), list("MPG 3" = with(mtcars, tab_summary(mpg)[[3]])))
+summary_table(dplyr::filter(mtcars, am == 0), list("MPG 4" = tab_summary(mtcars$mpg)[[3]]))
 
