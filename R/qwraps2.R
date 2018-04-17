@@ -91,6 +91,13 @@
 #'
 #' @useDynLib qwraps2
 #' @importFrom Rcpp sourceCpp
+#' @importFrom magrittr "%>%"
+#' @importFrom rlang .data
 #' @docType package
 #' @name qwraps2
 NULL
+
+# Define globalVariables so R CMD check doesn't freak out
+utils::globalVariables(".")
+
+
