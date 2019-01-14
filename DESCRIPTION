@@ -1,6 +1,6 @@
 Package: qwraps2
 Title: Quick Wraps 2
-Version: 0.3.0
+Version: 0.4.0
 Authors@R: c(
     person("Peter", "DeWitt", , "dewittpe@gmail.com", role = c("aut", "cre")),
     person("Tell",  "Bennett", , "tell.bennett@ucdenver.edu", role = c("ctb"))
@@ -16,18 +16,19 @@ Description: A collection of (wrapper) functions the creator found useful
     fundamentally different from 'qwraps'.
 Depends: R (>= 3.0.2)
 License: GPL-2
+Encoding: UTF-8
 URL: https://github.com/dewittpe/qwraps2/
 LazyData: true
-Imports: devtools, dplyr, ggplot2, knitr, magrittr, Rcpp (>= 0.12.11),
-        rlang, tidyr, utils
-Suggests: data.tree, survival, testthat, covr, rbenchmark, rmarkdown
-RoxygenNote: 6.0.1
+Imports: dplyr, ggplot2, knitr, magrittr, Rcpp (>= 0.12.11), rlang,
+        tidyr, utils
+Suggests: survival, testthat, covr, rbenchmark, rmarkdown
+RoxygenNote: 6.1.1
 LinkingTo: Rcpp (>= 0.12.11), RcppArmadillo
 VignetteBuilder: knitr
 NeedsCompilation: yes
-Packaged: 2018-04-17 17:04:22 UTC; pdewitt
+Packaged: 2019-01-14 06:28:59 UTC; dewittp
 Author: Peter DeWitt [aut, cre],
   Tell Bennett [ctb]
 Maintainer: Peter DeWitt <dewittpe@gmail.com>
 Repository: CRAN
-Date/Publication: 2018-04-17 17:47:06 UTC
+Date/Publication: 2019-01-14 07:00:03 UTC

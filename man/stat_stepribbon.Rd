@@ -25,7 +25,7 @@ data. All objects will be fortified to produce a data frame. See
 \code{\link[=fortify]{fortify()}} for which variables will be created.
 
 A \code{function} will be called with a single argument,
-the plot data. The return value must be a \code{data.frame.}, and
+the plot data. The return value must be a \code{data.frame}, and
 will be used as the layer data.}
 
 \item{geom}{which geom to use; defaults to "\code{ribbon}"}
@@ -50,9 +50,9 @@ the default plot specification, e.g. \code{\link[=borders]{borders()}}.}
 \item{direction}{\code{hv} for horizontal-veritcal steps, `vh`` for
 vertical-horizontal steps}
 
-\item{...}{other arguments passed on to \code{\link[=layer]{layer()}}. These are
+\item{...}{Other arguments passed on to \code{\link[=layer]{layer()}}. These are
 often aesthetics, used to set an aesthetic to a fixed value, like
-\code{color = "red"} or \code{size = 3}. They may also be parameters
+\code{colour = "red"} or \code{size = 3}. They may also be parameters
 to the paired geom/stat.}
 }
 \description{
