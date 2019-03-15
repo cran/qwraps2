@@ -1,4 +1,4 @@
-4ae20cc4a670eb36985910421d36470d *DESCRIPTION
+3b27bd16e8a2b97f3d09fa4716142cad *DESCRIPTION
 0e6e68ba65356c52ae5d0355245a0720 *NAMESPACE
 562e3e39796f2b6bd8b7e92c34fa5fd6 *R/RcppExports.R
 5b98a6b6a72192840150059bda132ebd *R/confusion_matrix.R
@@ -26,7 +26,7 @@ ef897fb13d0fc8fbb1c7624dd1d8e199 *R/summary_table.R
 0f7f39b2d17d7fb4a8b5d4cfdf695758 *build/vignette.rds
 35cdd38171f3191647a02880169a6082 *inst/doc/summary-statistics.R
 01b1784d8ce7791b2a9216bfee591156 *inst/doc/summary-statistics.Rmd
-185f42984ac5c13175815f8f33ad83ac *inst/doc/summary-statistics.html
+88c8b9a0bf914aaf8cdef71384aa2a2b *inst/doc/summary-statistics.html
 d41d8cd98f00b204e9800998ecf8427e *inst/templates/NEWS.md
 d41d8cd98f00b204e9800998ecf8427e *inst/templates/README.md
 9f490faee7553a75aa5daf7f762f4c7c *inst/templates/Rbuildignore
@@ -70,7 +70,7 @@ d19829d8aa06e0b706a8cd1e6f145e72 *man/traprule.Rd
 84a24a8003a68e8887338b001ada1707 *src/logit.cpp
 9930cf07b75fd6f09c11db8b87285fe8 *src/traprule.cpp
 935628a73f585752cae6212eccd4682a *tests/testthat.R
-5c766d61b5948808f0e3465e572ec7b7 *tests/testthat/test-confusion_matrix.R
+276acc6c97f712bded6ccd5ef59afea5 *tests/testthat/test-confusion_matrix.R
 1460c9d8c51bb796057129dc3ce63620 *tests/testthat/test-frmt.R
 a2a18a4e1e40f844104203e3267f4e6d *tests/testthat/test-logit.R
 1864bc7bdb9d42a1a91d058005124997 *tests/testthat/test-mean_ci.R
