@@ -1,18 +1,18 @@
 <!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
 
 <head>
 
 <meta charset="utf-8" />
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
 <meta name="author" content="Peter DeWitt" />
 
-<meta name="date" content="2019-03-14" />
+<meta name="date" content="2019-12-02" />
 
 <title>Formatted Summary Statistics and Data Summary Tables with qwraps2</title>
 
@@ -20,67 +20,41 @@
 
 <style type="text/css">code{white-space: pre;}</style>
 <style type="text/css" data-origin="pandoc">
-a.sourceLine { display: inline-block; line-height: 1.25; }
-a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
-a.sourceLine:empty { height: 1.2em; }
-.sourceCode { overflow: visible; }
-code.sourceCode { white-space: pre; position: relative; }
-div.sourceCode { margin: 1em 0; }
-pre.sourceCode { margin: 0; }
-@media screen {
-div.sourceCode { overflow: auto; }
-}
-@media print {
-code.sourceCode { white-space: pre-wrap; }
-a.sourceLine { text-indent: -1em; padding-left: 1em; }
-}
-pre.numberSource a.sourceLine
-  { position: relative; left: -4em; }
-pre.numberSource a.sourceLine::before
-  { content: attr(data-line-number);
-    position: relative; left: -1em; text-align: right; vertical-align: baseline;
-    border: none; pointer-events: all; display: inline-block;
-    -webkit-touch-callout: none; -webkit-user-select: none;
-    -khtml-user-select: none; -moz-user-select: none;
-    -ms-user-select: none; user-select: none;
-    padding: 0 4px; width: 4em;
-    color: #aaaaaa;
-  }
-pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
-div.sourceCode
-  {  }
-@media screen {
-a.sourceLine::before { text-decoration: underline; }
-}
-code span.al { color: #ff0000; font-weight: bold; } /* Alert */
-code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
-code span.at { color: #7d9029; } /* Attribute */
-code span.bn { color: #40a070; } /* BaseN */
-code span.bu { } /* BuiltIn */
-code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
-code span.ch { color: #4070a0; } /* Char */
-code span.cn { color: #880000; } /* Constant */
-code span.co { color: #60a0b0; font-style: italic; } /* Comment */
-code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
-code span.do { color: #ba2121; font-style: italic; } /* Documentation */
-code span.dt { color: #902000; } /* DataType */
-code span.dv { color: #40a070; } /* DecVal */
-code span.er { color: #ff0000; font-weight: bold; } /* Error */
-code span.ex { } /* Extension */
-code span.fl { color: #40a070; } /* Float */
-code span.fu { color: #06287e; } /* Function */
-code span.im { } /* Import */
-code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
-code span.kw { color: #007020; font-weight: bold; } /* Keyword */
-code span.op { color: #666666; } /* Operator */
-code span.ot { color: #007020; } /* Other */
-code span.pp { color: #bc7a00; } /* Preprocessor */
-code span.sc { color: #4070a0; } /* SpecialChar */
-code span.ss { color: #bb6688; } /* SpecialString */
-code span.st { color: #4070a0; } /* String */
-code span.va { color: #19177c; } /* Variable */
-code span.vs { color: #4070a0; } /* VerbatimString */
-code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+div.sourceCode { overflow-x: auto; }
+table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
+  margin: 0; padding: 0; vertical-align: baseline; border: none; }
+table.sourceCode { width: 100%; line-height: 100%; }
+td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
+td.sourceCode { padding-left: 5px; }
+code > span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code > span.dt { color: #902000; } /* DataType */
+code > span.dv { color: #40a070; } /* DecVal */
+code > span.bn { color: #40a070; } /* BaseN */
+code > span.fl { color: #40a070; } /* Float */
+code > span.ch { color: #4070a0; } /* Char */
+code > span.st { color: #4070a0; } /* String */
+code > span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code > span.ot { color: #007020; } /* Other */
+code > span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code > span.fu { color: #06287e; } /* Function */
+code > span.er { color: #ff0000; font-weight: bold; } /* Error */
+code > span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+code > span.cn { color: #880000; } /* Constant */
+code > span.sc { color: #4070a0; } /* SpecialChar */
+code > span.vs { color: #4070a0; } /* VerbatimString */
+code > span.ss { color: #bb6688; } /* SpecialString */
+code > span.im { } /* Import */
+code > span.va { color: #19177c; } /* Variable */
+code > span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code > span.op { color: #666666; } /* Operator */
+code > span.bu { } /* BuiltIn */
+code > span.ex { } /* Extension */
+code > span.pp { color: #bc7a00; } /* Preprocessor */
+code > span.at { color: #7d9029; } /* Attribute */
+code > span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code > span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code > span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
 
 </style>
 <script>
@@ -96,7 +70,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
       if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") continue;
       var style = rule.style.cssText;
       // check if color or background-color is set
-      if (rule.style.color === '' || rule.style.backgroundColor === '') continue;
+      if (rule.style.color === '' && rule.style.backgroundColor === '') continue;
       // replace div.sourceCode by a pre.sourceCode rule
       sheets[i].deleteRule(j);
       sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
@@ -107,189 +81,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 
 
-<style type="text/css">body {
-background-color: #fff;
-margin: 1em auto;
-max-width: 700px;
-overflow: visible;
-padding-left: 2em;
-padding-right: 2em;
-font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
-font-size: 14px;
-line-height: 1.35;
-}
-#header {
-text-align: center;
-}
-#TOC {
-clear: both;
-margin: 0 0 10px 10px;
-padding: 4px;
-width: 400px;
-border: 1px solid #CCCCCC;
-border-radius: 5px;
-background-color: #f6f6f6;
-font-size: 13px;
-line-height: 1.3;
-}
-#TOC .toctitle {
-font-weight: bold;
-font-size: 15px;
-margin-left: 5px;
-}
-#TOC ul {
-padding-left: 40px;
-margin-left: -1.5em;
-margin-top: 5px;
-margin-bottom: 5px;
-}
-#TOC ul ul {
-margin-left: -2em;
-}
-#TOC li {
-line-height: 16px;
-}
-table {
-margin: 1em auto;
-border-width: 1px;
-border-color: #DDDDDD;
-border-style: outset;
-border-collapse: collapse;
-}
-table th {
-border-width: 2px;
-padding: 5px;
-border-style: inset;
-}
-table td {
-border-width: 1px;
-border-style: inset;
-line-height: 18px;
-padding: 5px 5px;
-}
-table, table th, table td {
-border-left-style: none;
-border-right-style: none;
-}
-table thead, table tr.even {
-background-color: #f7f7f7;
-}
-p {
-margin: 0.5em 0;
-}
-blockquote {
-background-color: #f6f6f6;
-padding: 0.25em 0.75em;
-}
-hr {
-border-style: solid;
-border: none;
-border-top: 1px solid #777;
-margin: 28px 0;
-}
-dl {
-margin-left: 0;
-}
-dl dd {
-margin-bottom: 13px;
-margin-left: 13px;
-}
-dl dt {
-font-weight: bold;
-}
-ul {
-margin-top: 0;
-}
-ul li {
-list-style: circle outside;
-}
-ul ul {
-margin-bottom: 0;
-}
-pre, code {
-background-color: #f7f7f7;
-border-radius: 3px;
-color: #333;
-white-space: pre-wrap; 
-}
-pre {
-border-radius: 3px;
-margin: 5px 0px 10px 0px;
-padding: 10px;
-}
-pre:not([class]) {
-background-color: #f7f7f7;
-}
-code {
-font-family: Consolas, Monaco, 'Courier New', monospace;
-font-size: 85%;
-}
-p > code, li > code {
-padding: 2px 0px;
-}
-div.figure {
-text-align: center;
-}
-img {
-background-color: #FFFFFF;
-padding: 2px;
-border: 1px solid #DDDDDD;
-border-radius: 3px;
-border: 1px solid #CCCCCC;
-margin: 0 5px;
-}
-h1 {
-margin-top: 0;
-font-size: 35px;
-line-height: 40px;
-}
-h2 {
-border-bottom: 4px solid #f7f7f7;
-padding-top: 10px;
-padding-bottom: 2px;
-font-size: 145%;
-}
-h3 {
-border-bottom: 2px solid #f7f7f7;
-padding-top: 10px;
-font-size: 120%;
-}
-h4 {
-border-bottom: 1px solid #f7f7f7;
-margin-left: 8px;
-font-size: 105%;
-}
-h5, h6 {
-border-bottom: 1px solid #ccc;
-font-size: 105%;
-}
-a {
-color: #0033dd;
-text-decoration: none;
-}
-a:hover {
-color: #6666ff; }
-a:visited {
-color: #800080; }
-a:visited:hover {
-color: #BB00BB; }
-a[href^="http:"] {
-text-decoration: underline; }
-a[href^="https:"] {
-text-decoration: underline; }
-
-code > span.kw { color: #555; font-weight: bold; } 
-code > span.dt { color: #902000; } 
-code > span.dv { color: #40a070; } 
-code > span.bn { color: #d14; } 
-code > span.fl { color: #d14; } 
-code > span.ch { color: #d14; } 
-code > span.st { color: #d14; } 
-code > span.co { color: #888888; font-style: italic; } 
-code > span.ot { color: #007020; } 
-code > span.al { color: #ff0000; font-weight: bold; } 
-code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61717; background-color: #e3d2d2; } 
-</style>
+<link href="data:text/css;charset=utf-8,body%20%7B%0Abackground%2Dcolor%3A%20%23fff%3B%0Amargin%3A%201em%20auto%3B%0Amax%2Dwidth%3A%20700px%3B%0Aoverflow%3A%20visible%3B%0Apadding%2Dleft%3A%202em%3B%0Apadding%2Dright%3A%202em%3B%0Afont%2Dfamily%3A%20%22Open%20Sans%22%2C%20%22Helvetica%20Neue%22%2C%20Helvetica%2C%20Arial%2C%20sans%2Dserif%3B%0Afont%2Dsize%3A%2014px%3B%0Aline%2Dheight%3A%201%2E35%3B%0A%7D%0A%23header%20%7B%0Atext%2Dalign%3A%20center%3B%0A%7D%0A%23TOC%20%7B%0Aclear%3A%20both%3B%0Amargin%3A%200%200%2010px%2010px%3B%0Apadding%3A%204px%3B%0Awidth%3A%20400px%3B%0Aborder%3A%201px%20solid%20%23CCCCCC%3B%0Aborder%2Dradius%3A%205px%3B%0Abackground%2Dcolor%3A%20%23f6f6f6%3B%0Afont%2Dsize%3A%2013px%3B%0Aline%2Dheight%3A%201%2E3%3B%0A%7D%0A%23TOC%20%2Etoctitle%20%7B%0Afont%2Dweight%3A%20bold%3B%0Afont%2Dsize%3A%2015px%3B%0Amargin%2Dleft%3A%205px%3B%0A%7D%0A%23TOC%20ul%20%7B%0Apadding%2Dleft%3A%2040px%3B%0Amargin%2Dleft%3A%20%2D1%2E5em%3B%0Amargin%2Dtop%3A%205px%3B%0Amargin%2Dbottom%3A%205px%3B%0A%7D%0A%23TOC%20ul%20ul%20%7B%0Amargin%2Dleft%3A%20%2D2em%3B%0A%7D%0A%23TOC%20li%20%7B%0Aline%2Dheight%3A%2016px%3B%0A%7D%0Atable%20%7B%0Amargin%3A%201em%20auto%3B%0Aborder%2Dwidth%3A%201px%3B%0Aborder%2Dcolor%3A%20%23DDDDDD%3B%0Aborder%2Dstyle%3A%20outset%3B%0Aborder%2Dcollapse%3A%20collapse%3B%0A%7D%0Atable%20th%20%7B%0Aborder%2Dwidth%3A%202px%3B%0Apadding%3A%205px%3B%0Aborder%2Dstyle%3A%20inset%3B%0A%7D%0Atable%20td%20%7B%0Aborder%2Dwidth%3A%201px%3B%0Aborder%2Dstyle%3A%20inset%3B%0Aline%2Dheight%3A%2018px%3B%0Apadding%3A%205px%205px%3B%0A%7D%0Atable%2C%20table%20th%2C%20table%20td%20%7B%0Aborder%2Dleft%2Dstyle%3A%20none%3B%0Aborder%2Dright%2Dstyle%3A%20none%3B%0A%7D%0Atable%20thead%2C%20table%20tr%2Eeven%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0Ap%20%7B%0Amargin%3A%200%2E5em%200%3B%0A%7D%0Ablockquote%20%7B%0Abackground%2Dcolor%3A%20%23f6f6f6%3B%0Apadding%3A%200%2E25em%200%2E75em%3B%0A%7D%0Ahr%20%7B%0Aborder%2Dstyle%3A%20solid%3B%0Aborder%3A%20none%3B%0Aborder%2Dtop%3A%201px%20solid%20%23777%3B%0Amargin%3A%2028px%200%3B%0A%7D%0Adl%20%7B%0Amargin%2Dleft%3A%200%3B%0A%7D%0Adl%20dd%20%7B%0Amargin%2Dbottom%3A%2013px%3B%0Amargin%2Dleft%3A%2013px%3B%0A%7D%0Adl%20dt%20%7B%0Afont%2Dweight%3A%20bold%3B%0A%7D%0Aul%20%7B%0Amargin%2Dtop%3A%200%3B%0A%7D%0Aul%20li%20%7B%0Alist%2Dstyle%3A%20circle%20outside%3B%0A%7D%0Aul%20ul%20%7B%0Amargin%2Dbottom%3A%200%3B%0A%7D%0Apre%2C%20code%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0Aborder%2Dradius%3A%203px%3B%0Acolor%3A%20%23333%3B%0Awhite%2Dspace%3A%20pre%2Dwrap%3B%20%0A%7D%0Apre%20%7B%0Aborder%2Dradius%3A%203px%3B%0Amargin%3A%205px%200px%2010px%200px%3B%0Apadding%3A%2010px%3B%0A%7D%0Apre%3Anot%28%5Bclass%5D%29%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0Acode%20%7B%0Afont%2Dfamily%3A%20Consolas%2C%20Monaco%2C%20%27Courier%20New%27%2C%20monospace%3B%0Afont%2Dsize%3A%2085%25%3B%0A%7D%0Ap%20%3E%20code%2C%20li%20%3E%20code%20%7B%0Apadding%3A%202px%200px%3B%0A%7D%0Adiv%2Efigure%20%7B%0Atext%2Dalign%3A%20center%3B%0A%7D%0Aimg%20%7B%0Abackground%2Dcolor%3A%20%23FFFFFF%3B%0Apadding%3A%202px%3B%0Aborder%3A%201px%20solid%20%23DDDDDD%3B%0Aborder%2Dradius%3A%203px%3B%0Aborder%3A%201px%20solid%20%23CCCCCC%3B%0Amargin%3A%200%205px%3B%0A%7D%0Ah1%20%7B%0Amargin%2Dtop%3A%200%3B%0Afont%2Dsize%3A%2035px%3B%0Aline%2Dheight%3A%2040px%3B%0A%7D%0Ah2%20%7B%0Aborder%2Dbottom%3A%204px%20solid%20%23f7f7f7%3B%0Apadding%2Dtop%3A%2010px%3B%0Apadding%2Dbottom%3A%202px%3B%0Afont%2Dsize%3A%20145%25%3B%0A%7D%0Ah3%20%7B%0Aborder%2Dbottom%3A%202px%20solid%20%23f7f7f7%3B%0Apadding%2Dtop%3A%2010px%3B%0Afont%2Dsize%3A%20120%25%3B%0A%7D%0Ah4%20%7B%0Aborder%2Dbottom%3A%201px%20solid%20%23f7f7f7%3B%0Amargin%2Dleft%3A%208px%3B%0Afont%2Dsize%3A%20105%25%3B%0A%7D%0Ah5%2C%20h6%20%7B%0Aborder%2Dbottom%3A%201px%20solid%20%23ccc%3B%0Afont%2Dsize%3A%20105%25%3B%0A%7D%0Aa%20%7B%0Acolor%3A%20%230033dd%3B%0Atext%2Ddecoration%3A%20none%3B%0A%7D%0Aa%3Ahover%20%7B%0Acolor%3A%20%236666ff%3B%20%7D%0Aa%3Avisited%20%7B%0Acolor%3A%20%23800080%3B%20%7D%0Aa%3Avisited%3Ahover%20%7B%0Acolor%3A%20%23BB00BB%3B%20%7D%0Aa%5Bhref%5E%3D%22http%3A%22%5D%20%7B%0Atext%2Ddecoration%3A%20underline%3B%20%7D%0Aa%5Bhref%5E%3D%22https%3A%22%5D%20%7B%0Atext%2Ddecoration%3A%20underline%3B%20%7D%0A%0Acode%20%3E%20span%2Ekw%20%7B%20color%3A%20%23555%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Edt%20%7B%20color%3A%20%23902000%3B%20%7D%20%0Acode%20%3E%20span%2Edv%20%7B%20color%3A%20%2340a070%3B%20%7D%20%0Acode%20%3E%20span%2Ebn%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Efl%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Ech%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Est%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Eco%20%7B%20color%3A%20%23888888%3B%20font%2Dstyle%3A%20italic%3B%20%7D%20%0Acode%20%3E%20span%2Eot%20%7B%20color%3A%20%23007020%3B%20%7D%20%0Acode%20%3E%20span%2Eal%20%7B%20color%3A%20%23ff0000%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Efu%20%7B%20color%3A%20%23900%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%20code%20%3E%20span%2Eer%20%7B%20color%3A%20%23a61717%3B%20background%2Dcolor%3A%20%23e3d2d2%3B%20%7D%20%0A" rel="stylesheet" type="text/css" />
 
 
 
@@ -303,7 +95,7 @@ code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61
 
 <h1 class="title toc-ignore">Formatted Summary Statistics and Data Summary Tables with qwraps2</h1>
 <h4 class="author">Peter DeWitt</h4>
-<h4 class="date">2019-03-14</h4>
+<h4 class="date">2019-12-02</h4>
 
 
 <div id="TOC">
@@ -321,6 +113,7 @@ code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61
 <li><a href="#building-a-data-summary-table"><span class="toc-section-number">3</span> Building a Data Summary Table</a><ul>
 <li><a href="#easy-building-of-the-summaries"><span class="toc-section-number">3.1</span> Easy building of the summaries</a></li>
 <li><a href="#adding-p-values-to-a-summary-table"><span class="toc-section-number">3.2</span> Adding P-values to a Summary Table</a></li>
+<li><a href="#using-variable-labels"><span class="toc-section-number">3.3</span> Using Variable Labels</a></li>
 </ul></li>
 <li><a href="#session-info"><span class="toc-section-number">4</span> Session Info</a></li>
 </ul>
@@ -334,47 +127,47 @@ code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61
 <h2><span class="header-section-number">1.1</span> Prerequisites Example Data Set</h2>
 <p>We will use a modified version of the <code>mtcars</code> data set for examples throughout this vignette. The following packages are required to run the code in this vignette and to construct the <code>mtcars2</code> <code>data.frame</code>.</p>
 <p>The <code>mtcars2</code> data frame will have three versions of the <code>cyl</code> vector: the original numeric values in <code>cyl</code>, a <code>character</code> version, and a <code>factor</code> version.</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="kw">set.seed</span>(<span class="dv">42</span>)</a>
-<a class="sourceLine" id="cb1-2" data-line-number="2"><span class="kw">library</span>(magrittr)</a>
-<a class="sourceLine" id="cb1-3" data-line-number="3"><span class="kw">library</span>(qwraps2)</a>
-<a class="sourceLine" id="cb1-4" data-line-number="4"></a>
-<a class="sourceLine" id="cb1-5" data-line-number="5"><span class="co"># define the markup language we are working in.</span></a>
-<a class="sourceLine" id="cb1-6" data-line-number="6"><span class="co"># options(qwraps2_markup = &quot;latex&quot;) is also supported.</span></a>
-<a class="sourceLine" id="cb1-7" data-line-number="7"><span class="kw">options</span>(<span class="dt">qwraps2_markup =</span> <span class="st">&quot;markdown&quot;</span>)</a>
-<a class="sourceLine" id="cb1-8" data-line-number="8"></a>
-<a class="sourceLine" id="cb1-9" data-line-number="9"><span class="kw">data</span>(mtcars)</a>
-<a class="sourceLine" id="cb1-10" data-line-number="10"></a>
-<a class="sourceLine" id="cb1-11" data-line-number="11">mtcars2 &lt;-</a>
-<a class="sourceLine" id="cb1-12" data-line-number="12"><span class="st">  </span>dplyr<span class="op">::</span><span class="kw">mutate</span>(mtcars,</a>
-<a class="sourceLine" id="cb1-13" data-line-number="13">                <span class="dt">cyl_factor =</span> <span class="kw">factor</span>(cyl,</a>
-<a class="sourceLine" id="cb1-14" data-line-number="14">                                    <span class="dt">levels =</span> <span class="kw">c</span>(<span class="dv">6</span>, <span class="dv">4</span>, <span class="dv">8</span>),</a>
-<a class="sourceLine" id="cb1-15" data-line-number="15">                                    <span class="dt">labels =</span> <span class="kw">paste</span>(<span class="kw">c</span>(<span class="dv">6</span>, <span class="dv">4</span>, <span class="dv">8</span>), <span class="st">&quot;cylinders&quot;</span>)),</a>
-<a class="sourceLine" id="cb1-16" data-line-number="16">                <span class="dt">cyl_character =</span> <span class="kw">paste</span>(cyl, <span class="st">&quot;cylinders&quot;</span>))</a>
-<a class="sourceLine" id="cb1-17" data-line-number="17"></a>
-<a class="sourceLine" id="cb1-18" data-line-number="18"><span class="kw">str</span>(mtcars2)</a>
-<a class="sourceLine" id="cb1-19" data-line-number="19"><span class="co">## 'data.frame':    32 obs. of  13 variables:</span></a>
-<a class="sourceLine" id="cb1-20" data-line-number="20"><span class="co">##  $ mpg          : num  21 21 22.8 21.4 18.7 18.1 14.3 24.4 22.8 19.2 ...</span></a>
-<a class="sourceLine" id="cb1-21" data-line-number="21"><span class="co">##  $ cyl          : num  6 6 4 6 8 6 8 4 4 6 ...</span></a>
-<a class="sourceLine" id="cb1-22" data-line-number="22"><span class="co">##  $ disp         : num  160 160 108 258 360 ...</span></a>
-<a class="sourceLine" id="cb1-23" data-line-number="23"><span class="co">##  $ hp           : num  110 110 93 110 175 105 245 62 95 123 ...</span></a>
-<a class="sourceLine" id="cb1-24" data-line-number="24"><span class="co">##  $ drat         : num  3.9 3.9 3.85 3.08 3.15 2.76 3.21 3.69 3.92 3.92 ...</span></a>
-<a class="sourceLine" id="cb1-25" data-line-number="25"><span class="co">##  $ wt           : num  2.62 2.88 2.32 3.21 3.44 ...</span></a>
-<a class="sourceLine" id="cb1-26" data-line-number="26"><span class="co">##  $ qsec         : num  16.5 17 18.6 19.4 17 ...</span></a>
-<a class="sourceLine" id="cb1-27" data-line-number="27"><span class="co">##  $ vs           : num  0 0 1 1 0 1 0 1 1 1 ...</span></a>
-<a class="sourceLine" id="cb1-28" data-line-number="28"><span class="co">##  $ am           : num  1 1 1 0 0 0 0 0 0 0 ...</span></a>
-<a class="sourceLine" id="cb1-29" data-line-number="29"><span class="co">##  $ gear         : num  4 4 4 3 3 3 3 4 4 4 ...</span></a>
-<a class="sourceLine" id="cb1-30" data-line-number="30"><span class="co">##  $ carb         : num  4 4 1 1 2 1 4 2 2 4 ...</span></a>
-<a class="sourceLine" id="cb1-31" data-line-number="31"><span class="co">##  $ cyl_factor   : Factor w/ 3 levels &quot;6 cylinders&quot;,..: 1 1 2 1 3 1 3 2 2 1 ...</span></a>
-<a class="sourceLine" id="cb1-32" data-line-number="32"><span class="co">##  $ cyl_character: chr  &quot;6 cylinders&quot; &quot;6 cylinders&quot; &quot;4 cylinders&quot; &quot;6 cylinders&quot; ...</span></a></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">set.seed</span>(<span class="dv">42</span>)
+<span class="kw">library</span>(magrittr)
+<span class="kw">library</span>(qwraps2)
+
+<span class="co"># define the markup language we are working in.</span>
+<span class="co"># options(qwraps2_markup = &quot;latex&quot;) is also supported.</span>
+<span class="kw">options</span>(<span class="dt">qwraps2_markup =</span> <span class="st">&quot;markdown&quot;</span>)
+
+<span class="kw">data</span>(mtcars)
+
+mtcars2 &lt;-
+<span class="st">  </span>dplyr<span class="op">::</span><span class="kw">mutate</span>(mtcars,
+                <span class="dt">cyl_factor =</span> <span class="kw">factor</span>(cyl,
+                                    <span class="dt">levels =</span> <span class="kw">c</span>(<span class="dv">6</span>, <span class="dv">4</span>, <span class="dv">8</span>),
+                                    <span class="dt">labels =</span> <span class="kw">paste</span>(<span class="kw">c</span>(<span class="dv">6</span>, <span class="dv">4</span>, <span class="dv">8</span>), <span class="st">&quot;cylinders&quot;</span>)),
+                <span class="dt">cyl_character =</span> <span class="kw">paste</span>(cyl, <span class="st">&quot;cylinders&quot;</span>))
+
+<span class="kw">str</span>(mtcars2)
+## 'data.frame':    32 obs. of  13 variables:
+##  $ mpg          : num  21 21 22.8 21.4 18.7 18.1 14.3 24.4 22.8 19.2 ...
+##  $ cyl          : num  6 6 4 6 8 6 8 4 4 6 ...
+##  $ disp         : num  160 160 108 258 360 ...
+##  $ hp           : num  110 110 93 110 175 105 245 62 95 123 ...
+##  $ drat         : num  3.9 3.9 3.85 3.08 3.15 2.76 3.21 3.69 3.92 3.92 ...
+##  $ wt           : num  2.62 2.88 2.32 3.21 3.44 ...
+##  $ qsec         : num  16.5 17 18.6 19.4 17 ...
+##  $ vs           : num  0 0 1 1 0 1 0 1 1 1 ...
+##  $ am           : num  1 1 1 0 0 0 0 0 0 0 ...
+##  $ gear         : num  4 4 4 3 3 3 3 4 4 4 ...
+##  $ carb         : num  4 4 1 1 2 1 4 2 2 4 ...
+##  $ cyl_factor   : Factor w/ 3 levels &quot;6 cylinders&quot;,..: 1 1 2 1 3 1 3 2 2 1 ...
+##  $ cyl_character: chr  &quot;6 cylinders&quot; &quot;6 cylinders&quot; &quot;4 cylinders&quot; &quot;6 cylinders&quot; ...</code></pre></div>
 <p>Notice that the construction of the <code>cyl_factor</code> and <code>cyl_character</code> vectors was done such that the coercion of <code>cyl_character</code> to a <code>factor</code> will not be the same as the <code>cyl_factor</code> vector; the levels are in a different order.</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" data-line-number="1"><span class="kw">with</span>(mtcars2, <span class="kw">table</span>(cyl_factor, cyl_character))</a>
-<a class="sourceLine" id="cb2-2" data-line-number="2"><span class="co">##              cyl_character</span></a>
-<a class="sourceLine" id="cb2-3" data-line-number="3"><span class="co">## cyl_factor    4 cylinders 6 cylinders 8 cylinders</span></a>
-<a class="sourceLine" id="cb2-4" data-line-number="4"><span class="co">##   6 cylinders           0           7           0</span></a>
-<a class="sourceLine" id="cb2-5" data-line-number="5"><span class="co">##   4 cylinders          11           0           0</span></a>
-<a class="sourceLine" id="cb2-6" data-line-number="6"><span class="co">##   8 cylinders           0           0          14</span></a>
-<a class="sourceLine" id="cb2-7" data-line-number="7"><span class="kw">with</span>(mtcars2, <span class="kw">all.equal</span>(<span class="kw">factor</span>(cyl_character), cyl_factor))</a>
-<a class="sourceLine" id="cb2-8" data-line-number="8"><span class="co">## [1] &quot;Attributes: &lt; Component \&quot;levels\&quot;: 2 string mismatches &gt;&quot;</span></a></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">with</span>(mtcars2, <span class="kw">table</span>(cyl_factor, cyl_character))
+##              cyl_character
+## cyl_factor    4 cylinders 6 cylinders 8 cylinders
+##   6 cylinders           0           7           0
+##   4 cylinders          11           0           0
+##   8 cylinders           0           0          14
+<span class="kw">with</span>(mtcars2, <span class="kw">all.equal</span>(<span class="kw">factor</span>(cyl_character), cyl_factor))
+## [1] &quot;Attributes: &lt; Component \&quot;levels\&quot;: 2 string mismatches &gt;&quot;</code></pre></div>
 </div>
 </div>
 <div id="review-of-summary-statistic-functions-and-formatting" class="section level1">
@@ -382,10 +175,10 @@ code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61
 <div id="means-and-standard-deviations" class="section level2">
 <h2><span class="header-section-number">2.1</span> Means and Standard Deviations</h2>
 <p><code>mean_sd</code> will return the (arithmetic) mean and standard deviation for numeric vector. For example, <code>mean_sd(mtcars2$mpg)</code> will return the formatted string.</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" data-line-number="1"><span class="kw">mean_sd</span>(mtcars2<span class="op">$</span>mpg)</a>
-<a class="sourceLine" id="cb3-2" data-line-number="2"><span class="co">## [1] &quot;20.09 &amp;plusmn; 6.03&quot;</span></a>
-<a class="sourceLine" id="cb3-3" data-line-number="3"><span class="kw">mean_sd</span>(mtcars2<span class="op">$</span>mpg, <span class="dt">denote_sd =</span> <span class="st">&quot;paren&quot;</span>)</a>
-<a class="sourceLine" id="cb3-4" data-line-number="4"><span class="co">## [1] &quot;20.09 (6.03)&quot;</span></a></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">mean_sd</span>(mtcars2<span class="op">$</span>mpg)
+## [1] &quot;20.09 &amp;plusmn; 6.03&quot;
+<span class="kw">mean_sd</span>(mtcars2<span class="op">$</span>mpg, <span class="dt">denote_sd =</span> <span class="st">&quot;paren&quot;</span>)
+## [1] &quot;20.09 (6.03)&quot;</code></pre></div>
 <p>The default setting for <code>mean_sd</code> is to return the mean ± sd. In a table this default is helpful because the default table formatting for counts and percentages is n (%).</p>
 <p><code>mean_sd</code> and other functions are helpful for in-line text too:</p>
 <pre><code>The 32 vehicles in the `mtcars` data set had an average fuel
@@ -398,36 +191,36 @@ economy of 20.09 &amp;plusmn; 6.03 miles per gallon.</code></pre>
 <div id="mean-and-confidence-intervals" class="section level2">
 <h2><span class="header-section-number">2.2</span> Mean and Confidence intervals</h2>
 <p>If you need the mean and a confidence interval there is <code>mean_ci</code>. <code>mean_ci</code> returns a <code>qwraps2_mean_ci</code> object which is a named vector with the mean, lower confidence limit, and the upper confidence limit. The printing method for <code>qwraps2_mean_ci</code> objects is a call to the <code>frmtci</code> function. You an modify the formatting of printed result by adjusting the arguments pasted to <code>frmtci</code>.</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" data-line-number="1">mci &lt;-<span class="st"> </span><span class="kw">mean_ci</span>(mtcars2<span class="op">$</span>mpg)</a>
-<a class="sourceLine" id="cb5-2" data-line-number="2">mci</a>
-<a class="sourceLine" id="cb5-3" data-line-number="3"><span class="co">## [1] &quot;20.09 (18.00, 22.18)&quot;</span></a>
-<a class="sourceLine" id="cb5-4" data-line-number="4"><span class="kw">print</span>(mci, <span class="dt">show_level =</span> <span class="ot">TRUE</span>)</a>
-<a class="sourceLine" id="cb5-5" data-line-number="5"><span class="co">## [1] &quot;20.09 (95% CI: 18.00, 22.18)&quot;</span></a></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">mci &lt;-<span class="st"> </span><span class="kw">mean_ci</span>(mtcars2<span class="op">$</span>mpg)
+mci
+## [1] &quot;20.09 (18.00, 22.18)&quot;
+<span class="kw">print</span>(mci, <span class="dt">show_level =</span> <span class="ot">TRUE</span>)
+## [1] &quot;20.09 (95% CI: 18.00, 22.18)&quot;</code></pre></div>
 </div>
 <div id="median-and-inner-quartile-range" class="section level2">
 <h2><span class="header-section-number">2.3</span> Median and Inner Quartile Range</h2>
 <p>Similar to the <code>mean_sd</code> function, the <code>median_iqr</code> returns the median and the inner quartile range (IQR) of a data vector.</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" data-line-number="1"><span class="kw">median_iqr</span>(mtcars2<span class="op">$</span>mpg)</a>
-<a class="sourceLine" id="cb6-2" data-line-number="2"><span class="co">## [1] &quot;19.20 (15.43, 22.80)&quot;</span></a></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">median_iqr</span>(mtcars2<span class="op">$</span>mpg)
+## [1] &quot;19.20 (15.43, 22.80)&quot;</code></pre></div>
 </div>
 <div id="count-and-percentages" class="section level2">
 <h2><span class="header-section-number">2.4</span> Count and Percentages</h2>
 <p>The <code>n_perc</code> function is the workhorse, but <code>n_perc0</code> is also provided for ease of use in the same way that base R has <code>paste</code> and <code>paste0</code>. <code>n_perc</code> returns the n (%) with the percentage sign in the string, <code>n_perc0</code> omits the percentage sign from the string. The latter is good for tables, the former for in-line text.</p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" data-line-number="1"><span class="kw">n_perc</span>(mtcars2<span class="op">$</span>cyl <span class="op">==</span><span class="st"> </span><span class="dv">4</span>)</a>
-<a class="sourceLine" id="cb7-2" data-line-number="2"><span class="co">## [1] &quot;11 (34.38%)&quot;</span></a>
-<a class="sourceLine" id="cb7-3" data-line-number="3"><span class="kw">n_perc0</span>(mtcars2<span class="op">$</span>cyl <span class="op">==</span><span class="st"> </span><span class="dv">4</span>)</a>
-<a class="sourceLine" id="cb7-4" data-line-number="4"><span class="co">## [1] &quot;11 (34)&quot;</span></a>
-<a class="sourceLine" id="cb7-5" data-line-number="5"></a>
-<a class="sourceLine" id="cb7-6" data-line-number="6"><span class="kw">n_perc</span>(mtcars2<span class="op">$</span>cyl_factor <span class="op">==</span><span class="st"> </span><span class="dv">4</span>)  <span class="co"># this returns 0 (0.00%)</span></a>
-<a class="sourceLine" id="cb7-7" data-line-number="7"><span class="co">## [1] &quot;0 (0.00%)&quot;</span></a>
-<a class="sourceLine" id="cb7-8" data-line-number="8"><span class="kw">n_perc</span>(mtcars2<span class="op">$</span>cyl_factor <span class="op">==</span><span class="st"> &quot;4 cylinders&quot;</span>)</a>
-<a class="sourceLine" id="cb7-9" data-line-number="9"><span class="co">## [1] &quot;11 (34.38%)&quot;</span></a>
-<a class="sourceLine" id="cb7-10" data-line-number="10"><span class="kw">n_perc</span>(mtcars2<span class="op">$</span>cyl_factor <span class="op">==</span><span class="st"> </span><span class="kw">levels</span>(mtcars2<span class="op">$</span>cyl_factor)[<span class="dv">2</span>])</a>
-<a class="sourceLine" id="cb7-11" data-line-number="11"><span class="co">## [1] &quot;11 (34.38%)&quot;</span></a>
-<a class="sourceLine" id="cb7-12" data-line-number="12"></a>
-<a class="sourceLine" id="cb7-13" data-line-number="13"><span class="co"># The count and percentage of 4 or 6 cylinders vehicles in the data set is</span></a>
-<a class="sourceLine" id="cb7-14" data-line-number="14"><span class="kw">n_perc</span>(mtcars2<span class="op">$</span>cyl <span class="op">%in%</span><span class="st"> </span><span class="kw">c</span>(<span class="dv">4</span>, <span class="dv">6</span>))</a>
-<a class="sourceLine" id="cb7-15" data-line-number="15"><span class="co">## [1] &quot;18 (56.25%)&quot;</span></a></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">n_perc</span>(mtcars2<span class="op">$</span>cyl <span class="op">==</span><span class="st"> </span><span class="dv">4</span>)
+## [1] &quot;11 (34.38%)&quot;
+<span class="kw">n_perc0</span>(mtcars2<span class="op">$</span>cyl <span class="op">==</span><span class="st"> </span><span class="dv">4</span>)
+## [1] &quot;11 (34)&quot;
+
+<span class="kw">n_perc</span>(mtcars2<span class="op">$</span>cyl_factor <span class="op">==</span><span class="st"> </span><span class="dv">4</span>)  <span class="co"># this returns 0 (0.00%)</span>
+## [1] &quot;0 (0.00%)&quot;
+<span class="kw">n_perc</span>(mtcars2<span class="op">$</span>cyl_factor <span class="op">==</span><span class="st"> &quot;4 cylinders&quot;</span>)
+## [1] &quot;11 (34.38%)&quot;
+<span class="kw">n_perc</span>(mtcars2<span class="op">$</span>cyl_factor <span class="op">==</span><span class="st"> </span><span class="kw">levels</span>(mtcars2<span class="op">$</span>cyl_factor)[<span class="dv">2</span>])
+## [1] &quot;11 (34.38%)&quot;
+
+<span class="co"># The count and percentage of 4 or 6 cylinders vehicles in the data set is</span>
+<span class="kw">n_perc</span>(mtcars2<span class="op">$</span>cyl <span class="op">%in%</span><span class="st"> </span><span class="kw">c</span>(<span class="dv">4</span>, <span class="dv">6</span>))
+## [1] &quot;18 (56.25%)&quot;</code></pre></div>
 </div>
 <div id="geometric-means-and-standard-deviations" class="section level2">
 <h2><span class="header-section-number">2.5</span> Geometric Means and Standard Deviations</h2>
@@ -453,48 +246,48 @@ economy of 20.09 &amp;plusmn; 6.03 miles per gallon.</code></pre>
 \end{equation}
 \]</span></p>
 <p>When looking for the geometric standard deviation in R, the simple <code>exp(sd(log(x)))</code> is not exactly correct. The geometric standard deviation uses <span class="math inline">\(n,\)</span> the full sample size, in the denominator, where as the <code>sd</code> and <code>var</code> functions in R use the denominator <span class="math inline">\(n - 1.\)</span> To get the geometric standard deviation one should adjust the result by multiplying the variance by <span class="math inline">\((n - 1) / n\)</span> or the standard deviation by <span class="math inline">\(\sqrt{(n - 1) / n}.\)</span> See the example below.</p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb8-1" data-line-number="1">x &lt;-<span class="st"> </span><span class="kw">runif</span>(<span class="dv">6</span>, <span class="dt">min =</span> <span class="dv">4</span>, <span class="dt">max =</span> <span class="dv">70</span>)</a>
-<a class="sourceLine" id="cb8-2" data-line-number="2"></a>
-<a class="sourceLine" id="cb8-3" data-line-number="3"><span class="co"># geometric mean</span></a>
-<a class="sourceLine" id="cb8-4" data-line-number="4">mu_g &lt;-<span class="st"> </span><span class="kw">prod</span>(x) <span class="op">**</span><span class="st"> </span>(<span class="dv">1</span> <span class="op">/</span><span class="st"> </span><span class="kw">length</span>(x))</a>
-<a class="sourceLine" id="cb8-5" data-line-number="5">mu_g</a>
-<a class="sourceLine" id="cb8-6" data-line-number="6"><span class="co">## [1] 46.50714</span></a>
-<a class="sourceLine" id="cb8-7" data-line-number="7"><span class="kw">exp</span>(<span class="kw">mean</span>(<span class="kw">log</span>(x)))</a>
-<a class="sourceLine" id="cb8-8" data-line-number="8"><span class="co">## [1] 46.50714</span></a>
-<a class="sourceLine" id="cb8-9" data-line-number="9"><span class="fl">1.2</span> <span class="op">**</span><span class="st"> </span><span class="kw">mean</span>(<span class="kw">log</span>(x, <span class="dt">base =</span> <span class="fl">1.2</span>))</a>
-<a class="sourceLine" id="cb8-10" data-line-number="10"><span class="co">## [1] 46.50714</span></a>
-<a class="sourceLine" id="cb8-11" data-line-number="11"></a>
-<a class="sourceLine" id="cb8-12" data-line-number="12"><span class="co"># geometric standard deviation</span></a>
-<a class="sourceLine" id="cb8-13" data-line-number="13"><span class="kw">exp</span>(<span class="kw">sd</span>(<span class="kw">log</span>(x)))  <span class="co">## This is wrong</span></a>
-<a class="sourceLine" id="cb8-14" data-line-number="14"><span class="co">## [1] 1.500247</span></a>
-<a class="sourceLine" id="cb8-15" data-line-number="15"></a>
-<a class="sourceLine" id="cb8-16" data-line-number="16"><span class="co"># these equations are correct</span></a>
-<a class="sourceLine" id="cb8-17" data-line-number="17">sigma_g &lt;-<span class="st"> </span><span class="kw">exp</span>(<span class="kw">sqrt</span>(<span class="kw">sum</span>(<span class="kw">log</span>(x <span class="op">/</span><span class="st"> </span>mu_g) <span class="op">**</span><span class="st"> </span><span class="dv">2</span>) <span class="op">/</span><span class="st"> </span><span class="kw">length</span>(x)))</a>
-<a class="sourceLine" id="cb8-18" data-line-number="18">sigma_g</a>
-<a class="sourceLine" id="cb8-19" data-line-number="19"><span class="co">## [1] 1.448151</span></a>
-<a class="sourceLine" id="cb8-20" data-line-number="20"></a>
-<a class="sourceLine" id="cb8-21" data-line-number="21"><span class="kw">exp</span>(<span class="kw">sqrt</span>((<span class="kw">length</span>(x) <span class="op">-</span><span class="st"> </span><span class="dv">1</span>) <span class="op">/</span><span class="st"> </span><span class="kw">length</span>(x)) <span class="op">*</span><span class="st"> </span><span class="kw">sd</span>(<span class="kw">log</span>(x)))</a>
-<a class="sourceLine" id="cb8-22" data-line-number="22"><span class="co">## [1] 1.448151</span></a></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">x &lt;-<span class="st"> </span><span class="kw">runif</span>(<span class="dv">6</span>, <span class="dt">min =</span> <span class="dv">4</span>, <span class="dt">max =</span> <span class="dv">70</span>)
+
+<span class="co"># geometric mean</span>
+mu_g &lt;-<span class="st"> </span><span class="kw">prod</span>(x) <span class="op">**</span><span class="st"> </span>(<span class="dv">1</span> <span class="op">/</span><span class="st"> </span><span class="kw">length</span>(x))
+mu_g
+## [1] 46.50714
+<span class="kw">exp</span>(<span class="kw">mean</span>(<span class="kw">log</span>(x)))
+## [1] 46.50714
+<span class="fl">1.2</span> <span class="op">**</span><span class="st"> </span><span class="kw">mean</span>(<span class="kw">log</span>(x, <span class="dt">base =</span> <span class="fl">1.2</span>))
+## [1] 46.50714
+
+<span class="co"># geometric standard deviation</span>
+<span class="kw">exp</span>(<span class="kw">sd</span>(<span class="kw">log</span>(x)))  ## This is wrong
+## [1] 1.500247
+
+<span class="co"># these equations are correct</span>
+sigma_g &lt;-<span class="st"> </span><span class="kw">exp</span>(<span class="kw">sqrt</span>(<span class="kw">sum</span>(<span class="kw">log</span>(x <span class="op">/</span><span class="st"> </span>mu_g) <span class="op">**</span><span class="st"> </span><span class="dv">2</span>) <span class="op">/</span><span class="st"> </span><span class="kw">length</span>(x)))
+sigma_g
+## [1] 1.448151
+
+<span class="kw">exp</span>(<span class="kw">sqrt</span>((<span class="kw">length</span>(x) <span class="op">-</span><span class="st"> </span><span class="dv">1</span>) <span class="op">/</span><span class="st"> </span><span class="kw">length</span>(x)) <span class="op">*</span><span class="st"> </span><span class="kw">sd</span>(<span class="kw">log</span>(x)))
+## [1] 1.448151</code></pre></div>
 <p>The functions <code>gmean</code>, <code>gvar</code>, and <code>gsd</code> in the package, provide the geometric mean, variance, and standard deviation for a sample.</p>
-<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb9-1" data-line-number="1"><span class="kw">gmean</span>(x)</a>
-<a class="sourceLine" id="cb9-2" data-line-number="2"><span class="co">## [1] 46.50714</span></a>
-<a class="sourceLine" id="cb9-3" data-line-number="3"><span class="kw">all.equal</span>(<span class="kw">gmean</span>(x), mu_g)</a>
-<a class="sourceLine" id="cb9-4" data-line-number="4"><span class="co">## [1] TRUE</span></a>
-<a class="sourceLine" id="cb9-5" data-line-number="5"></a>
-<a class="sourceLine" id="cb9-6" data-line-number="6"><span class="kw">gvar</span>(x)</a>
-<a class="sourceLine" id="cb9-7" data-line-number="7"><span class="co">## [1] 1.146958</span></a>
-<a class="sourceLine" id="cb9-8" data-line-number="8"><span class="kw">all.equal</span>(<span class="kw">gvar</span>(x), sigma_g<span class="op">^</span><span class="dv">2</span>)  <span class="co"># This is supposed to be FALSE</span></a>
-<a class="sourceLine" id="cb9-9" data-line-number="9"><span class="co">## [1] &quot;Mean relative difference: 0.8284385&quot;</span></a>
-<a class="sourceLine" id="cb9-10" data-line-number="10"><span class="kw">all.equal</span>(<span class="kw">gvar</span>(x), <span class="kw">exp</span>(<span class="kw">log</span>(sigma_g)<span class="op">^</span><span class="dv">2</span>))</a>
-<a class="sourceLine" id="cb9-11" data-line-number="11"><span class="co">## [1] TRUE</span></a>
-<a class="sourceLine" id="cb9-12" data-line-number="12"></a>
-<a class="sourceLine" id="cb9-13" data-line-number="13"><span class="kw">gsd</span>(x)</a>
-<a class="sourceLine" id="cb9-14" data-line-number="14"><span class="co">## [1] 1.448151</span></a>
-<a class="sourceLine" id="cb9-15" data-line-number="15"><span class="kw">all.equal</span>(<span class="kw">gsd</span>(x), sigma_g)</a>
-<a class="sourceLine" id="cb9-16" data-line-number="16"><span class="co">## [1] TRUE</span></a></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">gmean</span>(x)
+## [1] 46.50714
+<span class="kw">all.equal</span>(<span class="kw">gmean</span>(x), mu_g)
+## [1] TRUE
+
+<span class="kw">gvar</span>(x)
+## [1] 1.146958
+<span class="kw">all.equal</span>(<span class="kw">gvar</span>(x), sigma_g<span class="op">^</span><span class="dv">2</span>)  <span class="co"># This is supposed to be FALSE</span>
+## [1] &quot;Mean relative difference: 0.8284385&quot;
+<span class="kw">all.equal</span>(<span class="kw">gvar</span>(x), <span class="kw">exp</span>(<span class="kw">log</span>(sigma_g)<span class="op">^</span><span class="dv">2</span>))
+## [1] TRUE
+
+<span class="kw">gsd</span>(x)
+## [1] 1.448151
+<span class="kw">all.equal</span>(<span class="kw">gsd</span>(x), sigma_g)
+## [1] TRUE</code></pre></div>
 <p><code>gmean_sd</code> will provide a quick way for reporting the geometric mean and geometric standard deviation in the same way that <code>mean_sd</code> does for the arithmetic mean and arithmetic standard deviation:</p>
-<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb10-1" data-line-number="1"><span class="kw">gmean_sd</span>(x)</a>
-<a class="sourceLine" id="cb10-2" data-line-number="2"><span class="co">## [1] &quot;46.51 &amp;plusmn; 1.45&quot;</span></a></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">gmean_sd</span>(x)
+## [1] &quot;46.51 &amp;plusmn; 1.45&quot;</code></pre></div>
 </div>
 </div>
 <div id="building-a-data-summary-table" class="section level1">
@@ -506,34 +299,34 @@ economy of 20.09 &amp;plusmn; 6.03 miles per gallon.</code></pre>
 <li><code>x</code> a (<code>grouped_df</code>) data.frame.</li>
 <li><code>summaries</code> a list of summaries. This is a list-of-lists. The outer list defines the row groups and the inner lists define the specif summaries. The default is generated by the <code>qsummary</code> function.</li>
 </ol>
-<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb11-1" data-line-number="1"><span class="kw">args</span>(summary_table)</a>
-<a class="sourceLine" id="cb11-2" data-line-number="2"><span class="co">## function (x, summaries = qsummary(x)) </span></a>
-<a class="sourceLine" id="cb11-3" data-line-number="3"><span class="co">## NULL</span></a></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">args</span>(summary_table)
+## function (x, summaries = qsummary(x)) 
+## NULL</code></pre></div>
 <p>Let’s build a list-of-lists to pass to the <code>summaries</code> argument of <code>summary_table</code>. Additional examples and tools for building the list-of-lists are given in the following section. The immediate example is provided to demonstrate how to use the <code>summary_table</code> method.</p>
 <p>The inner lists are named <code>formula</code>e defining the wanted summary. These <code>formula</code>e are passed through <code>dplyr::summarize</code> to generate the table. The names are important, as they are used to label row groups and row names in the table. The arguemnt for the functions below use the <code>.data</code> pronoun for tidy evaluation (see <code>help(topic = &quot;.data&quot;, package = &quot;rlang&quot;)</code>). The use of this pronoun is not mandatory, however, the use of the pronoun is strongly encouraged.</p>
-<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb12-1" data-line-number="1">our_summary1 &lt;-</a>
-<a class="sourceLine" id="cb12-2" data-line-number="2"><span class="st">  </span><span class="kw">list</span>(<span class="st">&quot;Miles Per Gallon&quot;</span> =</a>
-<a class="sourceLine" id="cb12-3" data-line-number="3"><span class="st">       </span><span class="kw">list</span>(<span class="st">&quot;min&quot;</span> =<span class="st"> </span><span class="er">~</span><span class="st"> </span><span class="kw">min</span>(.data<span class="op">$</span>mpg),</a>
-<a class="sourceLine" id="cb12-4" data-line-number="4">            <span class="st">&quot;max&quot;</span> =<span class="st"> </span><span class="er">~</span><span class="st"> </span><span class="kw">max</span>(.data<span class="op">$</span>mpg),</a>
-<a class="sourceLine" id="cb12-5" data-line-number="5">            <span class="st">&quot;mean (sd)&quot;</span> =<span class="st"> </span><span class="er">~</span><span class="st"> </span>qwraps2<span class="op">::</span><span class="kw">mean_sd</span>(.data<span class="op">$</span>mpg)),</a>
-<a class="sourceLine" id="cb12-6" data-line-number="6">       <span class="st">&quot;Displacement&quot;</span> =</a>
-<a class="sourceLine" id="cb12-7" data-line-number="7"><span class="st">       </span><span class="kw">list</span>(<span class="st">&quot;min&quot;</span> =<span class="st"> </span><span class="er">~</span><span class="st"> </span><span class="kw">min</span>(.data<span class="op">$</span>disp),</a>
-<a class="sourceLine" id="cb12-8" data-line-number="8">            <span class="st">&quot;median&quot;</span> =<span class="st"> </span><span class="er">~</span><span class="st"> </span><span class="kw">median</span>(.data<span class="op">$</span>disp),</a>
-<a class="sourceLine" id="cb12-9" data-line-number="9">            <span class="st">&quot;max&quot;</span> =<span class="st"> </span><span class="er">~</span><span class="st"> </span><span class="kw">max</span>(.data<span class="op">$</span>disp),</a>
-<a class="sourceLine" id="cb12-10" data-line-number="10">            <span class="st">&quot;mean (sd)&quot;</span> =<span class="st"> </span><span class="er">~</span><span class="st"> </span>qwraps2<span class="op">::</span><span class="kw">mean_sd</span>(.data<span class="op">$</span>disp)),</a>
-<a class="sourceLine" id="cb12-11" data-line-number="11">       <span class="st">&quot;Weight (1000 lbs)&quot;</span> =</a>
-<a class="sourceLine" id="cb12-12" data-line-number="12"><span class="st">       </span><span class="kw">list</span>(<span class="st">&quot;min&quot;</span> =<span class="st"> </span><span class="er">~</span><span class="st"> </span><span class="kw">min</span>(.data<span class="op">$</span>wt),</a>
-<a class="sourceLine" id="cb12-13" data-line-number="13">            <span class="st">&quot;max&quot;</span> =<span class="st"> </span><span class="er">~</span><span class="st"> </span><span class="kw">max</span>(.data<span class="op">$</span>wt),</a>
-<a class="sourceLine" id="cb12-14" data-line-number="14">            <span class="st">&quot;mean (sd)&quot;</span> =<span class="st"> </span><span class="er">~</span><span class="st"> </span>qwraps2<span class="op">::</span><span class="kw">mean_sd</span>(.data<span class="op">$</span>wt)),</a>
-<a class="sourceLine" id="cb12-15" data-line-number="15">       <span class="st">&quot;Forward Gears&quot;</span> =</a>
-<a class="sourceLine" id="cb12-16" data-line-number="16"><span class="st">       </span><span class="kw">list</span>(<span class="st">&quot;Three&quot;</span> =<span class="st"> </span><span class="er">~</span><span class="st"> </span>qwraps2<span class="op">::</span><span class="kw">n_perc0</span>(.data<span class="op">$</span>gear <span class="op">==</span><span class="st"> </span><span class="dv">3</span>),</a>
-<a class="sourceLine" id="cb12-17" data-line-number="17">            <span class="st">&quot;Four&quot;</span>  =<span class="st"> </span><span class="er">~</span><span class="st"> </span>qwraps2<span class="op">::</span><span class="kw">n_perc0</span>(.data<span class="op">$</span>gear <span class="op">==</span><span class="st"> </span><span class="dv">4</span>),</a>
-<a class="sourceLine" id="cb12-18" data-line-number="18">            <span class="st">&quot;Five&quot;</span>  =<span class="st"> </span><span class="er">~</span><span class="st"> </span>qwraps2<span class="op">::</span><span class="kw">n_perc0</span>(.data<span class="op">$</span>gear <span class="op">==</span><span class="st"> </span><span class="dv">5</span>))</a>
-<a class="sourceLine" id="cb12-19" data-line-number="19">       )</a></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">our_summary1 &lt;-
+<span class="st">  </span><span class="kw">list</span>(<span class="st">&quot;Miles Per Gallon&quot;</span> =
+<span class="st">       </span><span class="kw">list</span>(<span class="st">&quot;min&quot;</span> =<span class="st"> </span><span class="er">~</span><span class="st"> </span><span class="kw">min</span>(.data<span class="op">$</span>mpg),
+            <span class="st">&quot;max&quot;</span> =<span class="st"> </span><span class="er">~</span><span class="st"> </span><span class="kw">max</span>(.data<span class="op">$</span>mpg),
+            <span class="st">&quot;mean (sd)&quot;</span> =<span class="st"> </span><span class="er">~</span><span class="st"> </span>qwraps2<span class="op">::</span><span class="kw">mean_sd</span>(.data<span class="op">$</span>mpg)),
+       <span class="st">&quot;Displacement&quot;</span> =
+<span class="st">       </span><span class="kw">list</span>(<span class="st">&quot;min&quot;</span> =<span class="st"> </span><span class="er">~</span><span class="st"> </span><span class="kw">min</span>(.data<span class="op">$</span>disp),
+            <span class="st">&quot;median&quot;</span> =<span class="st"> </span><span class="er">~</span><span class="st"> </span><span class="kw">median</span>(.data<span class="op">$</span>disp),
+            <span class="st">&quot;max&quot;</span> =<span class="st"> </span><span class="er">~</span><span class="st"> </span><span class="kw">max</span>(.data<span class="op">$</span>disp),
+            <span class="st">&quot;mean (sd)&quot;</span> =<span class="st"> </span><span class="er">~</span><span class="st"> </span>qwraps2<span class="op">::</span><span class="kw">mean_sd</span>(.data<span class="op">$</span>disp)),
+       <span class="st">&quot;Weight (1000 lbs)&quot;</span> =
+<span class="st">       </span><span class="kw">list</span>(<span class="st">&quot;min&quot;</span> =<span class="st"> </span><span class="er">~</span><span class="st"> </span><span class="kw">min</span>(.data<span class="op">$</span>wt),
+            <span class="st">&quot;max&quot;</span> =<span class="st"> </span><span class="er">~</span><span class="st"> </span><span class="kw">max</span>(.data<span class="op">$</span>wt),
+            <span class="st">&quot;mean (sd)&quot;</span> =<span class="st"> </span><span class="er">~</span><span class="st"> </span>qwraps2<span class="op">::</span><span class="kw">mean_sd</span>(.data<span class="op">$</span>wt)),
+       <span class="st">&quot;Forward Gears&quot;</span> =
+<span class="st">       </span><span class="kw">list</span>(<span class="st">&quot;Three&quot;</span> =<span class="st"> </span><span class="er">~</span><span class="st"> </span>qwraps2<span class="op">::</span><span class="kw">n_perc0</span>(.data<span class="op">$</span>gear <span class="op">==</span><span class="st"> </span><span class="dv">3</span>),
+            <span class="st">&quot;Four&quot;</span>  =<span class="st"> </span><span class="er">~</span><span class="st"> </span>qwraps2<span class="op">::</span><span class="kw">n_perc0</span>(.data<span class="op">$</span>gear <span class="op">==</span><span class="st"> </span><span class="dv">4</span>),
+            <span class="st">&quot;Five&quot;</span>  =<span class="st"> </span><span class="er">~</span><span class="st"> </span>qwraps2<span class="op">::</span><span class="kw">n_perc0</span>(.data<span class="op">$</span>gear <span class="op">==</span><span class="st"> </span><span class="dv">5</span>))
+       )</code></pre></div>
 <p>Building the table is done with a call to <code>summary_table</code>:</p>
-<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb13-1" data-line-number="1"><span class="co">### Overall</span></a>
-<a class="sourceLine" id="cb13-2" data-line-number="2">whole &lt;-<span class="st"> </span><span class="kw">summary_table</span>(mtcars2, our_summary1)</a>
-<a class="sourceLine" id="cb13-3" data-line-number="3">whole</a></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">### Overall
+whole &lt;-<span class="st"> </span><span class="kw">summary_table</span>(mtcars2, our_summary1)
+whole</code></pre></div>
 <table>
 <thead>
 <tr class="header">
@@ -613,9 +406,9 @@ economy of 20.09 &amp;plusmn; 6.03 miles per gallon.</code></pre>
 </tbody>
 </table>
 <p>The <code>summary_table</code> will work with grouped data frames too.</p>
-<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb14-1" data-line-number="1"><span class="co">### By number of Cylinders</span></a>
-<a class="sourceLine" id="cb14-2" data-line-number="2">by_cyl &lt;-<span class="st"> </span><span class="kw">summary_table</span>(dplyr<span class="op">::</span><span class="kw">group_by</span>(mtcars2, cyl_factor), our_summary1)</a>
-<a class="sourceLine" id="cb14-3" data-line-number="3">by_cyl</a></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">### By number of Cylinders
+by_cyl &lt;-<span class="st"> </span><span class="kw">summary_table</span>(dplyr<span class="op">::</span><span class="kw">group_by</span>(mtcars2, cyl_factor), our_summary1)
+by_cyl</code></pre></div>
 <table>
 <colgroup>
 <col width="19%"></col>
@@ -737,12 +530,12 @@ economy of 20.09 &amp;plusmn; 6.03 miles per gallon.</code></pre>
 </tbody>
 </table>
 <p>To report a table with both the whole sample summary and conditional columns together:</p>
-<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb15-1" data-line-number="1">both &lt;-<span class="st"> </span><span class="kw">cbind</span>(whole, by_cyl)</a>
-<a class="sourceLine" id="cb15-2" data-line-number="2">both</a></code></pre></div>
-<table style="width:100%;">
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">both &lt;-<span class="st"> </span><span class="kw">cbind</span>(whole, by_cyl)
+both</code></pre></div>
+<table>
 <colgroup>
-<col width="15%"></col>
-<col width="15%"></col>
+<col width="16%"></col>
+<col width="16%"></col>
 <col width="22%"></col>
 <col width="22%"></col>
 <col width="22%"></col>
@@ -879,9 +672,9 @@ economy of 20.09 &amp;plusmn; 6.03 miles per gallon.</code></pre>
 </tbody>
 </table>
 <p>If you want to change the column names, do so via the <code>cnames</code> argument to <code>qable</code> via the print method for <code>qwraps2_summary_table</code> objects. Any argument that you want to send to <code>qable</code> can be sent there when explicitly using the <code>print</code> method for <code>qwraps2_summary_table</code> objects.</p>
-<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb16-1" data-line-number="1"><span class="kw">print</span>(both,</a>
-<a class="sourceLine" id="cb16-2" data-line-number="2">      <span class="dt">rtitle =</span> <span class="st">&quot;Summary Statistics&quot;</span>,</a>
-<a class="sourceLine" id="cb16-3" data-line-number="3">      <span class="dt">cnames =</span> <span class="kw">c</span>(<span class="st">&quot;Col 0&quot;</span>, <span class="st">&quot;Col 1&quot;</span>, <span class="st">&quot;Col 2&quot;</span>, <span class="st">&quot;Col 3&quot;</span>))</a></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">print</span>(both,
+      <span class="dt">rtitle =</span> <span class="st">&quot;Summary Statistics&quot;</span>,
+      <span class="dt">cnames =</span> <span class="kw">c</span>(<span class="st">&quot;Col 0&quot;</span>, <span class="st">&quot;Col 1&quot;</span>, <span class="st">&quot;Col 2&quot;</span>, <span class="st">&quot;Col 3&quot;</span>))</code></pre></div>
 <table>
 <thead>
 <tr class="header">
@@ -1018,64 +811,64 @@ economy of 20.09 &amp;plusmn; 6.03 miles per gallon.</code></pre>
 <h2><span class="header-section-number">3.1</span> Easy building of the summaries</h2>
 <p>The task of building the <code>summaries</code> list-of-lists can be tedious. <code>qsummary</code> is designed to make it easier. <code>qsummary</code> will use a set of predefined functions to summarize numeric columns of a <code>data.frame</code>, a set of arguments to pass to <code>qwraps2::n_perc</code> for categorical (<code>character</code> and <code>factors</code>) variables.</p>
 <p>By default, calling <code>summary_table</code> will use the default summary metrics defined by <code>qsummary</code>. The purpose of <code>qsummary</code> is to provide the same summary for all numeric variables within a data.frame and a single style of summary for categorical variables within the data.frame. For example, the default summary for a set of variables from the the <code>mtcars2</code> data set is</p>
-<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb17-1" data-line-number="1">mtcars2 <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb17-2" data-line-number="2"><span class="st">  </span>dplyr<span class="op">::</span><span class="kw">select</span>(.data<span class="op">$</span>mpg, .data<span class="op">$</span>cyl_factor, .data<span class="op">$</span>wt) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb17-3" data-line-number="3"><span class="st">  </span><span class="kw">qsummary</span>(.)</a>
-<a class="sourceLine" id="cb17-4" data-line-number="4"><span class="co">## $mpg</span></a>
-<a class="sourceLine" id="cb17-5" data-line-number="5"><span class="co">## $mpg$minimum</span></a>
-<a class="sourceLine" id="cb17-6" data-line-number="6"><span class="co">## ~qwraps2::frmt(min(.data[[&quot;mpg&quot;]]))</span></a>
-<a class="sourceLine" id="cb17-7" data-line-number="7"><span class="co">## &lt;environment: 0x55f7be267288&gt;</span></a>
-<a class="sourceLine" id="cb17-8" data-line-number="8"><span class="co">## </span></a>
-<a class="sourceLine" id="cb17-9" data-line-number="9"><span class="co">## $mpg$`median (IQR)`</span></a>
-<a class="sourceLine" id="cb17-10" data-line-number="10"><span class="co">## ~qwraps2::median_iqr(.data[[&quot;mpg&quot;]])</span></a>
-<a class="sourceLine" id="cb17-11" data-line-number="11"><span class="co">## &lt;environment: 0x55f7be267288&gt;</span></a>
-<a class="sourceLine" id="cb17-12" data-line-number="12"><span class="co">## </span></a>
-<a class="sourceLine" id="cb17-13" data-line-number="13"><span class="co">## $mpg$`mean (sd)`</span></a>
-<a class="sourceLine" id="cb17-14" data-line-number="14"><span class="co">## ~qwraps2::mean_sd(.data[[&quot;mpg&quot;]])</span></a>
-<a class="sourceLine" id="cb17-15" data-line-number="15"><span class="co">## &lt;environment: 0x55f7be267288&gt;</span></a>
-<a class="sourceLine" id="cb17-16" data-line-number="16"><span class="co">## </span></a>
-<a class="sourceLine" id="cb17-17" data-line-number="17"><span class="co">## $mpg$maximum</span></a>
-<a class="sourceLine" id="cb17-18" data-line-number="18"><span class="co">## ~qwraps2::frmt(max(.data[[&quot;mpg&quot;]]))</span></a>
-<a class="sourceLine" id="cb17-19" data-line-number="19"><span class="co">## &lt;environment: 0x55f7be267288&gt;</span></a>
-<a class="sourceLine" id="cb17-20" data-line-number="20"><span class="co">## </span></a>
-<a class="sourceLine" id="cb17-21" data-line-number="21"><span class="co">## </span></a>
-<a class="sourceLine" id="cb17-22" data-line-number="22"><span class="co">## $cyl_factor</span></a>
-<a class="sourceLine" id="cb17-23" data-line-number="23"><span class="co">## $cyl_factor$`6 cylinders`</span></a>
-<a class="sourceLine" id="cb17-24" data-line-number="24"><span class="co">## ~qwraps2::n_perc(.data[[&quot;cyl_factor&quot;]] == &quot;6 cylinders&quot;, digits = 0, </span></a>
-<a class="sourceLine" id="cb17-25" data-line-number="25"><span class="co">##     show_symbol = FALSE)</span></a>
-<a class="sourceLine" id="cb17-26" data-line-number="26"><span class="co">## &lt;environment: 0x55f7be267288&gt;</span></a>
-<a class="sourceLine" id="cb17-27" data-line-number="27"><span class="co">## </span></a>
-<a class="sourceLine" id="cb17-28" data-line-number="28"><span class="co">## $cyl_factor$`4 cylinders`</span></a>
-<a class="sourceLine" id="cb17-29" data-line-number="29"><span class="co">## ~qwraps2::n_perc(.data[[&quot;cyl_factor&quot;]] == &quot;4 cylinders&quot;, digits = 0, </span></a>
-<a class="sourceLine" id="cb17-30" data-line-number="30"><span class="co">##     show_symbol = FALSE)</span></a>
-<a class="sourceLine" id="cb17-31" data-line-number="31"><span class="co">## &lt;environment: 0x55f7be267288&gt;</span></a>
-<a class="sourceLine" id="cb17-32" data-line-number="32"><span class="co">## </span></a>
-<a class="sourceLine" id="cb17-33" data-line-number="33"><span class="co">## $cyl_factor$`8 cylinders`</span></a>
-<a class="sourceLine" id="cb17-34" data-line-number="34"><span class="co">## ~qwraps2::n_perc(.data[[&quot;cyl_factor&quot;]] == &quot;8 cylinders&quot;, digits = 0, </span></a>
-<a class="sourceLine" id="cb17-35" data-line-number="35"><span class="co">##     show_symbol = FALSE)</span></a>
-<a class="sourceLine" id="cb17-36" data-line-number="36"><span class="co">## &lt;environment: 0x55f7be267288&gt;</span></a>
-<a class="sourceLine" id="cb17-37" data-line-number="37"><span class="co">## </span></a>
-<a class="sourceLine" id="cb17-38" data-line-number="38"><span class="co">## </span></a>
-<a class="sourceLine" id="cb17-39" data-line-number="39"><span class="co">## $wt</span></a>
-<a class="sourceLine" id="cb17-40" data-line-number="40"><span class="co">## $wt$minimum</span></a>
-<a class="sourceLine" id="cb17-41" data-line-number="41"><span class="co">## ~qwraps2::frmt(min(.data[[&quot;wt&quot;]]))</span></a>
-<a class="sourceLine" id="cb17-42" data-line-number="42"><span class="co">## &lt;environment: 0x55f7be267288&gt;</span></a>
-<a class="sourceLine" id="cb17-43" data-line-number="43"><span class="co">## </span></a>
-<a class="sourceLine" id="cb17-44" data-line-number="44"><span class="co">## $wt$`median (IQR)`</span></a>
-<a class="sourceLine" id="cb17-45" data-line-number="45"><span class="co">## ~qwraps2::median_iqr(.data[[&quot;wt&quot;]])</span></a>
-<a class="sourceLine" id="cb17-46" data-line-number="46"><span class="co">## &lt;environment: 0x55f7be267288&gt;</span></a>
-<a class="sourceLine" id="cb17-47" data-line-number="47"><span class="co">## </span></a>
-<a class="sourceLine" id="cb17-48" data-line-number="48"><span class="co">## $wt$`mean (sd)`</span></a>
-<a class="sourceLine" id="cb17-49" data-line-number="49"><span class="co">## ~qwraps2::mean_sd(.data[[&quot;wt&quot;]])</span></a>
-<a class="sourceLine" id="cb17-50" data-line-number="50"><span class="co">## &lt;environment: 0x55f7be267288&gt;</span></a>
-<a class="sourceLine" id="cb17-51" data-line-number="51"><span class="co">## </span></a>
-<a class="sourceLine" id="cb17-52" data-line-number="52"><span class="co">## $wt$maximum</span></a>
-<a class="sourceLine" id="cb17-53" data-line-number="53"><span class="co">## ~qwraps2::frmt(max(.data[[&quot;wt&quot;]]))</span></a>
-<a class="sourceLine" id="cb17-54" data-line-number="54"><span class="co">## &lt;environment: 0x55f7be267288&gt;</span></a></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">mtcars2 <span class="op">%&gt;%</span>
+<span class="st">  </span>dplyr<span class="op">::</span><span class="kw">select</span>(.data<span class="op">$</span>mpg, .data<span class="op">$</span>cyl_factor, .data<span class="op">$</span>wt) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">qsummary</span>(.)
+## $mpg
+## $mpg$minimum
+## ~qwraps2::frmt(min(.data[[&quot;mpg&quot;]]))
+## &lt;environment: 0x555ad3e3a688&gt;
+## 
+## $mpg$`median (IQR)`
+## ~qwraps2::median_iqr(.data[[&quot;mpg&quot;]])
+## &lt;environment: 0x555ad3e3a688&gt;
+## 
+## $mpg$`mean (sd)`
+## ~qwraps2::mean_sd(.data[[&quot;mpg&quot;]])
+## &lt;environment: 0x555ad3e3a688&gt;
+## 
+## $mpg$maximum
+## ~qwraps2::frmt(max(.data[[&quot;mpg&quot;]]))
+## &lt;environment: 0x555ad3e3a688&gt;
+## 
+## 
+## $cyl_factor
+## $cyl_factor$`6 cylinders`
+## ~qwraps2::n_perc(.data[[&quot;cyl_factor&quot;]] == &quot;6 cylinders&quot;, digits = 0, 
+##     show_symbol = FALSE)
+## &lt;environment: 0x555ad3e3a688&gt;
+## 
+## $cyl_factor$`4 cylinders`
+## ~qwraps2::n_perc(.data[[&quot;cyl_factor&quot;]] == &quot;4 cylinders&quot;, digits = 0, 
+##     show_symbol = FALSE)
+## &lt;environment: 0x555ad3e3a688&gt;
+## 
+## $cyl_factor$`8 cylinders`
+## ~qwraps2::n_perc(.data[[&quot;cyl_factor&quot;]] == &quot;8 cylinders&quot;, digits = 0, 
+##     show_symbol = FALSE)
+## &lt;environment: 0x555ad3e3a688&gt;
+## 
+## 
+## $wt
+## $wt$minimum
+## ~qwraps2::frmt(min(.data[[&quot;wt&quot;]]))
+## &lt;environment: 0x555ad3e3a688&gt;
+## 
+## $wt$`median (IQR)`
+## ~qwraps2::median_iqr(.data[[&quot;wt&quot;]])
+## &lt;environment: 0x555ad3e3a688&gt;
+## 
+## $wt$`mean (sd)`
+## ~qwraps2::mean_sd(.data[[&quot;wt&quot;]])
+## &lt;environment: 0x555ad3e3a688&gt;
+## 
+## $wt$maximum
+## ~qwraps2::frmt(max(.data[[&quot;wt&quot;]]))
+## &lt;environment: 0x555ad3e3a688&gt;</code></pre></div>
 <p>That default summary is used for a table as follows:</p>
-<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb18-1" data-line-number="1">mtcars2 <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb18-2" data-line-number="2"><span class="st">  </span>dplyr<span class="op">::</span><span class="kw">select</span>(.data<span class="op">$</span>mpg, .data<span class="op">$</span>cyl_factor, .data<span class="op">$</span>wt) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb18-3" data-line-number="3"><span class="st">  </span><span class="kw">summary_table</span>(.)</a></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">mtcars2 <span class="op">%&gt;%</span>
+<span class="st">  </span>dplyr<span class="op">::</span><span class="kw">select</span>(.data<span class="op">$</span>mpg, .data<span class="op">$</span>cyl_factor, .data<span class="op">$</span>wt) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">summary_table</span>(.)</code></pre></div>
 <table>
 <thead>
 <tr class="header">
@@ -1143,15 +936,15 @@ economy of 20.09 &amp;plusmn; 6.03 miles per gallon.</code></pre>
 </tbody>
 </table>
 <p>Now, say we want to only report the minimum and maximum for each of the numeric variables and for the categorical variables we want two show the denominator for each category and for the percentage, to one digit with the percent symbol in the table. Note that when defining the list of numeric_summaries that the argument place holder is the <code>%s</code> character.</p>
-<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb19-1" data-line-number="1">new_summary &lt;-</a>
-<a class="sourceLine" id="cb19-2" data-line-number="2"><span class="st">  </span>mtcars2 <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb19-3" data-line-number="3"><span class="st">  </span>dplyr<span class="op">::</span><span class="kw">select</span>(.data<span class="op">$</span>mpg, .data<span class="op">$</span>cyl_factor, .data<span class="op">$</span>wt) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb19-4" data-line-number="4"><span class="st">  </span><span class="kw">qsummary</span>(.,</a>
-<a class="sourceLine" id="cb19-5" data-line-number="5">           <span class="dt">numeric_summaries =</span> <span class="kw">list</span>(<span class="st">&quot;Minimum&quot;</span> =<span class="st"> &quot;~ min(%s)&quot;</span>,</a>
-<a class="sourceLine" id="cb19-6" data-line-number="6">                                    <span class="st">&quot;Maximum&quot;</span> =<span class="st"> &quot;~ max(%s)&quot;</span>),</a>
-<a class="sourceLine" id="cb19-7" data-line-number="7">           <span class="dt">n_perc_args =</span> <span class="kw">list</span>(<span class="dt">digits =</span> <span class="dv">1</span>, <span class="dt">show_symbol =</span> <span class="ot">TRUE</span>, <span class="dt">show_denom =</span> <span class="st">&quot;always&quot;</span>))</a></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">new_summary &lt;-
+<span class="st">  </span>mtcars2 <span class="op">%&gt;%</span>
+<span class="st">  </span>dplyr<span class="op">::</span><span class="kw">select</span>(.data<span class="op">$</span>mpg, .data<span class="op">$</span>cyl_factor, .data<span class="op">$</span>wt) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">qsummary</span>(.,
+           <span class="dt">numeric_summaries =</span> <span class="kw">list</span>(<span class="st">&quot;Minimum&quot;</span> =<span class="st"> &quot;~ min(%s)&quot;</span>,
+                                    <span class="st">&quot;Maximum&quot;</span> =<span class="st"> &quot;~ max(%s)&quot;</span>),
+           <span class="dt">n_perc_args =</span> <span class="kw">list</span>(<span class="dt">digits =</span> <span class="dv">1</span>, <span class="dt">show_symbol =</span> <span class="ot">TRUE</span>, <span class="dt">show_denom =</span> <span class="st">&quot;always&quot;</span>))</code></pre></div>
 <p>The resulting table is:</p>
-<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb20-1" data-line-number="1"><span class="kw">summary_table</span>(mtcars2, new_summary)</a></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">summary_table</span>(mtcars2, new_summary)</code></pre></div>
 <table>
 <thead>
 <tr class="header">
@@ -1203,9 +996,9 @@ economy of 20.09 &amp;plusmn; 6.03 miles per gallon.</code></pre>
 </tbody>
 </table>
 <p>The summary can easily be used on a grouped <code>data.frame</code>.</p>
-<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb21-1" data-line-number="1">mtcars2 <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb21-2" data-line-number="2"><span class="st">  </span>dplyr<span class="op">::</span><span class="kw">group_by</span>(.data<span class="op">$</span>am) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb21-3" data-line-number="3"><span class="st">  </span><span class="kw">summary_table</span>(., new_summary)</a></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">mtcars2 <span class="op">%&gt;%</span>
+<span class="st">  </span>dplyr<span class="op">::</span><span class="kw">group_by</span>(.data<span class="op">$</span>am) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">summary_table</span>(., new_summary)</code></pre></div>
 <table>
 <thead>
 <tr class="header">
@@ -1273,41 +1066,41 @@ economy of 20.09 &amp;plusmn; 6.03 miles per gallon.</code></pre>
 <p>There are many, many different ways to format data summary tables. Adding p-values to a table is just one thing that can be done in more than one way. For example, if a row group reports the counts and percentages for each level of a categorical variable across multiple (column) groups, then I would argue that the p-value resulting from a chi square test or a Fisher exact test would be best placed on the line of the table labeling the row group. However, say we reported the minimum, median, mean, and maximum with in a row group for one variable. The p-value from a t-test, or other meaningful test, for the difference in mean I would suggest should be reported on the line of the summary table for the mean, not the row group itself.</p>
 <p>With so many possibilities I have reserved construction of a p-value column to be ad hoc. Perhaps an additional column wouldn’t be used and the p-values are edited into row group labels, for example.</p>
 <p>If you want to add a p-value column to a <code>qwraps2_summary_table</code> object you can with some degree of ease. Note that <code>qwraps2_summary_table</code> objects are just character matrices.</p>
-<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb22-1" data-line-number="1">both <span class="op">%&gt;%</span><span class="st"> </span>str</a>
-<a class="sourceLine" id="cb22-2" data-line-number="2"><span class="co">##  'qwraps2_summary_table' chr [1:13, 1:4] &quot;10.4&quot; &quot;33.9&quot; ...</span></a>
-<a class="sourceLine" id="cb22-3" data-line-number="3"><span class="co">##  - attr(*, &quot;dimnames&quot;)=List of 2</span></a>
-<a class="sourceLine" id="cb22-4" data-line-number="4"><span class="co">##   ..$ : chr [1:13] &quot;min&quot; &quot;max&quot; &quot;mean (sd)&quot; &quot;min&quot; ...</span></a>
-<a class="sourceLine" id="cb22-5" data-line-number="5"><span class="co">##   ..$ : chr [1:4] &quot;mtcars2 (N = 32)&quot; &quot;cyl_factor: 6 cylinders (N = 7)&quot; &quot;cyl_factor: 4 cylinders (N = 11)&quot; &quot;cyl_factor: 8 cylinders (N = 14)&quot;</span></a>
-<a class="sourceLine" id="cb22-6" data-line-number="6"><span class="co">##  - attr(*, &quot;rgroups&quot;)= Named int [1:4] 3 4 3 3</span></a>
-<a class="sourceLine" id="cb22-7" data-line-number="7"><span class="co">##   ..- attr(*, &quot;names&quot;)= chr [1:4] &quot;Miles Per Gallon&quot; &quot;Displacement&quot; &quot;Weight (1000 lbs)&quot; &quot;Forward Gears&quot;</span></a></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">both <span class="op">%&gt;%</span><span class="st"> </span>str
+##  'qwraps2_summary_table' chr [1:13, 1:4] &quot;10.4&quot; &quot;33.9&quot; ...
+##  - attr(*, &quot;dimnames&quot;)=List of 2
+##   ..$ : chr [1:13] &quot;min&quot; &quot;max&quot; &quot;mean (sd)&quot; &quot;min&quot; ...
+##   ..$ : chr [1:4] &quot;mtcars2 (N = 32)&quot; &quot;cyl_factor: 6 cylinders (N = 7)&quot; &quot;cyl_factor: 4 cylinders (N = 11)&quot; &quot;cyl_factor: 8 cylinders (N = 14)&quot;
+##  - attr(*, &quot;rgroups&quot;)= Named int [1:4] 3 4 3 3
+##   ..- attr(*, &quot;names&quot;)= chr [1:4] &quot;Miles Per Gallon&quot; &quot;Displacement&quot; &quot;Weight (1000 lbs)&quot; &quot;Forward Gears&quot;</code></pre></div>
 <p>Let’s added p-values for testing the difference in the mean between the three cylinder groups.</p>
-<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb23-1" data-line-number="1"><span class="co"># difference in means</span></a>
-<a class="sourceLine" id="cb23-2" data-line-number="2">mpvals &lt;-</a>
-<a class="sourceLine" id="cb23-3" data-line-number="3"><span class="st">  </span><span class="kw">list</span>(<span class="kw">lm</span>(mpg <span class="op">~</span><span class="st"> </span>cyl_factor,  <span class="dt">data =</span> mtcars2),</a>
-<a class="sourceLine" id="cb23-4" data-line-number="4">       <span class="kw">lm</span>(disp <span class="op">~</span><span class="st"> </span>cyl_factor, <span class="dt">data =</span> mtcars2),</a>
-<a class="sourceLine" id="cb23-5" data-line-number="5">       <span class="kw">lm</span>(wt <span class="op">~</span><span class="st"> </span>cyl_factor,   <span class="dt">data =</span> mtcars2)) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb23-6" data-line-number="6"><span class="st">  </span><span class="kw">lapply</span>(aov) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb23-7" data-line-number="7"><span class="st">  </span><span class="kw">lapply</span>(summary) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb23-8" data-line-number="8"><span class="st">  </span><span class="kw">lapply</span>(<span class="cf">function</span>(x) x[[<span class="dv">1</span>]][[<span class="st">&quot;Pr(&gt;F)&quot;</span>]][<span class="dv">1</span>]) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb23-9" data-line-number="9"><span class="st">  </span><span class="kw">lapply</span>(frmtp) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb23-10" data-line-number="10"><span class="st">  </span><span class="kw">do.call</span>(c, .)</a>
-<a class="sourceLine" id="cb23-11" data-line-number="11"></a>
-<a class="sourceLine" id="cb23-12" data-line-number="12"><span class="co"># Fisher test</span></a>
-<a class="sourceLine" id="cb23-13" data-line-number="13">fpval &lt;-<span class="st"> </span><span class="kw">frmtp</span>(<span class="kw">fisher.test</span>(<span class="kw">table</span>(mtcars2<span class="op">$</span>gear, mtcars2<span class="op">$</span>cyl_factor))<span class="op">$</span>p.value)</a></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># difference in means</span>
+mpvals &lt;-
+<span class="st">  </span><span class="kw">list</span>(<span class="kw">lm</span>(mpg <span class="op">~</span><span class="st"> </span>cyl_factor,  <span class="dt">data =</span> mtcars2),
+       <span class="kw">lm</span>(disp <span class="op">~</span><span class="st"> </span>cyl_factor, <span class="dt">data =</span> mtcars2),
+       <span class="kw">lm</span>(wt <span class="op">~</span><span class="st"> </span>cyl_factor,   <span class="dt">data =</span> mtcars2)) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">lapply</span>(aov) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">lapply</span>(summary) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">lapply</span>(<span class="cf">function</span>(x) x[[<span class="dv">1</span>]][[<span class="st">&quot;Pr(&gt;F)&quot;</span>]][<span class="dv">1</span>]) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">lapply</span>(frmtp) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">do.call</span>(c, .)
+
+<span class="co"># Fisher test</span>
+fpval &lt;-<span class="st"> </span><span class="kw">frmtp</span>(<span class="kw">fisher.test</span>(<span class="kw">table</span>(mtcars2<span class="op">$</span>gear, mtcars2<span class="op">$</span>cyl_factor))<span class="op">$</span>p.value)</code></pre></div>
 <p>Adding the p-value column is done as follows:</p>
-<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb24-1" data-line-number="1">both &lt;-<span class="st"> </span><span class="kw">cbind</span>(both, <span class="st">&quot;P-value&quot;</span> =<span class="st"> &quot;&quot;</span>)</a>
-<a class="sourceLine" id="cb24-2" data-line-number="2">both[<span class="kw">grepl</span>(<span class="st">&quot;mean </span><span class="ch">\\</span><span class="st">(sd</span><span class="ch">\\</span><span class="st">)&quot;</span>, <span class="kw">rownames</span>(both)), <span class="st">&quot;P-value&quot;</span>] &lt;-<span class="st"> </span>mpvals</a>
-<a class="sourceLine" id="cb24-3" data-line-number="3">a &lt;-<span class="st"> </span><span class="kw">capture.output</span>(<span class="kw">print</span>(both))</a>
-<a class="sourceLine" id="cb24-4" data-line-number="4">a[<span class="kw">grepl</span>(<span class="st">&quot;Forward Gears&quot;</span>, a)] <span class="op">%&lt;&gt;%</span><span class="st"> </span><span class="kw">sub</span>(<span class="st">&quot;&amp;nbsp;&amp;nbsp;</span><span class="ch">\\</span><span class="st"> </span><span class="ch">\\</span><span class="st">|$&quot;</span>, <span class="kw">paste</span>(fpval, <span class="st">&quot;|&quot;</span>), .)</a></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">both &lt;-<span class="st"> </span><span class="kw">cbind</span>(both, <span class="st">&quot;P-value&quot;</span> =<span class="st"> &quot;&quot;</span>)
+both[<span class="kw">grepl</span>(<span class="st">&quot;mean </span><span class="ch">\\</span><span class="st">(sd</span><span class="ch">\\</span><span class="st">)&quot;</span>, <span class="kw">rownames</span>(both)), <span class="st">&quot;P-value&quot;</span>] &lt;-<span class="st"> </span>mpvals
+a &lt;-<span class="st"> </span><span class="kw">capture.output</span>(<span class="kw">print</span>(both))
+a[<span class="kw">grepl</span>(<span class="st">&quot;Forward Gears&quot;</span>, a)] <span class="op">%&lt;&gt;%</span><span class="st"> </span><span class="kw">sub</span>(<span class="st">&quot;&amp;nbsp;&amp;nbsp;</span><span class="ch">\\</span><span class="st"> </span><span class="ch">\\</span><span class="st">|$&quot;</span>, <span class="kw">paste</span>(fpval, <span class="st">&quot;|&quot;</span>), .)</code></pre></div>
 <p>and the resulting table is:</p>
-<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb25-1" data-line-number="1"><span class="kw">cat</span>(a, <span class="dt">sep =</span> <span class="st">&quot;</span><span class="ch">\n</span><span class="st">&quot;</span>)</a></code></pre></div>
-<table>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">cat</span>(a, <span class="dt">sep =</span> <span class="st">&quot;</span><span class="ch">\n</span><span class="st">&quot;</span>)</code></pre></div>
+<table style="width:100%;">
 <colgroup>
 <col width="14%"></col>
 <col width="14%"></col>
 <col width="20%"></col>
-<col width="21%"></col>
-<col width="21%"></col>
+<col width="20%"></col>
+<col width="20%"></col>
 <col width="8%"></col>
 </colgroup>
 <thead>
@@ -1460,22 +1253,22 @@ economy of 20.09 &amp;plusmn; 6.03 miles per gallon.</code></pre>
 </tbody>
 </table>
 <p>Another option you might consider is to have the p-value in the row group name. Consider the following construction. The p-values are added to the names of the row groups when building the summary table.</p>
-<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb26-1" data-line-number="1">gear_summary &lt;-</a>
-<a class="sourceLine" id="cb26-2" data-line-number="2"><span class="st">  </span><span class="kw">list</span>(<span class="st">&quot;Forward Gears&quot;</span> =</a>
-<a class="sourceLine" id="cb26-3" data-line-number="3"><span class="st">       </span><span class="kw">list</span>(<span class="st">&quot;Three&quot;</span> =<span class="st"> </span><span class="er">~</span><span class="st"> </span>qwraps2<span class="op">::</span><span class="kw">n_perc0</span>(.data<span class="op">$</span>gear <span class="op">==</span><span class="st"> </span><span class="dv">3</span>),</a>
-<a class="sourceLine" id="cb26-4" data-line-number="4">            <span class="st">&quot;Four&quot;</span>  =<span class="st"> </span><span class="er">~</span><span class="st"> </span>qwraps2<span class="op">::</span><span class="kw">n_perc0</span>(.data<span class="op">$</span>gear <span class="op">==</span><span class="st"> </span><span class="dv">4</span>),</a>
-<a class="sourceLine" id="cb26-5" data-line-number="5">            <span class="st">&quot;Five&quot;</span>  =<span class="st"> </span><span class="er">~</span><span class="st"> </span>qwraps2<span class="op">::</span><span class="kw">n_perc0</span>(.data<span class="op">$</span>gear <span class="op">==</span><span class="st"> </span><span class="dv">5</span>)),</a>
-<a class="sourceLine" id="cb26-6" data-line-number="6">       <span class="st">&quot;Transmission&quot;</span> =</a>
-<a class="sourceLine" id="cb26-7" data-line-number="7"><span class="st">       </span><span class="kw">list</span>(<span class="st">&quot;Automatic&quot;</span> =<span class="st"> </span><span class="er">~</span><span class="st"> </span>qwraps2<span class="op">::</span><span class="kw">n_perc0</span>(.data<span class="op">$</span>am <span class="op">==</span><span class="st"> </span><span class="dv">0</span>),</a>
-<a class="sourceLine" id="cb26-8" data-line-number="8">            <span class="st">&quot;Manual&quot;</span>  =<span class="st"> </span><span class="er">~</span><span class="st"> </span>qwraps2<span class="op">::</span><span class="kw">n_perc0</span>(.data<span class="op">$</span>am <span class="op">==</span><span class="st"> </span><span class="dv">1</span>))</a>
-<a class="sourceLine" id="cb26-9" data-line-number="9">       ) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb26-10" data-line-number="10"><span class="kw">setNames</span>(.,</a>
-<a class="sourceLine" id="cb26-11" data-line-number="11">         <span class="kw">c</span>(</a>
-<a class="sourceLine" id="cb26-12" data-line-number="12">         <span class="kw">paste</span>(<span class="st">&quot;Forward Gears: &quot;</span>, <span class="kw">frmtp</span>(<span class="kw">fisher.test</span>(<span class="kw">xtabs</span>( <span class="op">~</span><span class="st"> </span>gear <span class="op">+</span><span class="st"> </span>cyl_factor, <span class="dt">data =</span> mtcars2))<span class="op">$</span>p.value)),</a>
-<a class="sourceLine" id="cb26-13" data-line-number="13">         <span class="kw">paste</span>(<span class="st">&quot;Transmission: &quot;</span>,  <span class="kw">frmtp</span>(<span class="kw">fisher.test</span>(<span class="kw">xtabs</span>( <span class="op">~</span><span class="st"> </span>am <span class="op">+</span><span class="st"> </span>cyl_factor, <span class="dt">data =</span> mtcars2))<span class="op">$</span>p.value)))</a>
-<a class="sourceLine" id="cb26-14" data-line-number="14">         )</a>
-<a class="sourceLine" id="cb26-15" data-line-number="15"></a>
-<a class="sourceLine" id="cb26-16" data-line-number="16"><span class="kw">summary_table</span>(dplyr<span class="op">::</span><span class="kw">group_by</span>(mtcars2, cyl_factor), gear_summary)</a></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">gear_summary &lt;-
+<span class="st">  </span><span class="kw">list</span>(<span class="st">&quot;Forward Gears&quot;</span> =
+<span class="st">       </span><span class="kw">list</span>(<span class="st">&quot;Three&quot;</span> =<span class="st"> </span><span class="er">~</span><span class="st"> </span>qwraps2<span class="op">::</span><span class="kw">n_perc0</span>(.data<span class="op">$</span>gear <span class="op">==</span><span class="st"> </span><span class="dv">3</span>),
+            <span class="st">&quot;Four&quot;</span>  =<span class="st"> </span><span class="er">~</span><span class="st"> </span>qwraps2<span class="op">::</span><span class="kw">n_perc0</span>(.data<span class="op">$</span>gear <span class="op">==</span><span class="st"> </span><span class="dv">4</span>),
+            <span class="st">&quot;Five&quot;</span>  =<span class="st"> </span><span class="er">~</span><span class="st"> </span>qwraps2<span class="op">::</span><span class="kw">n_perc0</span>(.data<span class="op">$</span>gear <span class="op">==</span><span class="st"> </span><span class="dv">5</span>)),
+       <span class="st">&quot;Transmission&quot;</span> =
+<span class="st">       </span><span class="kw">list</span>(<span class="st">&quot;Automatic&quot;</span> =<span class="st"> </span><span class="er">~</span><span class="st"> </span>qwraps2<span class="op">::</span><span class="kw">n_perc0</span>(.data<span class="op">$</span>am <span class="op">==</span><span class="st"> </span><span class="dv">0</span>),
+            <span class="st">&quot;Manual&quot;</span>  =<span class="st"> </span><span class="er">~</span><span class="st"> </span>qwraps2<span class="op">::</span><span class="kw">n_perc0</span>(.data<span class="op">$</span>am <span class="op">==</span><span class="st"> </span><span class="dv">1</span>))
+       ) <span class="op">%&gt;%</span>
+<span class="kw">setNames</span>(.,
+         <span class="kw">c</span>(
+         <span class="kw">paste</span>(<span class="st">&quot;Forward Gears: &quot;</span>, <span class="kw">frmtp</span>(<span class="kw">fisher.test</span>(<span class="kw">xtabs</span>( <span class="op">~</span><span class="st"> </span>gear <span class="op">+</span><span class="st"> </span>cyl_factor, <span class="dt">data =</span> mtcars2))<span class="op">$</span>p.value)),
+         <span class="kw">paste</span>(<span class="st">&quot;Transmission: &quot;</span>,  <span class="kw">frmtp</span>(<span class="kw">fisher.test</span>(<span class="kw">xtabs</span>( <span class="op">~</span><span class="st"> </span>am <span class="op">+</span><span class="st"> </span>cyl_factor, <span class="dt">data =</span> mtcars2))<span class="op">$</span>p.value)))
+         )
+
+<span class="kw">summary_table</span>(dplyr<span class="op">::</span><span class="kw">group_by</span>(mtcars2, cyl_factor), gear_summary)</code></pre></div>
 <table style="width:100%;">
 <colgroup>
 <col width="25%"></col>
@@ -1537,32 +1330,165 @@ economy of 20.09 &amp;plusmn; 6.03 miles per gallon.</code></pre>
 </tbody>
 </table>
 </div>
+<div id="using-variable-labels" class="section level2">
+<h2><span class="header-section-number">3.3</span> Using Variable Labels</h2>
+<p>Some data management paradigms will use attributes to keep a label associated with a variable in a data.frame. Notable examples are the <a href="https://cran.r-project.org/package=Hmisc">Hmisc</a> and <a href="https://cran.r-project.org/package=sjPlot">sjPlot</a>. If you associate a label with a variable in the data frame the that label will be used when building a summary table. This feature was suggested <a href="https://github.com/dewittpe/qwraps2/issues/74" class="uri">https://github.com/dewittpe/qwraps2/issues/74</a> and implemented thusly:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">new_data_frame &lt;-
+<span class="st">  </span><span class="kw">data.frame</span>(<span class="dt">age =</span> <span class="kw">c</span>(<span class="dv">18</span>, <span class="dv">20</span>, <span class="dv">24</span>, <span class="dv">17</span>, <span class="dv">43</span>),
+             <span class="dt">edu =</span> <span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">3</span>, <span class="dv">1</span>, <span class="dv">5</span>, <span class="dv">2</span>),
+             <span class="dt">rt  =</span> <span class="kw">c</span>(<span class="fl">0.01</span>, <span class="fl">0.04</span>, <span class="fl">0.02</span>, <span class="fl">0.10</span>, <span class="fl">0.06</span>))
+
+<span class="co"># Set a label for the variables</span>
+<span class="kw">attr</span>(new_data_frame<span class="op">$</span>age, <span class="st">&quot;label&quot;</span>) &lt;-<span class="st"> &quot;Age in years&quot;</span>
+<span class="kw">attr</span>(new_data_frame<span class="op">$</span>rt,  <span class="st">&quot;label&quot;</span>) &lt;-<span class="st"> &quot;Reaction time&quot;</span>
+
+<span class="co"># mistakenly set the attribute to name instead of label</span>
+<span class="kw">attr</span>(new_data_frame<span class="op">$</span>edu, <span class="st">&quot;name&quot;</span>) &lt;-<span class="st"> &quot;Education&quot;</span></code></pre></div>
+<p>When calling <code>qsummary</code> the provide labels for the age and rt variables will be used. Since the attribute “label” does not exist for the edu variable, edu will be used in the output.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">qsummary</span>(new_data_frame)
+## $`Age in years`
+## $`Age in years`$minimum
+## ~qwraps2::frmt(min(.data[[&quot;age&quot;]]))
+## 
+## $`Age in years`$`median (IQR)`
+## ~qwraps2::median_iqr(.data[[&quot;age&quot;]])
+## 
+## $`Age in years`$`mean (sd)`
+## ~qwraps2::mean_sd(.data[[&quot;age&quot;]])
+## 
+## $`Age in years`$maximum
+## ~qwraps2::frmt(max(.data[[&quot;age&quot;]]))
+## 
+## 
+## $edu
+## $edu$minimum
+## ~qwraps2::frmt(min(.data[[&quot;edu&quot;]]))
+## 
+## $edu$`median (IQR)`
+## ~qwraps2::median_iqr(.data[[&quot;edu&quot;]])
+## 
+## $edu$`mean (sd)`
+## ~qwraps2::mean_sd(.data[[&quot;edu&quot;]])
+## 
+## $edu$maximum
+## ~qwraps2::frmt(max(.data[[&quot;edu&quot;]]))
+## 
+## 
+## $`Reaction time`
+## $`Reaction time`$minimum
+## ~qwraps2::frmt(min(.data[[&quot;rt&quot;]]))
+## 
+## $`Reaction time`$`median (IQR)`
+## ~qwraps2::median_iqr(.data[[&quot;rt&quot;]])
+## 
+## $`Reaction time`$`mean (sd)`
+## ~qwraps2::mean_sd(.data[[&quot;rt&quot;]])
+## 
+## $`Reaction time`$maximum
+## ~qwraps2::frmt(max(.data[[&quot;rt&quot;]]))</code></pre></div>
+<p>This behavior is also seen with the <code>summary_table</code> call</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">summary_table</span>(new_data_frame)</code></pre></div>
+<table>
+<thead>
+<tr class="header">
+<th align="left"></th>
+<th align="left">new_data_frame (N = 5)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left"><strong>Age in years</strong></td>
+<td align="left">  </td>
+</tr>
+<tr class="even">
+<td align="left">   minimum</td>
+<td align="left">17.00</td>
+</tr>
+<tr class="odd">
+<td align="left">   median (IQR)</td>
+<td align="left">20.00 (18.00, 24.00)</td>
+</tr>
+<tr class="even">
+<td align="left">   mean (sd)</td>
+<td align="left">24.40 ± 10.74</td>
+</tr>
+<tr class="odd">
+<td align="left">   maximum</td>
+<td align="left">43.00</td>
+</tr>
+<tr class="even">
+<td align="left"><strong>edu</strong></td>
+<td align="left">  </td>
+</tr>
+<tr class="odd">
+<td align="left">   minimum</td>
+<td align="left">1.00</td>
+</tr>
+<tr class="even">
+<td align="left">   median (IQR)</td>
+<td align="left">2.00 (1.00, 3.00)</td>
+</tr>
+<tr class="odd">
+<td align="left">   mean (sd)</td>
+<td align="left">2.40 ± 1.67</td>
+</tr>
+<tr class="even">
+<td align="left">   maximum</td>
+<td align="left">5.00</td>
+</tr>
+<tr class="odd">
+<td align="left"><strong>Reaction time</strong></td>
+<td align="left">  </td>
+</tr>
+<tr class="even">
+<td align="left">   minimum</td>
+<td align="left">0.01</td>
+</tr>
+<tr class="odd">
+<td align="left">   median (IQR)</td>
+<td align="left">0.04 (0.02, 0.06)</td>
+</tr>
+<tr class="even">
+<td align="left">   mean (sd)</td>
+<td align="left">0.05 ± 0.04</td>
+</tr>
+<tr class="odd">
+<td align="left">   maximum</td>
+<td align="left">0.10</td>
+</tr>
+</tbody>
+</table>
+</div>
 </div>
 <div id="session-info" class="section level1">
 <h1><span class="header-section-number">4</span> Session Info</h1>
-<div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb27-1" data-line-number="1"><span class="kw">print</span>(<span class="kw">sessionInfo</span>(), <span class="dt">local =</span> <span class="ot">FALSE</span>)</a>
-<a class="sourceLine" id="cb27-2" data-line-number="2"><span class="co">## R Under development (unstable) (2019-03-11 r76221)</span></a>
-<a class="sourceLine" id="cb27-3" data-line-number="3"><span class="co">## Platform: x86_64-pc-linux-gnu (64-bit)</span></a>
-<a class="sourceLine" id="cb27-4" data-line-number="4"><span class="co">## Running under: Debian GNU/Linux 9 (stretch)</span></a>
-<a class="sourceLine" id="cb27-5" data-line-number="5"><span class="co">## </span></a>
-<a class="sourceLine" id="cb27-6" data-line-number="6"><span class="co">## Matrix products: default</span></a>
-<a class="sourceLine" id="cb27-7" data-line-number="7"><span class="co">## BLAS/LAPACK: /usr/lib/libopenblasp-r0.2.19.so</span></a>
-<a class="sourceLine" id="cb27-8" data-line-number="8"><span class="co">## </span></a>
-<a class="sourceLine" id="cb27-9" data-line-number="9"><span class="co">## attached base packages:</span></a>
-<a class="sourceLine" id="cb27-10" data-line-number="10"><span class="co">## [1] stats     graphics  grDevices utils     datasets  methods   base     </span></a>
-<a class="sourceLine" id="cb27-11" data-line-number="11"><span class="co">## </span></a>
-<a class="sourceLine" id="cb27-12" data-line-number="12"><span class="co">## other attached packages:</span></a>
-<a class="sourceLine" id="cb27-13" data-line-number="13"><span class="co">## [1] qwraps2_0.4.1 magrittr_1.5 </span></a>
-<a class="sourceLine" id="cb27-14" data-line-number="14"><span class="co">## </span></a>
-<a class="sourceLine" id="cb27-15" data-line-number="15"><span class="co">## loaded via a namespace (and not attached):</span></a>
-<a class="sourceLine" id="cb27-16" data-line-number="16"><span class="co">##  [1] Rcpp_1.0.0       crayon_1.3.4     digest_0.6.18    dplyr_0.8.0.1   </span></a>
-<a class="sourceLine" id="cb27-17" data-line-number="17"><span class="co">##  [5] assertthat_0.2.0 R6_2.4.0         evaluate_0.13    highr_0.7       </span></a>
-<a class="sourceLine" id="cb27-18" data-line-number="18"><span class="co">##  [9] pillar_1.3.1     rlang_0.3.1      stringi_1.4.3    rmarkdown_1.12  </span></a>
-<a class="sourceLine" id="cb27-19" data-line-number="19"><span class="co">## [13] tools_3.6.0      stringr_1.4.0    glue_1.3.1       purrr_0.3.1     </span></a>
-<a class="sourceLine" id="cb27-20" data-line-number="20"><span class="co">## [17] xfun_0.5         yaml_2.2.0       compiler_3.6.0   pkgconfig_2.0.2 </span></a>
-<a class="sourceLine" id="cb27-21" data-line-number="21"><span class="co">## [21] htmltools_0.3.6  tidyselect_0.2.5 knitr_1.22       tibble_2.0.1</span></a></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">print</span>(<span class="kw">sessionInfo</span>(), <span class="dt">local =</span> <span class="ot">FALSE</span>)
+## R version 3.6.1 (2019-07-05)
+## Platform: x86_64-pc-linux-gnu (64-bit)
+## Running under: Ubuntu 18.04.3 LTS
+## 
+## Matrix products: default
+## BLAS:   /usr/lib/x86_64-linux-gnu/openblas/libblas.so.3
+## LAPACK: /usr/lib/x86_64-linux-gnu/libopenblasp-r0.2.20.so
+## 
+## attached base packages:
+## [1] stats     graphics  grDevices utils     datasets  methods   base     
+## 
+## other attached packages:
+## [1] qwraps2_0.4.2 magrittr_1.5 
+## 
+## loaded via a namespace (and not attached):
+##  [1] Rcpp_1.0.3       crayon_1.3.4     digest_0.6.23    dplyr_0.8.3     
+##  [5] assertthat_0.2.1 R6_2.4.1         evaluate_0.14    highr_0.8       
+##  [9] pillar_1.4.2     rlang_0.4.2      stringi_1.4.3    rmarkdown_1.18  
+## [13] tools_3.6.1      stringr_1.4.0    glue_1.3.1       purrr_0.3.3     
+## [17] xfun_0.11        yaml_2.2.0       compiler_3.6.1   pkgconfig_2.0.3 
+## [21] htmltools_0.4.0  tidyselect_0.2.5 knitr_1.26       tibble_2.1.3</code></pre></div>
 </div>
 
+
+
+<!-- code folding -->
 
 
 <!-- dynamically load mathjax for compatibility with self-contained -->
