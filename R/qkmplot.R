@@ -10,73 +10,69 @@
 #' @param conf_int logical if TRUE show the CI
 #' @param ... Other arguments passed to survival::plot.survfit
 #'
-#' @return a ggplot.  
-#' 
+#' @seealso \code{vignette("qwraps2-graphics", package = "qwraps2")} for
+#' additional examples.
+#'
+#' @return a ggplot.
+#'
 #' @examples
+#' # create a survfit object
 #' require(survival)
-#' leukemia.surv <- survival::survfit(survival::Surv(time, status) ~ x, data = survival::aml) 
-#' survival:::plot.survfit(leukemia.surv, conf.int = TRUE, lty = 2:3, col = 1:2)
-#' 
-#' qkmplot_bulid_data_frame(leukemia.surv) 
-#' qkmplot(leukemia.surv, conf_int = TRUE) 
-#' 
-#' intonly_fit <- survival::survfit(survival::Surv(time, status) ~ 1, data = survival::aml) 
-#' survival:::plot.survfit(intonly_fit, conf.int = TRUE)
-#' 
-#' qkmplot_bulid_data_frame(intonly_fit) 
-#' qkmplot(intonly_fit, conf_int = TRUE) 
-#' @export   
+#' leukemia.surv <- survival::survfit(survival::Surv(time, status) ~ x, data = survival::aml)
+#'
+#' qkmplot(leukemia.surv, conf_int = TRUE)
+#'
+#' @export
 #' @rdname qkmplot
-qkmplot <- function(x, conf_int = FALSE, ...) { 
-  UseMethod("qkmplot") 
+qkmplot <- function(x, conf_int = FALSE, ...) {
+  UseMethod("qkmplot")
 }
 
 #' @export
-qkmplot.default <- function(x, conf_int = FALSE, ...) { 
+qkmplot.default <- function(x, conf_int = FALSE, ...) {
   qkmplot_ggplot(x, conf_int = conf_int, ...)
 }
 
 #' @export
-qkmplot.survfit <- function(x, conf_int = FALSE, ...) { 
+qkmplot.survfit <- function(x, conf_int = FALSE, ...) {
   qkmplot_ggplot(qkmplot_bulid_data_frame(x), conf_int = conf_int, ...)
 }
 
 #' @export
-qkmplot.qwraps2_generated <- function(x, conf_int = FALSE, ...) { 
+qkmplot.qwraps2_generated <- function(x, conf_int = FALSE, ...) {
   qkmplot_ggplot(x, conf_int = conf_int, ...)
 }
 
-qkmplot_ggplot <- function(dat, conf_int = FALSE, ...) { 
+qkmplot_ggplot <- function(dat, conf_int = FALSE, ...) {
   layers <- list(ggplot2::aes_string(x = "time", y = "surv"),
                  if (!is.null(dat$strata)) {ggplot2::aes_string(colour = "strata", fill = "strata") } else {NULL},
                  ggplot2::geom_step(),
                  ggplot2::ylim(c(0, 1)),
                  ggplot2::ylab("Survivial"),
-                 ggplot2::geom_point(data = dplyr::filter(dat, .data$n.censor > 0), shape = 3, alpha = 0.9)
-                 )
+                 ggplot2::geom_point(data = dat[dat$n.censor > 0, ], shape = 3, alpha = 0.9))
 
   if (conf_int) {
     layers <- append(layers,
                      ggplot2::geom_ribbon(ggplot2::aes_string(ymin = "lower", ymax = "upper"), alpha = 0.2,
-                                          stat = "stepribbon") 
+                                          stat = "stepribbon")
       )
   }
 
   ggplot2::ggplot(dat) + layers
 }
 
-#' @export   
+#' @export
 #' @rdname qkmplot
-qkmplot_bulid_data_frame <- function(x) { 
-  plot_data <- data.frame(time = x[['time']], 
+qkmplot_bulid_data_frame <- function(x) {
+  plot_data <- data.frame(time = x[['time']],
                           n.risk = x[['n.risk']],
                           n.event = x[['n.event']],
                           n.censor = x[['n.censor']],
                           surv = x[['surv']],
-                          # strata = rep(attr(x[['strata']], "names"), times = x[['strata']]), 
+                          # strata = rep(attr(x[['strata']], "names"), times = x[['strata']]),
                           upper = x[['upper']],
-                          lower = x[['lower']], 
-                          stringsAsFactors = FALSE) 
+                          lower = x[['lower']],
+                          stringsAsFactors = FALSE)
   if (!is.null(x$strata)) {
     plot_data$strata <- rep(attr(x[['strata']], "names"), times = x[['strata']])
     first_data <- plot_data[!duplicated(plot_data$strata), ]
@@ -93,6 +89,6 @@ qkmplot_bulid_data_frame <- function(x) {
 
   dat <- rbind(plot_data, first_data)
   class(dat) <- c("qwraps2_generated", class(dat))
-  dplyr::tbl_df(dat)
-} 
+  dat
+}
 

@@ -2,18 +2,18 @@
 % Please edit documentation in R/summary_table.R
 \name{summary_table}
 \alias{summary_table}
+\alias{qsummary}
 \alias{cbind.qwraps2_summary_table}
 \alias{rbind.qwraps2_summary_table}
-\alias{qsummary}
 \title{Data Summary Tables}
 \usage{
-summary_table(x, summaries = qsummary(x))
+summary_table(x, summaries = qsummary(x), by = NULL)
+
+qsummary(x, numeric_summaries, n_perc_args, env = parent.frame())
 
 \method{cbind}{qwraps2_summary_table}(..., deparse.level = 1)
 
 \method{rbind}{qwraps2_summary_table}(..., deparse.level = 1)
-
-qsummary(.data, numeric_summaries, n_perc_args, env)
 }
 \arguments{
 \item{x}{a \code{data.frame} or \code{grouped_df}.}
@@ -21,14 +21,8 @@ qsummary(.data, numeric_summaries, n_perc_args, env)
 \item{summaries}{a list of lists of formulea for summarizing the data set.
 See Details and examples.}
 
-\item{...}{\code{qwraps2_summary_table} objects to bind together}
-
-\item{deparse.level}{integer controlling the construction of labels in the
-case of non-matrix-like arguments (for the default method): \code{deparse.level =
-0} constructs no labels; the default, \code{deparse.level = 1} or
-\code{deparse.level = 2} constructs labels from the argument names.}
-
-\item{.data}{a \code{data.frame}}
+\item{by}{a character vector of variable names to generate the summary by,
+that is one column for each unique values of the variables specified.}
 
 \item{numeric_summaries}{a list of functions to use for summarizing numeric
 variables.  The functions need to be provided as character strings with the
@@ -39,20 +33,24 @@ single argument defined by the \code{\%s} symbol.}
 \code{factor} variables in \code{.data}.}
 
 \item{env}{environment to assign to the resulting formulae}
+
+\item{...}{\code{qwraps2_summary_table} objects to bind together}
+
+\item{deparse.level}{integer controlling the construction of labels in the
+case of non-matrix-like arguments (for the default method): \code{deparse.level =
+0} constructs no labels; the default, \code{deparse.level = 1} or
+\code{deparse.level = 2} constructs labels from the argument names.}
 }
 \value{
 a \code{qwraps2_summary_table} object.
 }
 \description{
 Tools useful for building data summary tables.
-
-Tool to quickly generate the code for summarizing the variables of a
-\code{data.frame}.
 }
 \details{
-\code{summary_table} can be used to generate good looking, simple tabels in
+\code{summary_table} can be used to generate good looking, simple tables in
 LaTeX or markdown.  Functions like xtables::print.xtable and Hmisc::latex
-provide many more tools for formating tables.  The purpose of
+provide many more tools for formatting tables.  The purpose of
 \code{summary_table} is to generate good looking tables quickly within
 workflow for summarizing a data set.
 
@@ -60,9 +58,8 @@ Creating a list-of-lists of summary functions to apply to a data set will
 allow the exploration of the whole data set and grouped data sets.  In the
 example provided on this page we see a set of summary measures for the
 \code{\link[datasets]{mtcars}} data set and the construction of a table for
-the whole data set and for a grouped data set.  When working through the
-example pay attention to the use of \code{\link[dplyr]{group_by}} and
-\code{\link[dplyr]{ungroup}} from \code{dplyr}.
+the whole data set and for a grouped data set.
+
 
 The list-of-lists should be thought of as follows:  the outer list defines
 row groups, the inner lists define the rows within each row group.
@@ -86,17 +83,17 @@ a simple wrapper for \code{\link{qable}}.
 #           "row 3B" = ~ <summary function>))
 
 our_summaries <-
-  list("Miles Per Gallon" = 
-         list("min"  = ~ min(.data$mpg),
-              "mean" = ~ mean(.data$mpg),
-              "mean &plusmn; sd" = ~ qwraps2::mean_sd(.data$mpg),
-              "max"  = ~ max(.data$mpg)),
-       "Weight" = 
-         list("median" = ~ median(.data$wt)),
-       "Cylinders" = 
-         list("4 cyl: n (\%)" = ~ qwraps2::n_perc0(.data$cyl == 4),
-              "6 cyl: n (\%)" = ~ qwraps2::n_perc0(.data$cyl == 6),
-              "8 cyl: n (\%)" = ~ qwraps2::n_perc0(.data$cyl == 8)))
+  list("Miles Per Gallon" =
+         list("min"  = ~ min(mpg),
+              "mean" = ~ mean(mpg),
+              "mean &plusmn; sd" = ~ qwraps2::mean_sd(mpg),
+              "max"  = ~ max(mpg)),
+       "Weight" =
+         list("median" = ~ median(wt)),
+       "Cylinders" =
+         list("4 cyl: n (\%)" = ~ qwraps2::n_perc0(cyl == 4),
+              "6 cyl: n (\%)" = ~ qwraps2::n_perc0(cyl == 6),
+              "8 cyl: n (\%)" = ~ qwraps2::n_perc0(cyl == 8)))
 
 # Going to use markdown for the markup language in this example,  the original
 # option will be reset at the end of the example.
@@ -104,14 +101,18 @@ orig_opt <- options()$qwraps2_markup
 options(qwraps2_markup = "markdown")
 
 # The summary table for the whole mtcars data set
+# whole_table <- summary_table_042(mtcars, our_summaries)
 whole_table <- summary_table(mtcars, our_summaries)
 whole_table
 
 # The summary table for mtcars grouped by am (automatic or manual transmission)
 # This will generate one column for each level of mtcars$am
 grouped_by_table <-
-  summary_table(dplyr::group_by(mtcars, .data$am), our_summaries)
+  summary_table(mtcars, our_summaries, by = "am")
 grouped_by_table
+
+# an equivalent call if you are using the tidyverse:
+summary_table(dplyr::group_by(mtcars, am), our_summaries)
 
 # To build a table with a column for the whole data set and each of the am
 # levels
@@ -129,64 +130,57 @@ print(whole_table, caption = "Hello world", markup = "latex")
 # by finding the max ISS score for each subject and then reporting summary
 # statistics there of.
 set.seed(42)
-library(magrittr)
-dat <- dplyr::data_frame(id = letters[1:20],
-                         head_iss = sample(1:6, 20, replace = TRUE, prob = 10 * (6:1)),
-                         face_iss = sample(1:6, 20, replace = TRUE, prob = 10 * (6:1)))
+dat <- data.frame(id = letters[1:20],
+                  head_iss = sample(1:6, 20, replace = TRUE, prob = 10 * (6:1)),
+                  face_iss = sample(1:6, 20, replace = TRUE, prob = 10 * (6:1)))
+dat <- dplyr::group_by(dat, id)
+dat <- dplyr::mutate(dat, iss = max(head_iss, face_iss))
 
 iss_summary <-
-  list("Head ISS" = 
-       list("min"    = ~ min(.data$head_iss),
-            "median" = ~ median(.data$head_iss),
-            "max"    = ~ max(.data$head_iss)),
-       "Face ISS" = 
-       list("min"    = ~ min(.data$face_iss),
-            "median" = ~ median(.data$face_iss),
-            "max"    = ~ max(.data$face_iss)),
-       "Max ISS" = 
-       list("min"    = ~ min(.data$iss),
-            "median" = ~ median(.data$iss),
-            "max"    = ~ max(.data$iss)))
-
-
-subject_level_dat <-
-  dat \%>\%
-    dplyr::group_by(.data$id) \%>\%
-    dplyr::mutate(iss = max(head_iss, face_iss))
+  list("Head ISS" =
+       list("min"    = ~ min(head_iss),
+            "median" = ~ median(head_iss),
+            "max"    = ~ max(head_iss)),
+       "Face ISS" =
+       list("min"    = ~ min(face_iss),
+            "median" = ~ median(face_iss),
+            "max"    = ~ max(face_iss)),
+       "Max ISS" =
+       list("min"    = ~ min(iss),
+            "median" = ~ median(iss),
+            "max"    = ~ max(iss)))
 
 # Want: a table with one column for all subjects with nine rows divided up into
-# three row groups.  However, this will create a table with 20 columns, one for
-# each subject
-summary_table(subject_level_dat, iss_summary)
+# three row groups.  However, the following call will create a table with 20
+# columns, one for each subject because dat is a grouped_df
+summary_table(dat, iss_summary)
 
 # Ungroup the data.frame to get the correct output
-subject_level_dat \%>\%
-  dplyr::ungroup() \%>\%
-  summary_table(iss_summary)
+summary_table(dplyr::ungroup(dat), iss_summary)
 
 
 ################################################################################
 # The Default call will work with non-syntactically valid names and will
 # generate a table with statistics defined by the qsummary call.
-mtcars \%>\%
-  dplyr::group_by(.data$cyl) \%>\%
-  summary_table(.)
+summary_table(mtcars, by = "cyl")
 
 # Another example from the diamonds data
 data("diamonds", package = "ggplot2")
 diamonds["The Price"] <- diamonds$price
 diamonds["A Logical"] <- sample(c(TRUE, FALSE), size = nrow(diamonds), replace = TRUE)
-diamonds[["badcol"]] <- replicate(expr = list(c(1:34)), n = nrow(diamonds))
 
+# the next two lines are equivalent.
 summary_table(diamonds)
 summary_table(diamonds, qsummary(diamonds))
 
-summary_table(dplyr::group_by(diamonds, .data$cut))
+summary_table(diamonds, by = "cut")
 
-summary_table(dplyr::group_by(diamonds, .data$cut),
+summary_table(diamonds,
+              summaries =
               list("My Summary of Price" =
-                   list("min price" = ~ min(.data$price),
-                        "IQR"       = ~ stats::IQR(.data$price))))
+                   list("min price" = ~ min(price),
+                        "IQR"       = ~ stats::IQR(price))),
+              by = "cut")
 
 ################################################################################
 # Data sets with missing values
@@ -196,8 +190,8 @@ temp$am[c(1, 5, 10)] <- NA
 temp$am <- factor(temp$am, levels = 0:1, labels = c("Automatic", "Manual"))
 temp$vs <- as.logical(temp$vs)
 temp$vs[c(2, 6)] <- NA
-qsummary(dplyr::select(temp, .data$cyl, .data$am, .data$vs))
-summary_table(dplyr::select(temp, .data$cyl, .data$am, .data$vs))
+qsummary(dplyr::select(temp, cyl, am, vs))
+summary_table(dplyr::select(temp, cyl, am, vs))
 
 ################################################################################
 # binding tables together.  The original design and expected use of
@@ -206,40 +200,40 @@ summary_table(dplyr::select(temp, .data$cyl, .data$am, .data$vs))
 # build several different tables.
 our_summary1 <-
   list("Miles Per Gallon" =
-       list("min" = ~ min(.data$mpg),
-            "max" = ~ max(.data$mpg),
-            "mean (sd)" = ~ qwraps2::mean_sd(.data$mpg)),
+       list("min" = ~ min(mpg),
+            "max" = ~ max(mpg),
+            "mean (sd)" = ~ qwraps2::mean_sd(mpg)),
        "Displacement" =
-       list("min" = ~ min(.data$disp),
-            "max" = ~ max(.data$disp),
-            "mean (sd)" = ~ qwraps2::mean_sd(.data$disp)))
+       list("min" = ~ min(disp),
+            "max" = ~ max(disp),
+            "mean (sd)" = ~ qwraps2::mean_sd(disp)))
 
 our_summary2 <-
   list(
        "Weight (1000 lbs)" =
-       list("min" = ~ min(.data$wt),
-            "max" = ~ max(.data$wt),
-            "mean (sd)" = ~ qwraps2::mean_sd(.data$wt)),
+       list("min" = ~ min(wt),
+            "max" = ~ max(wt),
+            "mean (sd)" = ~ qwraps2::mean_sd(wt)),
        "Forward Gears" =
-       list("Three" = ~ qwraps2::n_perc0(.data$gear == 3),
-            "Four"  = ~ qwraps2::n_perc0(.data$gear == 4),
-            "Five"  = ~ qwraps2::n_perc0(.data$gear == 5))
+       list("Three" = ~ qwraps2::n_perc0(gear == 3),
+            "Four"  = ~ qwraps2::n_perc0(gear == 4),
+            "Five"  = ~ qwraps2::n_perc0(gear == 5))
        )
 
 tab1 <- summary_table(mtcars, our_summary1)
 tab2 <- summary_table(dplyr::group_by(mtcars, am), our_summary1)
-tab3 <- summary_table(dplyr::group_by(mtcars, vs), our_summary1) 
+tab3 <- summary_table(dplyr::group_by(mtcars, vs), our_summary1)
 
 tab4 <- summary_table(mtcars, our_summary2)
 tab5 <- summary_table(dplyr::group_by(mtcars, am), our_summary2)
 tab6 <- summary_table(dplyr::group_by(mtcars, vs), our_summary2)
 
-
 cbind(tab1, tab2, tab3)
 cbind(tab4, tab5, tab6)
 
+# row bind is possible, but it is recommended to extend the summary instead.
 rbind(tab1, tab4)
-all.equal(rbind(tab1, tab4), summary_table(mtcars, c(our_summary1, our_summary2)))
+summary_table(mtcars, summaries = c(our_summary1, our_summary2))
 
 \dontrun{
   cbind(tab1, tab4) # error because rows are not the same
@@ -253,12 +247,14 @@ options(qwraps2_markup = orig_opt)
 
 # Detailed examples in the vignette
 # vignette("summary-statistics", package = "qwraps2")
+
+
 }
 \seealso{
-\code{\link{qable}} for marking up \code{qwraps2_data_summary}
-objects.  \code{\link[dplyr]{group_by}} for \code{\link[dplyr]{grouped_df}}
-objects.  The \code{vignette("summary-statistics", package = "qwraps2")} for
-detailed use of these functions and cavets.
+\code{\link{qsummary}} for generating the summaries,
+\code{\link{qable}} for marking up \code{qwraps2_data_summary} objects.
+The \code{vignette("summary-statistics", package = "qwraps2")} for detailed
+use of these functions and caveats.
 
 \code{cbind}
 

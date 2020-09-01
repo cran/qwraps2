@@ -1,18 +1,17 @@
 #' @title Autocorrelation plot
 #'
-#' @description TO BE CONSTRUCTED
-#'
-#' @details
-#' TO DO
+#' @description ggplot2 style autocorrelation plot
 #'
 #' @param x object
-#' @param conf_level confidence level for determining \sQuote{sigificant}
+#' @param conf_level confidence level for determining \sQuote{significant}
 #' correlations.
 #' @param show_sig logical, highlight significant correlations.
 #' @param ... Other arguments passed to stats::acf
 #'
-#' @return a ggplot.  
-#' 
+#' @return a ggplot.
+#'
+#' @seealso \code{vignette("qwraps2-graphics", pacakge = "qwraps2")}
+#'
 #' @examples
 #' # Generate a random data set
 #' set.seed(42)
@@ -22,34 +21,30 @@
 #' x2[1] <- runif(1)
 #' x3[1] <- runif(1)
 #' x4[1] <- runif(1)
-#' 
+#'
 #' # white noise
 #' Z.1 <- rnorm(n, 0, 1)
 #' Z.2 <- rnorm(n, 0, 2)
 #' Z.3 <- rnorm(n, 0, 5)
-#' 
+#'
 #' for(i in 2:n)
 #' {
-#' 	x1[i] <- x1[i-1] + Z.1[i] - Z.1[i-1] + x4[i-1] - x2[i-1]
-#' 	x2[i] <- x2[i-1] - 2 * Z.2[i] + Z.2[i-1] - x4[i-1]
-#' 	x3[i] <- x3[i-1] + x2[i-1] + 0.2 * Z.3[i] + Z.3[i-1]
-#' 	x4[i] <- x4[i-1] + runif(1, 0.5, 1.5) * x4[i-1]
+#'   x1[i] <- x1[i-1] + Z.1[i] - Z.1[i-1] + x4[i-1] - x2[i-1]
+#'   x2[i] <- x2[i-1] - 2 * Z.2[i] + Z.2[i-1] - x4[i-1]
+#'   x3[i] <- x3[i-1] + x2[i-1] + 0.2 * Z.3[i] + Z.3[i-1]
+#'   x4[i] <- x4[i-1] + runif(1, 0.5, 1.5) * x4[i-1]
 #' }
 #' testdf <- data.frame(x1, x2, x3, x4)
-#' 
-#' # Base acf plot for one variable
-#' acf(testdf$x1)
-#' 
+#'
 #' # qacf plot for one variable
 #' qacf(testdf$x1)
 #' qacf(testdf$x1, show_sig = TRUE)
-#' 
+#'
 #' # more than one variable
-#' acf(testdf)
 #' qacf(testdf)
 #' qacf(testdf, show_sig = TRUE)
-#' 
-#' @export   
+#'
+#' @export
 #' @rdname qacf
 qacf <- function(x, conf_level = 0.95, show_sig = FALSE, ...) {
   UseMethod("qacf")
@@ -62,18 +57,19 @@ qacf.default <- function(x, conf_level = 0.95, show_sig = FALSE, ...) {
 
 #' @export
 #' @method qacf data.frame
-qacf.data.frame <- function(x, conf_level = 0.95, show_sig = FALSE, ...) { 
+qacf.data.frame <- function(x, conf_level = 0.95, show_sig = FALSE, ...) {
   acf_data <- stats::acf(x, plot = FALSE, ...)
   ciline <- stats::qnorm((1 - conf_level) / 2) / sqrt(acf_data$n.used)
 
-  lags <- dplyr::as_data_frame(acf_data$lag)
-  acfs <- dplyr::as_data_frame(acf_data$acf)
+  lags <- as.data.frame(acf_data$lag)
+  acfs <- as.data.frame(acf_data$acf)
+  lags <- utils::stack(lags)
+  acfs <- utils::stack(acfs)
+  names(lags) <- c("lag", "variable")
+  names(acfs) <- c("value", "variable")
+  acf_df <- cbind(lags, value = acfs[["value"]])
 
-  acf_df <- 
-    dplyr::bind_cols(tidyr::gather(lags, key = 'key', value = 'lag'),
-                     tidyr::gather(acfs, key = 'key', value = 'value')["value"])
-  acf_df <-
-    dplyr::mutate(acf_df, significant =  factor(abs(.data$value) > abs(ciline)))
+  acf_df$significant <- factor(abs(acf_df$value) > abs(ciline))
 
   g <-
     ggplot2::ggplot() +
@@ -89,26 +85,25 @@ qacf.data.frame <- function(x, conf_level = 0.95, show_sig = FALSE, ...) {
       apply(expand.grid(acf_data$snames, acf_data$snames)[, 2:1],
             1, function(x) {if(x[1] == x[2]) x[1] else paste(x, collapse = " & ")})
 
-    acf_df <-
-      dplyr::mutate(acf_df, facets = factor(facets, levels = facets_levels))
+    acf_df$facets <- factor(facets, levels = facets_levels)
 
     g <- g + ggplot2::facet_wrap( ~ facets, scales = "free_x")
   }
 
-  if(show_sig) { 
+  if(show_sig) {
     if (ncol(x) > 1) {
       g <- g +
-        ggplot2::geom_hline(yintercept = ciline) + 
-        ggplot2::geom_hline(yintercept = -ciline) + 
+        ggplot2::geom_hline(yintercept = ciline) +
+        ggplot2::geom_hline(yintercept = -ciline) +
         ggplot2::aes_string(fill = "significant")
     } else {
       g <- g +
-        ggplot2::geom_hline(yintercept = -ciline) + 
+        ggplot2::geom_hline(yintercept = -ciline) +
         ggplot2::aes_string(fill = "significant")
     }
 
-  } 
+  }
 
   g <- ggplot2::`%+%`(g, acf_df)
   g
-} 
+}

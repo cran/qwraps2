@@ -2,13 +2,13 @@
 #include <math.h>
 
 //' @title logit and inverse logit functions
-//' 
+//'
 //' @description
 //' transform \code{x} either via the logit, or inverse logit.
 //'
 //' @details
-//' The loogit and inverse logit functions are part of R via the
-//' logistic distribution functions in the stats package.  
+//' The logit and inverse logit functions are part of R via the
+//' logistic distribution functions in the stats package.
 //' Quoting from the documentation for the logistic distribution
 //'
 //' "\code{qlogis(p)} is the same as the \code{logit} function, \code{logit(p) =
@@ -19,21 +19,26 @@
 //' \code{invlogit} functions are faster than the \code{qlogis} and \code{plogis}
 //' functions.
 //'
-//' @seealso \code{\link[stats]{qlogis}}
+//' @seealso \code{\link[stats:Logistic]{qlogis}}
 //'
 //' @examples
-//' library(qwraps2)
 //' library(rbenchmark)
-//' 
+//'
 //' # compare logit to qlogis
 //' p <- runif(1e5)
-//' identical(logit(p), qlogis(p)) 
-//' benchmark(logit(p), qlogis(p))
-//' 
+//' identical(logit(p), qlogis(p))
+//'
+//' \dontrun{
+//' rbenchmark::benchmark(logit(p), qlogis(p))
+//' }
+//'
 //' # compare invlogit to plogis
 //' x <- runif(1e5, -1000, 1000)
 //' identical(invlogit(x), plogis(x))
-//' benchmark(invlogit(x), plogis(x))
+//'
+//' \dontrun{
+//' rbenchmark::benchmark(invlogit(x), plogis(x))
+//' }
 //'
 //' @param x a numeric vector
 //' @export
@@ -43,20 +48,20 @@ Rcpp::NumericVector logit(Rcpp::NumericVector x) {
   int n = x.size();
   Rcpp::NumericVector result(n);
 
-  for(int i = 0; i < n; ++i) { 
+  for(int i = 0; i < n; ++i) {
     result[i] = log( x[i] / (1.0 - x[i]) );
-  } 
+  }
   return result;
 }
 
 //' @export
 //' @rdname logit
 // [[Rcpp::export]]
-Rcpp::NumericVector invlogit(Rcpp::NumericVector x) { 
+Rcpp::NumericVector invlogit(Rcpp::NumericVector x) {
   int n = x.size();
   Rcpp::NumericVector result(n);
 
-  for (int i=0; i < n; ++i) { 
+  for (int i=0; i < n; ++i) {
     result[i] = 1.0 / (1.0 + exp (-1.0 * x[i]));
   }
   return result;

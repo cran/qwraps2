@@ -36,12 +36,15 @@ ll()
 
 # View another environment
 e <- new.env()
+ll(e)
+
 e$fit <- lm(mpg ~ wt, mtcars)
 e$fit2 <- lm(mpg ~ wt + am + vs, data = mtcars)
 e$x <- rnorm(1e5)
 e$y <- runif(1e4)
 e$z <- with(e, x * y)
 e$w <- sum(e$z)
+
 ls(e)
 ll(e)
 ll(e, head = TRUE)
@@ -49,7 +52,7 @@ ll(e, head = TRUE)
 }
 \references{
 The basis for this work came from a Stack Overflow posting:
-\url{http://stackoverflow.com/questions/1358003/tricks-to-manage-the-available-memory-in-an-r-session}
+\url{https://stackoverflow.com/q/1358003/1104685}
 }
 \seealso{
 \code{\link[base]{ls}}

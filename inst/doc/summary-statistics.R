@@ -3,27 +3,17 @@ knitr::opts_chunk$set(collapse = TRUE)
 
 ## -----------------------------------------------------------------------------
 set.seed(42)
-library(magrittr)
-library(qwraps2)
-
+  library(qwraps2)
 # define the markup language we are working in.
 # options(qwraps2_markup = "latex") is also supported.
 options(qwraps2_markup = "markdown")
 
-data(mtcars)
-
-mtcars2 <-
-  dplyr::mutate(mtcars,
-                cyl_factor = factor(cyl,
-                                    levels = c(6, 4, 8),
-                                    labels = paste(c(6, 4, 8), "cylinders")),
-                cyl_character = paste(cyl, "cylinders"))
-
-str(mtcars2)
+## -----------------------------------------------------------------------------
+library(qwraps2)
 
 ## -----------------------------------------------------------------------------
-with(mtcars2, table(cyl_factor, cyl_character))
-with(mtcars2, all.equal(factor(cyl_character), cyl_factor))
+data(mtcars2)
+str(mtcars2)
 
 ## -----------------------------------------------------------------------------
 mean_sd(mtcars2$mpg)
@@ -31,6 +21,7 @@ mean_sd(mtcars2$mpg, denote_sd = "paren")
 
 ## -----------------------------------------------------------------------------
 mci <- mean_ci(mtcars2$mpg)
+str(mci)
 mci
 print(mci, show_level = TRUE)
 
@@ -81,27 +72,24 @@ all.equal(gsd(x), sigma_g)
 gmean_sd(x)
 
 ## -----------------------------------------------------------------------------
-args(summary_table)
-
-## -----------------------------------------------------------------------------
 our_summary1 <-
   list("Miles Per Gallon" =
-       list("min" = ~ min(.data$mpg),
-            "max" = ~ max(.data$mpg),
-            "mean (sd)" = ~ qwraps2::mean_sd(.data$mpg)),
+       list("min"       = ~ min(mpg),
+            "max"       = ~ max(mpg),
+            "mean (sd)" = ~ qwraps2::mean_sd(mpg)),
        "Displacement" =
-       list("min" = ~ min(.data$disp),
-            "median" = ~ median(.data$disp),
-            "max" = ~ max(.data$disp),
-            "mean (sd)" = ~ qwraps2::mean_sd(.data$disp)),
+       list("min"       = ~ min(disp),
+            "median"    = ~ median(disp),
+            "max"       = ~ max(disp),
+            "mean (sd)" = ~ qwraps2::mean_sd(disp)),
        "Weight (1000 lbs)" =
-       list("min" = ~ min(.data$wt),
-            "max" = ~ max(.data$wt),
-            "mean (sd)" = ~ qwraps2::mean_sd(.data$wt)),
+       list("min"       = ~ min(wt),
+            "max"       = ~ max(wt),
+            "mean (sd)" = ~ qwraps2::mean_sd(wt)),
        "Forward Gears" =
-       list("Three" = ~ qwraps2::n_perc0(.data$gear == 3),
-            "Four"  = ~ qwraps2::n_perc0(.data$gear == 4),
-            "Five"  = ~ qwraps2::n_perc0(.data$gear == 5))
+       list("Three" = ~ qwraps2::n_perc0(gear == 3),
+            "Four"  = ~ qwraps2::n_perc0(gear == 4),
+            "Five"  = ~ qwraps2::n_perc0(gear == 5))
        )
 
 ## ----results = "asis"---------------------------------------------------------
@@ -115,6 +103,20 @@ by_cyl <- summary_table(dplyr::group_by(mtcars2, cyl_factor), our_summary1)
 by_cyl
 
 ## ----results = "asis"---------------------------------------------------------
+summary_table(mtcars2, summaries = our_summary1, by = c("cyl_factor"))
+
+## -----------------------------------------------------------------------------
+by_cyl_am <- summary_table(mtcars2, summaries = our_summary1, by = c("cyl_factor", "am"))
+by_cyl_am
+
+## -----------------------------------------------------------------------------
+all.equal(summary_table(dplyr::group_by(mtcars2, cyl_factor, am), summaries = our_summary1),
+          by_cyl_am)
+
+## ----results = "asis"---------------------------------------------------------
+summary_table(dplyr::group_by(mtcars2, carb), summaries = our_summary1, by = c("cyl_factor", "am"))
+
+## ----results = "asis"---------------------------------------------------------
 both <- cbind(whole, by_cyl)
 both
 
@@ -124,46 +126,36 @@ print(both,
       cnames = c("Col 0", "Col 1", "Col 2", "Col 3"))
 
 ## -----------------------------------------------------------------------------
-mtcars2 %>%
-  dplyr::select(.data$mpg, .data$cyl_factor, .data$wt) %>%
-  qsummary(.)
+qsummary(mtcars2[, c("mpg", "cyl_factor", "wt")])
 
 ## ----label="summary_table_mtcars2_default", results = "asis"------------------
-mtcars2 %>%
-  dplyr::select(.data$mpg, .data$cyl_factor, .data$wt) %>%
-  summary_table(.)
+summary_table(mtcars2[, c("mpg", "cyl_factor", "wt")])
 
 ## -----------------------------------------------------------------------------
 new_summary <-
-  mtcars2 %>%
-  dplyr::select(.data$mpg, .data$cyl_factor, .data$wt) %>%
-  qsummary(.,
+  qsummary(mtcars2[, c("mpg", "cyl_factor", "wt")],
            numeric_summaries = list("Minimum" = "~ min(%s)",
                                     "Maximum" = "~ max(%s)"),
            n_perc_args = list(digits = 1, show_symbol = TRUE, show_denom = "always"))
+str(new_summary)
 
 ## ----results = "asis"---------------------------------------------------------
 summary_table(mtcars2, new_summary)
 
 ## ----results = "asis"---------------------------------------------------------
-mtcars2 %>%
-  dplyr::group_by(.data$am) %>%
-  summary_table(., new_summary)
+summary_table(mtcars2, new_summary, by = c("cyl_factor"))
 
 ## -----------------------------------------------------------------------------
-both %>% str
+str(both)
 
 ## -----------------------------------------------------------------------------
 # difference in means
 mpvals <-
-  list(lm(mpg ~ cyl_factor,  data = mtcars2),
-       lm(disp ~ cyl_factor, data = mtcars2),
-       lm(wt ~ cyl_factor,   data = mtcars2)) %>%
-  lapply(aov) %>%
-  lapply(summary) %>%
-  lapply(function(x) x[[1]][["Pr(>F)"]][1]) %>%
-  lapply(frmtp) %>%
-  do.call(c, .)
+  sapply(
+         list(lm(mpg ~ cyl_factor,  data = mtcars2),
+              lm(disp ~ cyl_factor, data = mtcars2),
+              lm(wt ~ cyl_factor,   data = mtcars2)),
+         extract_fpvalue)
 
 # Fisher test
 fpval <- frmtp(fisher.test(table(mtcars2$gear, mtcars2$cyl_factor))$p.value)
@@ -172,7 +164,8 @@ fpval <- frmtp(fisher.test(table(mtcars2$gear, mtcars2$cyl_factor))$p.value)
 both <- cbind(both, "P-value" = "")
 both[grepl("mean \\(sd\\)", rownames(both)), "P-value"] <- mpvals
 a <- capture.output(print(both))
-a[grepl("Forward Gears", a)] %<>% sub("&nbsp;&nbsp;\\ \\|$", paste(fpval, "|"), .)
+a[grepl("Forward Gears", a)] <-
+  sub("&nbsp;&nbsp;\\ \\|$", paste(fpval, "|"), a[grepl("Forward Gears", a)])
 
 ## ----results = "asis"---------------------------------------------------------
 cat(a, sep = "\n")
@@ -180,20 +173,22 @@ cat(a, sep = "\n")
 ## ----results = "asis"---------------------------------------------------------
 gear_summary <-
   list("Forward Gears" =
-       list("Three" = ~ qwraps2::n_perc0(.data$gear == 3),
-            "Four"  = ~ qwraps2::n_perc0(.data$gear == 4),
-            "Five"  = ~ qwraps2::n_perc0(.data$gear == 5)),
+       list("Three" = ~ qwraps2::n_perc0(gear == 3),
+            "Four"  = ~ qwraps2::n_perc0(gear == 4),
+            "Five"  = ~ qwraps2::n_perc0(gear == 5)),
        "Transmission" =
-       list("Automatic" = ~ qwraps2::n_perc0(.data$am == 0),
-            "Manual"  = ~ qwraps2::n_perc0(.data$am == 1))
-       ) %>%
-setNames(.,
+       list("Automatic" = ~ qwraps2::n_perc0(am == 0),
+            "Manual"    = ~ qwraps2::n_perc0(am == 1))
+       )
+
+gear_summary <-
+setNames(gear_summary,
          c(
          paste("Forward Gears: ", frmtp(fisher.test(xtabs( ~ gear + cyl_factor, data = mtcars2))$p.value)),
          paste("Transmission: ",  frmtp(fisher.test(xtabs( ~ am + cyl_factor, data = mtcars2))$p.value)))
          )
 
-summary_table(dplyr::group_by(mtcars2, cyl_factor), gear_summary)
+summary_table(mtcars2, gear_summary, by = "cyl_factor")
 
 ## -----------------------------------------------------------------------------
 new_data_frame <-
