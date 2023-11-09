@@ -2,7 +2,6 @@
 % Please edit documentation in R/mean_sd.R
 \name{mean_sd}
 \alias{mean_sd}
-\alias{gmean_sd}
 \title{Mean and Standard deviation}
 \usage{
 mean_sd(
@@ -11,16 +10,8 @@ mean_sd(
   na_rm = FALSE,
   show_n = "ifNA",
   denote_sd = "pm",
-  markup = getOption("qwraps2_markup", "latex")
-)
-
-gmean_sd(
-  x,
-  digits = getOption("qwraps2_frmt_digits", 2),
-  na_rm = FALSE,
-  show_n = "ifNA",
-  denote_sd = "pm",
-  markup = getOption("qwraps2_markup", "latex")
+  markup = getOption("qwraps2_markup", "latex"),
+  ...
 )
 }
 \arguments{
@@ -36,21 +27,21 @@ percentage estimate.}
 \item{denote_sd}{a character string set to either "pm" or "paren" for reporting 'mean
 \eqn{\pm} sd' or 'mean (sd)'}
 
-\item{markup}{latex or markdown}
+\item{markup}{character string with value "latex" or "markdown"}
+
+\item{...}{pass through}
 }
 \value{
 a character vector of the formatted values
 }
 \description{
-A function for calculating and formatting means and 
+A function for calculating and formatting means and
 standard deviations.
 }
 \details{
 Given a numeric vector, \code{mean_sd} will return a character string with
 the mean and standard deviation.  Formatting of the output will be extended in
-future versions.  
-
-\code{gmean_sd} returns the geometric mean and geometric standard deviation.
+future versions.
 }
 \examples{
 set.seed(42)
@@ -64,4 +55,8 @@ mean_sd(x, show_n = "always", denote_sd = "paren")
 x[187] <- NA
 mean_sd(x, na_rm = TRUE)
 
+}
+\seealso{
+\code{\link{gmean_sd}}, \code{\link{n_perc}},
+\code{\link{median_iqr}}
 }

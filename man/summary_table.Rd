@@ -3,20 +3,14 @@
 \name{summary_table}
 \alias{summary_table}
 \alias{qsummary}
-\alias{cbind.qwraps2_summary_table}
-\alias{rbind.qwraps2_summary_table}
 \title{Data Summary Tables}
 \usage{
-summary_table(x, summaries = qsummary(x), by = NULL)
+summary_table(x, summaries = qsummary(x), by = NULL, qable_args = list(), ...)
 
 qsummary(x, numeric_summaries, n_perc_args, env = parent.frame())
-
-\method{cbind}{qwraps2_summary_table}(..., deparse.level = 1)
-
-\method{rbind}{qwraps2_summary_table}(..., deparse.level = 1)
 }
 \arguments{
-\item{x}{a \code{data.frame} or \code{grouped_df}.}
+\item{x}{a \code{data.frame}.}
 
 \item{summaries}{a list of lists of formulea for summarizing the data set.
 See Details and examples.}
@@ -24,22 +18,19 @@ See Details and examples.}
 \item{by}{a character vector of variable names to generate the summary by,
 that is one column for each unique values of the variables specified.}
 
+\item{qable_args}{additional values passed to \code{\link{qable}}}
+
+\item{...}{pass through}
+
 \item{numeric_summaries}{a list of functions to use for summarizing numeric
 variables.  The functions need to be provided as character strings with the
 single argument defined by the \code{\%s} symbol.}
 
 \item{n_perc_args}{a list of arguments to pass to
 \code{\link[qwraps2]{n_perc}} to be used with \code{character} or
-\code{factor} variables in \code{.data}.}
+\code{factor} variables within \code{x}.}
 
 \item{env}{environment to assign to the resulting formulae}
-
-\item{...}{\code{qwraps2_summary_table} objects to bind together}
-
-\item{deparse.level}{integer controlling the construction of labels in the
-case of non-matrix-like arguments (for the default method): \code{deparse.level =
-0} constructs no labels; the default, \code{deparse.level = 1} or
-\code{deparse.level = 2} constructs labels from the argument names.}
 }
 \value{
 a \code{qwraps2_summary_table} object.
@@ -72,8 +63,7 @@ a simple wrapper for \code{\link{qable}}.
 }
 \examples{
 # A list-of-lists for the summaries arg.  This object is of the basic form:
-# It is recommended that you use the .data pronoun in the functions, see
-# help(topic = ".data", package = "rlang") for details on this pronoun.
+#
 # list("row group A" =
 #      list("row 1A" = ~ <summary function>,
 #           "row 2A" = ~ <summary function>),
@@ -101,7 +91,6 @@ orig_opt <- options()$qwraps2_markup
 options(qwraps2_markup = "markdown")
 
 # The summary table for the whole mtcars data set
-# whole_table <- summary_table_042(mtcars, our_summaries)
 whole_table <- summary_table(mtcars, our_summaries)
 whole_table
 
@@ -190,8 +179,15 @@ temp$am[c(1, 5, 10)] <- NA
 temp$am <- factor(temp$am, levels = 0:1, labels = c("Automatic", "Manual"))
 temp$vs <- as.logical(temp$vs)
 temp$vs[c(2, 6)] <- NA
-qsummary(dplyr::select(temp, cyl, am, vs))
-summary_table(dplyr::select(temp, cyl, am, vs))
+qsummary(temp[, c("cyl", "am", "vs")])
+summary_table(temp[, c("cyl", "am", "vs")])
+
+################################################################################
+# Group by Multiple Variables
+temp <- mtcars
+temp$trans <- factor(temp$am, 0:1, c("Manual", "Auto"))
+temp$engine <- factor(temp$vs, 0:1, c("V-Shaped", "Straight"))
+summary_table(temp, our_summaries, by = c("trans", "engine"))
 
 ################################################################################
 # binding tables together.  The original design and expected use of
@@ -255,8 +251,4 @@ options(qwraps2_markup = orig_opt)
 \code{\link{qable}} for marking up \code{qwraps2_data_summary} objects.
 The \code{vignette("summary-statistics", package = "qwraps2")} for detailed
 use of these functions and caveats.
-
-\code{cbind}
-
-\code{rbind}
 }

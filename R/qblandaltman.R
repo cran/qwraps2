@@ -13,6 +13,9 @@
 #' then call \code{qblandaltman}.  This might be helpful if you are putting
 #' multiple Bland Altman plots together into one ggplot object.  See Examples.
 #'
+#' More details and examples for graphics within qwraps2 are in the
+#' vignette(\dQuote{qwraps2-graphics}, package = \dQuote{qwraps2})
+#'
 #' @param x a \code{data.frame} with two columns, or an object that can be
 #' coerced to a data frame.  If a \code{data.frame} with more than two columns
 #' is used only the first two columns will be used.
@@ -33,9 +36,6 @@
 #' Bland, J. Martin, and Douglas G Altman. "Statistical methods for assessing
 #' agreement between two methods of clinical measurement." The lancet 327, no. 8476
 #' (1986): 307-310.
-#'
-#' @seealso \code{vignette("qwraps2-graphics", pacakge = "qwraps2")} for more
-#' examples and details.
 #'
 #' @examples
 #'
@@ -73,11 +73,11 @@ qblandaltman.data.frame <- function(x, alpha = getOption("qwraps2_alpha", 0.05),
   }
 
   ggplot2::ggplot(x) +
-  ggplot2::aes_string(x = 'avg', y = 'diff') +
+  eval(substitute(ggplot2::aes(x = X, y = Y), list(X = as.name('avg'), Y = as.name('diff')))) +
   ggplot2::geom_point() +
-  ggplot2::geom_hline(ggplot2::aes_string(yintercept = 'lcl'), lty = 2) +
-  ggplot2::geom_hline(ggplot2::aes_string(yintercept = 'ucl'), lty = 2) +
-  ggplot2::geom_hline(ggplot2::aes_string(yintercept = 'mean_diff'), lty = 3)
+  ggplot2::geom_hline(mapping = eval(substitute(ggplot2::aes(yintercept = Y), list(Y = as.name('lcl')))), lty = 2) +
+  ggplot2::geom_hline(mapping = eval(substitute(ggplot2::aes(yintercept = Y), list(Y = as.name('ucl')))), lty = 2) +
+  ggplot2::geom_hline(mapping = eval(substitute(ggplot2::aes(yintercept = Y), list(Y = as.name('mean_diff')))), lty = 3)
 }
 
 #' @export

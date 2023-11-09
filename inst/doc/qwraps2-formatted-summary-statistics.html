@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<meta name="author" content="Peter E. DeWitt" />
+
+
+<title>qwraps2: Formatted Summary Statistics</title>
+
+<script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
+// be compatible with the behavior of Pandoc < 2.8).
+document.addEventListener('DOMContentLoaded', function(e) {
+  var hs = document.querySelectorAll("div.section[class*='level'] > :first-child");
+  var i, h, a;
+  for (i = 0; i < hs.length; i++) {
+    h = hs[i];
+    if (!/^h[1-6]$/i.test(h.tagName)) continue;  // it should be a header h1-h6
+    a = h.attributes;
+    while (a.length > 0) h.removeAttribute(a[0].name);
+  }
+});
+</script>
+
+<style type="text/css">
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+span.underline{text-decoration: underline;}
+div.column{display: inline-block; vertical-align: top; width: 50%;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+</style>
+
+
+
+<style type="text/css">
+code {
+white-space: pre;
+}
+.sourceCode {
+overflow: visible;
+}
+</style>
+<style type="text/css" data-origin="pandoc">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+{ counter-reset: source-line 0; }
+pre.numberSource code > span
+{ position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+{ content: counter(source-line);
+position: relative; left: -1em; text-align: right; vertical-align: baseline;
+border: none; display: inline-block;
+-webkit-touch-callout: none; -webkit-user-select: none;
+-khtml-user-select: none; -moz-user-select: none;
+-ms-user-select: none; user-select: none;
+padding: 0 4px; width: 4em;
+color: #aaaaaa;
+}
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa; padding-left: 4px; }
+div.sourceCode
+{ }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } 
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.at { color: #7d9029; } 
+code span.bn { color: #40a070; } 
+code span.bu { color: #008000; } 
+code span.cf { color: #007020; font-weight: bold; } 
+code span.ch { color: #4070a0; } 
+code span.cn { color: #880000; } 
+code span.co { color: #60a0b0; font-style: italic; } 
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.do { color: #ba2121; font-style: italic; } 
+code span.dt { color: #902000; } 
+code span.dv { color: #40a070; } 
+code span.er { color: #ff0000; font-weight: bold; } 
+code span.ex { } 
+code span.fl { color: #40a070; } 
+code span.fu { color: #06287e; } 
+code span.im { color: #008000; font-weight: bold; } 
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.kw { color: #007020; font-weight: bold; } 
+code span.op { color: #666666; } 
+code span.ot { color: #007020; } 
+code span.pp { color: #bc7a00; } 
+code span.sc { color: #4070a0; } 
+code span.ss { color: #bb6688; } 
+code span.st { color: #4070a0; } 
+code span.va { color: #19177c; } 
+code span.vs { color: #4070a0; } 
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } 
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    var j = 0;
+    while (j < rules.length) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") {
+        j++;
+        continue;
+      }
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') {
+        j++;
+        continue;
+      }
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+
+
+
+
+<style type="text/css">body {
+background-color: #fff;
+margin: 1em auto;
+max-width: 700px;
+overflow: visible;
+padding-left: 2em;
+padding-right: 2em;
+font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+font-size: 14px;
+line-height: 1.35;
+}
+#TOC {
+clear: both;
+margin: 0 0 10px 10px;
+padding: 4px;
+width: 400px;
+border: 1px solid #CCCCCC;
+border-radius: 5px;
+background-color: #f6f6f6;
+font-size: 13px;
+line-height: 1.3;
+}
+#TOC .toctitle {
+font-weight: bold;
+font-size: 15px;
+margin-left: 5px;
+}
+#TOC ul {
+padding-left: 40px;
+margin-left: -1.5em;
+margin-top: 5px;
+margin-bottom: 5px;
+}
+#TOC ul ul {
+margin-left: -2em;
+}
+#TOC li {
+line-height: 16px;
+}
+table {
+margin: 1em auto;
+border-width: 1px;
+border-color: #DDDDDD;
+border-style: outset;
+border-collapse: collapse;
+}
+table th {
+border-width: 2px;
+padding: 5px;
+border-style: inset;
+}
+table td {
+border-width: 1px;
+border-style: inset;
+line-height: 18px;
+padding: 5px 5px;
+}
+table, table th, table td {
+border-left-style: none;
+border-right-style: none;
+}
+table thead, table tr.even {
+background-color: #f7f7f7;
+}
+p {
+margin: 0.5em 0;
+}
+blockquote {
+background-color: #f6f6f6;
+padding: 0.25em 0.75em;
+}
+hr {
+border-style: solid;
+border: none;
+border-top: 1px solid #777;
+margin: 28px 0;
+}
+dl {
+margin-left: 0;
+}
+dl dd {
+margin-bottom: 13px;
+margin-left: 13px;
+}
+dl dt {
+font-weight: bold;
+}
+ul {
+margin-top: 0;
+}
+ul li {
+list-style: circle outside;
+}
+ul ul {
+margin-bottom: 0;
+}
+pre, code {
+background-color: #f7f7f7;
+border-radius: 3px;
+color: #333;
+white-space: pre-wrap; 
+}
+pre {
+border-radius: 3px;
+margin: 5px 0px 10px 0px;
+padding: 10px;
+}
+pre:not([class]) {
+background-color: #f7f7f7;
+}
+code {
+font-family: Consolas, Monaco, 'Courier New', monospace;
+font-size: 85%;
+}
+p > code, li > code {
+padding: 2px 0px;
+}
+div.figure {
+text-align: center;
+}
+img {
+background-color: #FFFFFF;
+padding: 2px;
+border: 1px solid #DDDDDD;
+border-radius: 3px;
+border: 1px solid #CCCCCC;
+margin: 0 5px;
+}
+h1 {
+margin-top: 0;
+font-size: 35px;
+line-height: 40px;
+}
+h2 {
+border-bottom: 4px solid #f7f7f7;
+padding-top: 10px;
+padding-bottom: 2px;
+font-size: 145%;
+}
+h3 {
+border-bottom: 2px solid #f7f7f7;
+padding-top: 10px;
+font-size: 120%;
+}
+h4 {
+border-bottom: 1px solid #f7f7f7;
+margin-left: 8px;
+font-size: 105%;
+}
+h5, h6 {
+border-bottom: 1px solid #ccc;
+font-size: 105%;
+}
+a {
+color: #0033dd;
+text-decoration: none;
+}
+a:hover {
+color: #6666ff; }
+a:visited {
+color: #800080; }
+a:visited:hover {
+color: #BB00BB; }
+a[href^="http:"] {
+text-decoration: underline; }
+a[href^="https:"] {
+text-decoration: underline; }
+
+code > span.kw { color: #555; font-weight: bold; } 
+code > span.dt { color: #902000; } 
+code > span.dv { color: #40a070; } 
+code > span.bn { color: #d14; } 
+code > span.fl { color: #d14; } 
+code > span.ch { color: #d14; } 
+code > span.st { color: #d14; } 
+code > span.co { color: #888888; font-style: italic; } 
+code > span.ot { color: #007020; } 
+code > span.al { color: #ff0000; font-weight: bold; } 
+code > span.fu { color: #900; font-weight: bold; } 
+code > span.er { color: #a61717; background-color: #e3d2d2; } 
+</style>
+
+
+
+
+</head>
+
+<body>
+
+
+
+
+<h1 class="title toc-ignore">qwraps2: Formatted Summary Statistics</h1>
+<h4 class="author">Peter E. DeWitt</h4>
+
+
+<div id="TOC">
+<ul>
+<li><a href="#introduction" id="toc-introduction"><span class="toc-section-number">1</span> Introduction</a>
+<ul>
+<li><a href="#prerequisites-example-data-set" id="toc-prerequisites-example-data-set"><span class="toc-section-number">1.1</span> Prerequisites Example Data
+Set</a></li>
+</ul></li>
+<li><a href="#review-of-summary-statistic-functions-and-formatting" id="toc-review-of-summary-statistic-functions-and-formatting"><span class="toc-section-number">2</span> Review of Summary Statistic
+Functions and Formatting</a>
+<ul>
+<li><a href="#means-and-standard-deviations" id="toc-means-and-standard-deviations"><span class="toc-section-number">2.1</span> Means and Standard
+Deviations</a></li>
+<li><a href="#mean-and-confidence-intervals" id="toc-mean-and-confidence-intervals"><span class="toc-section-number">2.2</span> Mean and Confidence
+intervals</a></li>
+<li><a href="#median-and-inner-quartile-range" id="toc-median-and-inner-quartile-range"><span class="toc-section-number">2.3</span> Median and Inner Quartile
+Range</a></li>
+<li><a href="#count-and-percentages" id="toc-count-and-percentages"><span class="toc-section-number">2.4</span> Count and Percentages</a></li>
+<li><a href="#geometric-means-and-standard-deviations" id="toc-geometric-means-and-standard-deviations"><span class="toc-section-number">2.5</span> Geometric Means and Standard
+Deviations</a></li>
+</ul></li>
+<li><a href="#building-a-data-summary-table" id="toc-building-a-data-summary-table"><span class="toc-section-number">3</span> Building a Data Summary
+Table</a></li>
+<li><a href="#session-info" id="toc-session-info"><span class="toc-section-number">4</span> Session Info</a></li>
+</ul>
+</div>
+
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">42</span>)</span>
+<span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a><span class="fu">library</span>(qwraps2)</span>
+<span id="cb1-3"><a href="#cb1-3" tabindex="-1"></a><span class="co"># define the markup language we are working in.</span></span>
+<span id="cb1-4"><a href="#cb1-4" tabindex="-1"></a><span class="co"># options(qwraps2_markup = &quot;latex&quot;) is also supported.</span></span>
+<span id="cb1-5"><a href="#cb1-5" tabindex="-1"></a><span class="fu">options</span>(<span class="at">qwraps2_markup =</span> <span class="st">&quot;markdown&quot;</span>)</span></code></pre></div>
+<div id="introduction" class="section level1" number="1">
+<h1><span class="header-section-number">1</span> Introduction</h1>
+<p>It is common for a manuscript to require a data summary table. The
+table might include simple summary statistics for the whole sample and
+for subgroups. There are several tools available to build such tables.
+In my opinion, though, most of those tools have nuances imposed by the
+creators/authors such that other users need not only understand the
+tool, but also think like the authors. I wrote this package to be as
+flexible and general as possible. I hope you like these tools and will
+be able to use them in your work.</p>
+<p>This vignette presents the use of the <code>summary_table</code>,
+<code>qsummary</code>, and <code>qable</code> functions for quickly
+building data summary tables. We will be using summary statistic
+functions, <code>mean_sd</code>, <code>median_iqr</code>,
+<code>n_perc</code>, and others, from <em><a href="https://cran.r-project.org/package=qwraps2">qwraps2</a></em> as
+well.</p>
+<div id="prerequisites-example-data-set" class="section level2" number="1.1">
+<h2><span class="header-section-number">1.1</span> Prerequisites Example
+Data Set</h2>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a><span class="fu">library</span>(qwraps2)</span></code></pre></div>
+<p>We will use the data set <code>mtcars2</code> for the examples
+throughout this vignette data set for examples throughout this vignette.
+<code>mtcars2</code> is a modified and extended version of the base R
+data set <code>mtcars</code> . For details on the construction of the
+<code>mtcars2</code> data set please view the vignette:
+<code>vignette(&quot;mtcars&quot;, package = &quot;qwraps2&quot;)</code></p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a><span class="fu">data</span>(mtcars2)</span>
+<span id="cb3-2"><a href="#cb3-2" tabindex="-1"></a><span class="fu">str</span>(mtcars2)</span>
+<span id="cb3-3"><a href="#cb3-3" tabindex="-1"></a><span class="do">## &#39;data.frame&#39;:    32 obs. of  19 variables:</span></span>
+<span id="cb3-4"><a href="#cb3-4" tabindex="-1"></a><span class="do">##  $ make         : chr  &quot;Mazda&quot; &quot;Mazda&quot; &quot;Datsun&quot; &quot;Hornet&quot; ...</span></span>
+<span id="cb3-5"><a href="#cb3-5" tabindex="-1"></a><span class="do">##  $ model        : chr  &quot;RX4&quot; &quot;RX4 Wag&quot; &quot;710&quot; &quot;4 Drive&quot; ...</span></span>
+<span id="cb3-6"><a href="#cb3-6" tabindex="-1"></a><span class="do">##  $ mpg          : num  21 21 22.8 21.4 18.7 18.1 14.3 24.4 22.8 19.2 ...</span></span>
+<span id="cb3-7"><a href="#cb3-7" tabindex="-1"></a><span class="do">##  $ disp         : num  160 160 108 258 360 ...</span></span>
+<span id="cb3-8"><a href="#cb3-8" tabindex="-1"></a><span class="do">##  $ hp           : num  110 110 93 110 175 105 245 62 95 123 ...</span></span>
+<span id="cb3-9"><a href="#cb3-9" tabindex="-1"></a><span class="do">##  $ drat         : num  3.9 3.9 3.85 3.08 3.15 2.76 3.21 3.69 3.92 3.92 ...</span></span>
+<span id="cb3-10"><a href="#cb3-10" tabindex="-1"></a><span class="do">##  $ wt           : num  2.62 2.88 2.32 3.21 3.44 ...</span></span>
+<span id="cb3-11"><a href="#cb3-11" tabindex="-1"></a><span class="do">##  $ qsec         : num  16.5 17 18.6 19.4 17 ...</span></span>
+<span id="cb3-12"><a href="#cb3-12" tabindex="-1"></a><span class="do">##  $ cyl          : num  6 6 4 6 8 6 8 4 4 6 ...</span></span>
+<span id="cb3-13"><a href="#cb3-13" tabindex="-1"></a><span class="do">##  $ cyl_character: chr  &quot;6 cylinders&quot; &quot;6 cylinders&quot; &quot;4 cylinders&quot; &quot;6 cylinders&quot; ...</span></span>
+<span id="cb3-14"><a href="#cb3-14" tabindex="-1"></a><span class="do">##  $ cyl_factor   : Factor w/ 3 levels &quot;6 cylinders&quot;,..: 1 1 2 1 3 1 3 2 2 1 ...</span></span>
+<span id="cb3-15"><a href="#cb3-15" tabindex="-1"></a><span class="do">##  $ vs           : num  0 0 1 1 0 1 0 1 1 1 ...</span></span>
+<span id="cb3-16"><a href="#cb3-16" tabindex="-1"></a><span class="do">##  $ engine       : Factor w/ 2 levels &quot;V-shaped&quot;,&quot;straight&quot;: 1 1 2 2 1 2 1 2 2 2 ...</span></span>
+<span id="cb3-17"><a href="#cb3-17" tabindex="-1"></a><span class="do">##  $ am           : num  1 1 1 0 0 0 0 0 0 0 ...</span></span>
+<span id="cb3-18"><a href="#cb3-18" tabindex="-1"></a><span class="do">##  $ transmission : Factor w/ 2 levels &quot;Automatic&quot;,&quot;Manual&quot;: 2 2 2 1 1 1 1 1 1 1 ...</span></span>
+<span id="cb3-19"><a href="#cb3-19" tabindex="-1"></a><span class="do">##  $ gear         : num  4 4 4 3 3 3 3 4 4 4 ...</span></span>
+<span id="cb3-20"><a href="#cb3-20" tabindex="-1"></a><span class="do">##  $ gear_factor  : Factor w/ 3 levels &quot;3 forward gears&quot;,..: 2 2 2 1 1 1 1 2 2 2 ...</span></span>
+<span id="cb3-21"><a href="#cb3-21" tabindex="-1"></a><span class="do">##  $ carb         : num  4 4 1 1 2 1 4 2 2 4 ...</span></span>
+<span id="cb3-22"><a href="#cb3-22" tabindex="-1"></a><span class="do">##  $ test_date    : POSIXct, format: &quot;1974-01-05&quot; &quot;1974-01-07&quot; ...</span></span></code></pre></div>
+</div>
+</div>
+<div id="review-of-summary-statistic-functions-and-formatting" class="section level1" number="2">
+<h1><span class="header-section-number">2</span> Review of Summary
+Statistic Functions and Formatting</h1>
+<div id="means-and-standard-deviations" class="section level2" number="2.1">
+<h2><span class="header-section-number">2.1</span> Means and Standard
+Deviations</h2>
+<p><code>mean_sd</code> returns the (arithmetic) mean and standard
+deviation for numeric vector as a formatted character string. For
+example, <code>mean_sd(mtcars2$mpg)</code> returns the formatted string
+20.09 ± 6.03. There are other options for formatting character
+string:</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a><span class="fu">mean_sd</span>(mtcars2<span class="sc">$</span>mpg)</span>
+<span id="cb4-2"><a href="#cb4-2" tabindex="-1"></a><span class="do">## [1] &quot;20.09 &amp;plusmn; 6.03&quot;</span></span>
+<span id="cb4-3"><a href="#cb4-3" tabindex="-1"></a><span class="fu">mean_sd</span>(mtcars2<span class="sc">$</span>mpg, <span class="at">denote_sd =</span> <span class="st">&quot;paren&quot;</span>)</span>
+<span id="cb4-4"><a href="#cb4-4" tabindex="-1"></a><span class="do">## [1] &quot;20.09 (6.03)&quot;</span></span></code></pre></div>
+</div>
+<div id="mean-and-confidence-intervals" class="section level2" number="2.2">
+<h2><span class="header-section-number">2.2</span> Mean and Confidence
+intervals</h2>
+<p>If you need the mean and a confidence interval there is the function
+<code>mean_ci</code>. which returns a <code>qwraps2_mean_ci</code>
+object which is a named vector with the mean, lower confidence limit,
+and the upper confidence limit. The printing method for
+<code>qwraps2_mean_ci</code> objects is a call to the
+<code>frmtci</code> function. You an modify the formatting of printed
+result by adjusting the arguments pasted to <code>frmtci</code>.</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" tabindex="-1"></a>mci <span class="ot">&lt;-</span> <span class="fu">mean_ci</span>(mtcars2<span class="sc">$</span>mpg)</span>
+<span id="cb5-2"><a href="#cb5-2" tabindex="-1"></a><span class="fu">str</span>(mci)</span>
+<span id="cb5-3"><a href="#cb5-3" tabindex="-1"></a><span class="do">##  &#39;qwraps2_mean_ci&#39; Named num [1:3] 20.1 18 22.2</span></span>
+<span id="cb5-4"><a href="#cb5-4" tabindex="-1"></a><span class="do">##  - attr(*, &quot;names&quot;)= chr [1:3] &quot;mean&quot; &quot;lcl&quot; &quot;ucl&quot;</span></span>
+<span id="cb5-5"><a href="#cb5-5" tabindex="-1"></a><span class="do">##  - attr(*, &quot;alpha&quot;)= num 0.05</span></span>
+<span id="cb5-6"><a href="#cb5-6" tabindex="-1"></a>mci</span>
+<span id="cb5-7"><a href="#cb5-7" tabindex="-1"></a><span class="do">## [1] &quot;20.09 (18.00, 22.18)&quot;</span></span>
+<span id="cb5-8"><a href="#cb5-8" tabindex="-1"></a><span class="fu">print</span>(mci, <span class="at">show_level =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb5-9"><a href="#cb5-9" tabindex="-1"></a><span class="do">## [1] &quot;20.09 (95% CI: 18.00, 22.18)&quot;</span></span></code></pre></div>
+</div>
+<div id="median-and-inner-quartile-range" class="section level2" number="2.3">
+<h2><span class="header-section-number">2.3</span> Median and Inner
+Quartile Range</h2>
+<p>Similar to the <code>mean_sd</code> function, the
+<code>median_iqr</code> returns the median and the inner quartile range
+(IQR) of a data vector.</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" tabindex="-1"></a><span class="fu">median_iqr</span>(mtcars2<span class="sc">$</span>mpg)</span>
+<span id="cb6-2"><a href="#cb6-2" tabindex="-1"></a><span class="do">## [1] &quot;19.20 (15.43, 22.80)&quot;</span></span></code></pre></div>
+</div>
+<div id="count-and-percentages" class="section level2" number="2.4">
+<h2><span class="header-section-number">2.4</span> Count and
+Percentages</h2>
+<p>The <code>n_perc</code> function is the workhorse.
+<code>n_perc0</code> is also provided for ease of use in the same way
+that base R has <code>paste</code> and <code>paste0</code> .
+<code>n_perc</code> returns the n (%) with the percentage sign in the
+string, <code>n_perc0</code> omits the percentage sign from the string.
+The latter is good for tables, the former for in-line text.</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" tabindex="-1"></a><span class="fu">n_perc</span>(mtcars2<span class="sc">$</span>cyl <span class="sc">==</span> <span class="dv">4</span>)</span>
+<span id="cb7-2"><a href="#cb7-2" tabindex="-1"></a><span class="do">## [1] &quot;11 (34.38%)&quot;</span></span>
+<span id="cb7-3"><a href="#cb7-3" tabindex="-1"></a><span class="fu">n_perc0</span>(mtcars2<span class="sc">$</span>cyl <span class="sc">==</span> <span class="dv">4</span>)</span>
+<span id="cb7-4"><a href="#cb7-4" tabindex="-1"></a><span class="do">## [1] &quot;11 (34)&quot;</span></span>
+<span id="cb7-5"><a href="#cb7-5" tabindex="-1"></a></span>
+<span id="cb7-6"><a href="#cb7-6" tabindex="-1"></a><span class="fu">n_perc</span>(mtcars2<span class="sc">$</span>cyl_factor <span class="sc">==</span> <span class="dv">4</span>)  <span class="co"># this returns 0 (0.00%)</span></span>
+<span id="cb7-7"><a href="#cb7-7" tabindex="-1"></a><span class="do">## [1] &quot;0 (0.00%)&quot;</span></span>
+<span id="cb7-8"><a href="#cb7-8" tabindex="-1"></a><span class="fu">n_perc</span>(mtcars2<span class="sc">$</span>cyl_factor <span class="sc">==</span> <span class="st">&quot;4 cylinders&quot;</span>)</span>
+<span id="cb7-9"><a href="#cb7-9" tabindex="-1"></a><span class="do">## [1] &quot;11 (34.38%)&quot;</span></span>
+<span id="cb7-10"><a href="#cb7-10" tabindex="-1"></a><span class="fu">n_perc</span>(mtcars2<span class="sc">$</span>cyl_factor <span class="sc">==</span> <span class="fu">levels</span>(mtcars2<span class="sc">$</span>cyl_factor)[<span class="dv">2</span>])</span>
+<span id="cb7-11"><a href="#cb7-11" tabindex="-1"></a><span class="do">## [1] &quot;11 (34.38%)&quot;</span></span>
+<span id="cb7-12"><a href="#cb7-12" tabindex="-1"></a></span>
+<span id="cb7-13"><a href="#cb7-13" tabindex="-1"></a><span class="co"># The count and percentage of 4 or 6 cylinders vehicles in the data set is</span></span>
+<span id="cb7-14"><a href="#cb7-14" tabindex="-1"></a><span class="fu">n_perc</span>(mtcars2<span class="sc">$</span>cyl <span class="sc">%in%</span> <span class="fu">c</span>(<span class="dv">4</span>, <span class="dv">6</span>))</span>
+<span id="cb7-15"><a href="#cb7-15" tabindex="-1"></a><span class="do">## [1] &quot;18 (56.25%)&quot;</span></span></code></pre></div>
+</div>
+<div id="geometric-means-and-standard-deviations" class="section level2" number="2.5">
+<h2><span class="header-section-number">2.5</span> Geometric Means and
+Standard Deviations</h2>
+<p>Let <span class="math inline">\(\left\{x_1, x_2, x_3, \ldots, x_n
+\right\}\)</span> be a sample of size <span class="math inline">\(n\)</span> with <span class="math inline">\(x_i
+&gt; 0\)</span> for all <span class="math inline">\(i.\)</span> Then the
+geometric mean, <span class="math inline">\(\mu_g,\)</span> and
+geometric standard deviation are</p>
+<p><span class="math display">\[
+\begin{equation}
+  \mu_g = \left( \prod_{i = 1}^{n} x_i \right)^{\frac{1}{n}} = b^{
+\sum_{i =
+  1}^{n} \log_{b} x_i },
+\end{equation}
+\]</span> and <span class="math display">\[
+\begin{equation}
+  \sigma_g = b ^ {
+  \sqrt{
+    \frac{\sum_{i = 1}^{n} \left( \log_{b} \frac{x_i}{\mu_g}
+\right)^2}{n}
+  }
+  }
+\end{equation}
+\]</span> or, for clarity, <span class="math display">\[
+\begin{equation}
+  \log_{b} \sigma_g =
+  \sqrt{ \frac{\sum_{i = 1}^{n} \left( \log_{b} \frac{x_i}{\mu_g}
+  \right)^2}{n}}
+\end{equation}
+\]</span></p>
+<p>When looking for the geometric standard deviation in R, the simple
+<code>exp(sd(log(x)))</code> is not exactly correct. The geometric
+standard deviation uses <span class="math inline">\(n,\)</span> the full
+sample size, in the denominator, where as the <code>sd</code> and
+<code>var</code> functions in R use the denominator <span class="math inline">\(n - 1.\)</span> To get the geometric standard
+deviation one should adjust the result by multiplying the variance by
+<span class="math inline">\((n - 1) / n\)</span> or the standard
+deviation by <span class="math inline">\(\sqrt{(n - 1) / n}.\)</span>
+See the example below.</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">runif</span>(<span class="dv">6</span>, <span class="at">min =</span> <span class="dv">4</span>, <span class="at">max =</span> <span class="dv">70</span>)</span>
+<span id="cb8-2"><a href="#cb8-2" tabindex="-1"></a></span>
+<span id="cb8-3"><a href="#cb8-3" tabindex="-1"></a><span class="co"># geometric mean</span></span>
+<span id="cb8-4"><a href="#cb8-4" tabindex="-1"></a>mu_g <span class="ot">&lt;-</span> <span class="fu">prod</span>(x) <span class="sc">**</span> (<span class="dv">1</span> <span class="sc">/</span> <span class="fu">length</span>(x))</span>
+<span id="cb8-5"><a href="#cb8-5" tabindex="-1"></a>mu_g</span>
+<span id="cb8-6"><a href="#cb8-6" tabindex="-1"></a><span class="do">## [1] 46.50714</span></span>
+<span id="cb8-7"><a href="#cb8-7" tabindex="-1"></a><span class="fu">exp</span>(<span class="fu">mean</span>(<span class="fu">log</span>(x)))</span>
+<span id="cb8-8"><a href="#cb8-8" tabindex="-1"></a><span class="do">## [1] 46.50714</span></span>
+<span id="cb8-9"><a href="#cb8-9" tabindex="-1"></a><span class="fl">1.2</span> <span class="sc">**</span> <span class="fu">mean</span>(<span class="fu">log</span>(x, <span class="at">base =</span> <span class="fl">1.2</span>))</span>
+<span id="cb8-10"><a href="#cb8-10" tabindex="-1"></a><span class="do">## [1] 46.50714</span></span>
+<span id="cb8-11"><a href="#cb8-11" tabindex="-1"></a></span>
+<span id="cb8-12"><a href="#cb8-12" tabindex="-1"></a><span class="co"># geometric standard deviation</span></span>
+<span id="cb8-13"><a href="#cb8-13" tabindex="-1"></a><span class="fu">exp</span>(<span class="fu">sd</span>(<span class="fu">log</span>(x)))  <span class="do">## This is wrong</span></span>
+<span id="cb8-14"><a href="#cb8-14" tabindex="-1"></a><span class="do">## [1] 1.500247</span></span>
+<span id="cb8-15"><a href="#cb8-15" tabindex="-1"></a></span>
+<span id="cb8-16"><a href="#cb8-16" tabindex="-1"></a><span class="co"># these equations are correct</span></span>
+<span id="cb8-17"><a href="#cb8-17" tabindex="-1"></a>sigma_g <span class="ot">&lt;-</span> <span class="fu">exp</span>(<span class="fu">sqrt</span>(<span class="fu">sum</span>(<span class="fu">log</span>(x <span class="sc">/</span> mu_g) <span class="sc">**</span> <span class="dv">2</span>) <span class="sc">/</span> <span class="fu">length</span>(x)))</span>
+<span id="cb8-18"><a href="#cb8-18" tabindex="-1"></a>sigma_g</span>
+<span id="cb8-19"><a href="#cb8-19" tabindex="-1"></a><span class="do">## [1] 1.448151</span></span>
+<span id="cb8-20"><a href="#cb8-20" tabindex="-1"></a></span>
+<span id="cb8-21"><a href="#cb8-21" tabindex="-1"></a><span class="fu">exp</span>(<span class="fu">sqrt</span>((<span class="fu">length</span>(x) <span class="sc">-</span> <span class="dv">1</span>) <span class="sc">/</span> <span class="fu">length</span>(x)) <span class="sc">*</span> <span class="fu">sd</span>(<span class="fu">log</span>(x)))</span>
+<span id="cb8-22"><a href="#cb8-22" tabindex="-1"></a><span class="do">## [1] 1.448151</span></span></code></pre></div>
+<p>The functions <code>gmean</code>, <code>gvar</code>, and
+<code>gsd</code> provide the geometric mean, variance, and standard
+deviation for a numeric vector.</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" tabindex="-1"></a><span class="fu">gmean</span>(x)</span>
+<span id="cb9-2"><a href="#cb9-2" tabindex="-1"></a><span class="do">## [1] 46.50714</span></span>
+<span id="cb9-3"><a href="#cb9-3" tabindex="-1"></a><span class="fu">all.equal</span>(<span class="fu">gmean</span>(x), mu_g)</span>
+<span id="cb9-4"><a href="#cb9-4" tabindex="-1"></a><span class="do">## [1] TRUE</span></span>
+<span id="cb9-5"><a href="#cb9-5" tabindex="-1"></a></span>
+<span id="cb9-6"><a href="#cb9-6" tabindex="-1"></a><span class="fu">gvar</span>(x)</span>
+<span id="cb9-7"><a href="#cb9-7" tabindex="-1"></a><span class="do">## [1] 1.146958</span></span>
+<span id="cb9-8"><a href="#cb9-8" tabindex="-1"></a><span class="fu">all.equal</span>(<span class="fu">gvar</span>(x), sigma_g<span class="sc">^</span><span class="dv">2</span>)  <span class="co"># This is supposed to be FALSE</span></span>
+<span id="cb9-9"><a href="#cb9-9" tabindex="-1"></a><span class="do">## [1] &quot;Mean relative difference: 0.8284385&quot;</span></span>
+<span id="cb9-10"><a href="#cb9-10" tabindex="-1"></a><span class="fu">all.equal</span>(<span class="fu">gvar</span>(x), <span class="fu">exp</span>(<span class="fu">log</span>(sigma_g)<span class="sc">^</span><span class="dv">2</span>))</span>
+<span id="cb9-11"><a href="#cb9-11" tabindex="-1"></a><span class="do">## [1] TRUE</span></span>
+<span id="cb9-12"><a href="#cb9-12" tabindex="-1"></a></span>
+<span id="cb9-13"><a href="#cb9-13" tabindex="-1"></a><span class="fu">gsd</span>(x)</span>
+<span id="cb9-14"><a href="#cb9-14" tabindex="-1"></a><span class="do">## [1] 1.448151</span></span>
+<span id="cb9-15"><a href="#cb9-15" tabindex="-1"></a><span class="fu">all.equal</span>(<span class="fu">gsd</span>(x), sigma_g)</span>
+<span id="cb9-16"><a href="#cb9-16" tabindex="-1"></a><span class="do">## [1] TRUE</span></span></code></pre></div>
+<p><code>gmean_sd</code> will provide a quick way for reporting the
+geometric mean and geometric standard deviation in the same way that
+<code>mean_sd</code> does for the arithmetic mean and arithmetic
+standard deviation:</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" tabindex="-1"></a><span class="fu">gmean_sd</span>(x)</span>
+<span id="cb10-2"><a href="#cb10-2" tabindex="-1"></a><span class="do">## [1] &quot;46.51 &amp;plusmn; 1.45&quot;</span></span></code></pre></div>
+</div>
+</div>
+<div id="building-a-data-summary-table" class="section level1" number="3">
+<h1><span class="header-section-number">3</span> Building a Data Summary
+Table</h1>
+<p>The function <code>summary_table</code> appears to be the most widely
+used tool provided by the qwraps2 package. As such, that function has
+earned its own vignette.</p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" tabindex="-1"></a><span class="fu">vignette</span>(<span class="st">&quot;qwraps2-summary-table&quot;</span>)</span></code></pre></div>
+</div>
+<div id="session-info" class="section level1" number="4">
+<h1><span class="header-section-number">4</span> Session Info</h1>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">sessionInfo</span>(), <span class="at">local =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb12-2"><a href="#cb12-2" tabindex="-1"></a><span class="do">## R version 4.3.2 (2023-10-31)</span></span>
+<span id="cb12-3"><a href="#cb12-3" tabindex="-1"></a><span class="do">## Platform: x86_64-apple-darwin20 (64-bit)</span></span>
+<span id="cb12-4"><a href="#cb12-4" tabindex="-1"></a><span class="do">## Running under: macOS Monterey 12.6</span></span>
+<span id="cb12-5"><a href="#cb12-5" tabindex="-1"></a><span class="do">## </span></span>
+<span id="cb12-6"><a href="#cb12-6" tabindex="-1"></a><span class="do">## Matrix products: default</span></span>
+<span id="cb12-7"><a href="#cb12-7" tabindex="-1"></a><span class="do">## BLAS:   /Library/Frameworks/R.framework/Versions/4.3-x86_64/Resources/lib/libRblas.0.dylib </span></span>
+<span id="cb12-8"><a href="#cb12-8" tabindex="-1"></a><span class="do">## LAPACK: /Library/Frameworks/R.framework/Versions/4.3-x86_64/Resources/lib/libRlapack.dylib;  LAPACK version 3.11.0</span></span>
+<span id="cb12-9"><a href="#cb12-9" tabindex="-1"></a><span class="do">## </span></span>
+<span id="cb12-10"><a href="#cb12-10" tabindex="-1"></a><span class="do">## attached base packages:</span></span>
+<span id="cb12-11"><a href="#cb12-11" tabindex="-1"></a><span class="do">## [1] stats     graphics  grDevices utils     datasets  methods   base     </span></span>
+<span id="cb12-12"><a href="#cb12-12" tabindex="-1"></a><span class="do">## </span></span>
+<span id="cb12-13"><a href="#cb12-13" tabindex="-1"></a><span class="do">## other attached packages:</span></span>
+<span id="cb12-14"><a href="#cb12-14" tabindex="-1"></a><span class="do">## [1] qwraps2_0.6.0</span></span>
+<span id="cb12-15"><a href="#cb12-15" tabindex="-1"></a><span class="do">## </span></span>
+<span id="cb12-16"><a href="#cb12-16" tabindex="-1"></a><span class="do">## loaded via a namespace (and not attached):</span></span>
+<span id="cb12-17"><a href="#cb12-17" tabindex="-1"></a><span class="do">##  [1] digest_0.6.33   R6_2.5.1        fastmap_1.1.1   xfun_0.41      </span></span>
+<span id="cb12-18"><a href="#cb12-18" tabindex="-1"></a><span class="do">##  [5] cachem_1.0.8    knitr_1.45      htmltools_0.5.7 rmarkdown_2.25 </span></span>
+<span id="cb12-19"><a href="#cb12-19" tabindex="-1"></a><span class="do">##  [9] cli_3.6.1       sass_0.4.7      jquerylib_0.1.4 compiler_4.3.2 </span></span>
+<span id="cb12-20"><a href="#cb12-20" tabindex="-1"></a><span class="do">## [13] tools_4.3.2     evaluate_0.23   bslib_0.5.1     Rcpp_1.0.11    </span></span>
+<span id="cb12-21"><a href="#cb12-21" tabindex="-1"></a><span class="do">## [17] yaml_2.3.7      rlang_1.1.2     jsonlite_1.8.7</span></span></code></pre></div>
+</div>
+
+
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

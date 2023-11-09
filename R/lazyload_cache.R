@@ -20,19 +20,21 @@
 #' @param ask if TRUE ask the user to confirm loading each database found in
 #' \code{path}
 #' @param verbose if TRUE display the chunk labels being loaded
-#' @param full.names use the full name, i.e., include the path, for the chunk
-#' label? This argument is passed to \code{\link[base]{list.files}}.
 #' @param ... additional arguments passed to \code{\link[base]{list.files}}.
 #'
 #' @examples
 #' # this example is based on \url{https://stackoverflow.com/a/41439691/1104685}
 #'
 #' # create a temp directory for a and place a .Rmd file within
-#' tmpdr <- paste0(tempdir(), "/llcache_eg")
-#' dir.create(tmpdr)
-#' old_wd <- getwd()
-#' setwd(tmpdr)
+#' tmpdir <- normalizePath(paste0(tempdir(), "/llcache_eg"), mustWork = FALSE)
+#' tmprmd <- tempfile(pattern = "report", tmpdir = tmpdir, fileext = "Rmd")
+#' dir.create(tmpdir)
+#' oldwd <- getwd()
+#' setwd(tmpdir)
 #'
+#' # build and example .Rmd file
+#' # note that the variable x is created in the first chunck and then over
+#' # written in the second chunk
 #' cat("---",
 #'     "title: \"A Report\"",
 #'     "output: html_document",
@@ -41,52 +43,77 @@
 #'     "```{r first-chunk, cache = TRUE}",
 #'     "mpg_by_wt_hp <- lm(mpg ~ wt + hp, data = mtcars)",
 #'     "x_is_pi <- pi",
+#'     "x <- pi",
 #'     "```",
 #'     "",
 #'     "```{r second-chunk, cache = TRUE}",
 #'     "mpg_by_wt_hp_am <- lm(mpg ~ wt + hp + am, data = mtcars)",
 #'     "x_is_e <- exp(1)",
+#'     "x <- exp(1)",
 #'     "```",
 #'     sep = "\n",
-#'     file = paste0(tmpdr, "/report.Rmd"))
+#'     file = tmprmd)
 #'
 #' # knit the file.  evaluate the chuncks in a new environment so we can compare
 #' # the objects after loading the cache.
 #' kenv <- new.env()
-#' knitr::knit(input = paste0(tmpdr, "/report.Rmd"), envir = kenv)
+#' knitr::knit(input = tmprmd, envir = kenv)
 #'
 #' # The objects defined in the .Rmd file are now in kenv
 #' ls(envir = kenv)
 #'
 #' # view the cache
-#' list.files(path = tmpdr, recursive = TRUE)
+#' list.files(path = tmpdir, recursive = TRUE)
 #'
-#' # create another environment, and load only the second chunk
-#' lenv <- new.env()
-#' ls(envir = lenv)
+#' # create three more environment, and load only the first chunk into the
+#' # first, and the second chunck into the second, and then load all of the
+#' # cache into the third
+#' env1 <- new.env()
+#' env2 <- new.env()
+#' env3 <- new.env()
+#'
+#' lazyload_cache_labels(labels = "first-chunk",
+#'                       path = paste0(tmpdir, "/cache"),
+#'                       envir = env1)
 #'
 #' lazyload_cache_labels(labels = "second-chunk",
-#'                       path = paste0(tmpdr, "/cache"),
-#'                       envir = lenv)
-#' lenv$x_is_e
-#' lenv$mpg_by_wt_hp_am
+#'                       path = paste0(tmpdir, "/cache"),
+#'                       envir = env2)
 #'
-#' # load all the chuncks
-#' menv <- new.env()
-#' lazyload_cache_dir(path = paste0(tmpdr, "/cache"), envir = menv)
+#' lazyload_cache_dir(path = paste0(tmpdir, "/cache"), envir = env3)
 #'
-#' ls(envir = menv)
-#' menv$x_is_pi
-#' menv$x_is_e
+#' # Look at the conents of each of these environments
+#' ls(envir = kenv)
+#' ls(envir = env1)
+#' ls(envir = env2)
+#' ls(envir = env3)
+#'
+#' # The regression models are only fitted once an should be the same in all the
+#' # environments where they exist, as should the variables x_is_e and x_is_pi
+#' all.equal(kenv$mpg_by_wt_hp, env1$mpg_by_wt_hp)
+#' all.equal(env1$mpg_by_wt_hp, env3$mpg_by_wt_hp)
+#'
+#' all.equal(kenv$mpg_by_wt_hp_am, env2$mpg_by_wt_hp_am)
+#' all.equal(env2$mpg_by_wt_hp_am, env3$mpg_by_wt_hp_am)
+#'
+#' # The value of x, however, should be different in the differnet
+#' # environments.  For kenv, env2, and env3 the value should be exp(1) as that
+#' # was the last assignment value.  In env1 the value should be pi as that is
+#' # the only relevent assignment.
+#'
+#' all.equal(kenv$x, exp(1))
+#' all.equal(env1$x, pi)
+#' all.equal(env2$x, exp(1))
+#' all.equal(env3$x, exp(1))
 #'
 #' # cleanup
-#' setwd(old_wd)
-#' unlink(tmpdr, recursive = TRUE)
+#' setwd(oldwd)
+#' unlink(tmpdir, recursive = TRUE)
 #'
 #' @export
 #' @rdname lazyload_cache
-lazyload_cache_dir <- function(path = "./cache", envir = parent.frame(), ask = FALSE, verbose = TRUE, full.names = TRUE, ...) {
-  files <- do.call(list.files, list(path = path, pattern = "\\.rdx$", full.names = full.names, ...))
+lazyload_cache_dir <- function(path = "./cache", envir = parent.frame(), ask = FALSE, verbose = TRUE, ...) {
+  files <- do.call(list.files, list(path = path, pattern = "\\.rdx$", full.names = TRUE, ...))
   files <- gsub("\\.rdx", "", files)
 
   load_these <- rep(TRUE, length(files))
@@ -119,8 +146,8 @@ lazyload_cache_dir <- function(path = "./cache", envir = parent.frame(), ask = F
 #' only objects for which this is true will be loaded.
 #' @export
 #' @rdname lazyload_cache
-lazyload_cache_labels <- function(labels, path = "./cache/", envir = parent.frame(), verbose = TRUE, filter, full.names = TRUE, ...) {
-  files <- do.call(list.files, list(path = path, pattern = paste0("^(", paste(labels, collapse = "|"), ")_[0-9a-f]{32}\\.rdx$"), full.names = full.names, ...))
+lazyload_cache_labels <- function(labels, path = "./cache/", envir = parent.frame(), verbose = TRUE, filter, ...) {
+  files <- do.call(list.files, list(path = path, pattern = paste0("^(", paste(labels, collapse = "|"), ")_[0-9a-f]{32}\\.rdx$"), full.names = TRUE, ...))
   files <- gsub("\\.rdx$", "", files)
 
   lfound <- sapply(lapply(labels, grepl, x = files), any)

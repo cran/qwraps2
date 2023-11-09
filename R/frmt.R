@@ -4,7 +4,8 @@
 #' in reports.
 #'
 #' @details
-#' `frmt` is really just a wrapper for the \code{formatC}.
+#' `frmt` was originally really just a wrapper for the \code{formatC}.  It has
+#' extended functionality now as I have found common uses cases.
 #'
 #' `frmtp` formats P-values per journal
 #' requirements.  As I work on papers aimed at different journals, the
@@ -45,12 +46,16 @@
 #' @param x a vector of numbers or a numeric matrix to format.
 #' @param digits number of digits, including trailing zeros, to the right of the
 #' decimal point.  This option is ignored if \code{is.integer(x) == TRUE)}.
+#' @param append a character string to append to the formatted number.  This is
+#' particularly useful for percentages or adding punctuation to the end of the
+#' formatted number.  This should be a vector of length 1, or equal to the
+#' length of \code{x}.
 #'
 #' @return a character vector of the formatted numbers
 #'
 #' @examples
 #'
-#' # Formatting numbers
+#' ### Formatting numbers
 #' integers <- c(1234L, 9861230L)
 #' numbers  <- c(1234,  9861230)
 #' frmt(integers)  # no decimal point
@@ -59,7 +64,17 @@
 #' numbers <- c(0.1234, 0.1, 1234.4321, 0.365, 0.375)
 #' frmt(numbers)
 #'
-#' # Formatting p-values
+#' # reporting a percentage
+#' frmt(17/19 * 100, digits = 2, append = "%")   # good for markdown
+#' frmt(17/19 * 100, digits = 2, append = "\\%") # good for LaTeX
+#'
+#' # append one character
+#' frmt(c(1, 2, 3)/19 * 100, digits = 2, append = "%")
+#'
+#' # append different characters
+#' frmt(c(1, 2, 3)/19 * 100, digits = 2, append = c("%;", "%!", "%."))
+#'
+#' ### Formatting p-values
 #' ps <- c(0.2, 0.001, 0.00092, 0.047, 0.034781, 0.0000872, 0.787, 0.05, 0.043)
 #' # LaTeX is the default markup language
 #' cbind("raw"      = ps,
@@ -67,7 +82,7 @@
 #'       "3lower"   = frmtp(ps, digits = 3, case = "lower"),
 #'       "PediDent" = frmtp(ps, style = "pediatric_dentistry"))
 #'
-#' # Using markdown
+#' ### Using markdown
 #' cbind("raw"      = ps,
 #'       "default"  = frmtp(ps, markup = "markdown"),
 #'       "3lower"   = frmtp(ps, digits = 3, case = "lower", markup = "markdown"),
@@ -75,15 +90,30 @@
 #'
 #' @export
 #' @rdname frmt
-frmt <- function(x, digits = getOption("qwraps2_frmt_digits", 2)) {
-  sapply(x,
-         function(xx) {
-           if (is.integer(xx)) {
-             formatC(xx, format = "d", big.mark = ",")
-           } else {
-             formatC(xx, digits = digits, format = "f", big.mark = ",")
-           }
-         })
+frmt <- function(x
+                 , digits = getOption("qwraps2_frmt_digits", 2)
+                 , append = NULL
+                 ) {
+  rtn <-
+    sapply(x,
+           function(xx) {
+             if (is.integer(xx)) {
+               formatC(xx, format = "d", big.mark = ",")
+             } else {
+               formatC(xx, digits = digits, format = "f", big.mark = ",")
+             }
+           })
+
+  if (!is.null(append)) {
+    if (length(append) == 1L) {
+      rtn <- paste0(rtn, append)
+    } else if (length(append) == length(x)) {
+      rtn <- paste0(rtn, append)
+    } else {
+      stop("length(append) != length(x)")
+    }
+  }
+  rtn
 }
 
 
@@ -194,6 +224,8 @@ frmtp_obstetrics_gynecology <- function(x) {
 #' # for a set of three values
 #' temp <- c(a = 1.23, b = .32, CC = 1.78)
 #' frmtci(temp)
+#'
+#' # show level uses getOption("qwraps2_alpha", 0.05)
 #' frmtci(temp, show_level = TRUE)
 #'
 #' # note that the show_level will be ignored in the following
@@ -208,6 +240,12 @@ frmtp_obstetrics_gynecology <- function(x) {
 #'                 dimnames = list(c("A", "B", "C", "D"), c("EST", "LOW", "HIGH")))
 #' temp2
 #' frmtci(temp2)
+#'
+#' # similar for a data.frame
+#' df2 <- as.data.frame(temp2)
+#' frmtci(df2)
+#'
+#' @export
 frmtci <- function(x, est = 1, lcl = 2, ucl = 3, format = "est (lcl, ucl)", show_level = FALSE, ...) {
   UseMethod("frmtci")
 }
@@ -335,10 +373,15 @@ Gitlabpkg <- function(pkg, username) {
 #' Backtick
 #'
 #' Encapsulate a string in backticks. Very helpful for in line code in
-#' knitr::spin scripts.
+#' \code{\link[knitr]{spin}} scripts.
 #'
 #' @param x the thing to be deparsed and encapsulated in backticks
 #' @param dequote remove the first and last double or signal quote form \code{x}
+#'
+#' @examples
+#' backtick("a quoted string")
+#' backtick(no-quote)
+#' backtick(noquote)
 #'
 #' @export
 backtick <- function(x, dequote = FALSE) {

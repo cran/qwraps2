@@ -24,11 +24,13 @@
 #' The \code{print} method for the \code{qwraps2_summary_table} objects is just
 #' a simple wrapper for \code{\link{qable}}.
 #'
-#' @param x a \code{data.frame} or \code{grouped_df}.
+#' @param x a \code{data.frame}.
 #' @param summaries a list of lists of formulea for summarizing the data set.
 #' See Details and examples.
 #' @param by a character vector of variable names to generate the summary by,
 #' that is one column for each unique values of the variables specified.
+#' @param qable_args additional values passed to \code{\link{qable}}
+#' @param ... pass through
 #'
 #' @seealso \code{\link{qsummary}} for generating the summaries,
 #' \code{\link{qable}} for marking up \code{qwraps2_data_summary} objects.
@@ -39,8 +41,7 @@
 #'
 #' @examples
 #' # A list-of-lists for the summaries arg.  This object is of the basic form:
-#' # It is recommended that you use the .data pronoun in the functions, see
-#' # help(topic = ".data", package = "rlang") for details on this pronoun.
+#' #
 #' # list("row group A" =
 #' #      list("row 1A" = ~ <summary function>,
 #' #           "row 2A" = ~ <summary function>),
@@ -68,7 +69,6 @@
 #' options(qwraps2_markup = "markdown")
 #'
 #' # The summary table for the whole mtcars data set
-#' # whole_table <- summary_table_042(mtcars, our_summaries)
 #' whole_table <- summary_table(mtcars, our_summaries)
 #' whole_table
 #'
@@ -157,8 +157,15 @@
 #' temp$am <- factor(temp$am, levels = 0:1, labels = c("Automatic", "Manual"))
 #' temp$vs <- as.logical(temp$vs)
 #' temp$vs[c(2, 6)] <- NA
-#' qsummary(dplyr::select(temp, cyl, am, vs))
-#' summary_table(dplyr::select(temp, cyl, am, vs))
+#' qsummary(temp[, c("cyl", "am", "vs")])
+#' summary_table(temp[, c("cyl", "am", "vs")])
+#'
+#' ################################################################################
+#' # Group by Multiple Variables
+#' temp <- mtcars
+#' temp$trans <- factor(temp$am, 0:1, c("Manual", "Auto"))
+#' temp$engine <- factor(temp$vs, 0:1, c("V-Shaped", "Straight"))
+#' summary_table(temp, our_summaries, by = c("trans", "engine"))
 #'
 #' ################################################################################
 #' # binding tables together.  The original design and expected use of
@@ -218,28 +225,29 @@
 #'
 #' @export
 #' @rdname summary_table
-summary_table <- function(x, summaries = qsummary(x), by = NULL) {
+summary_table <- function(x, summaries = qsummary(x), by = NULL, qable_args = list(), ...) {
   UseMethod("summary_table")
 }
 
 #' @export
-summary_table.grouped_df <- function(x, summaries = qsummary(x), by = NULL) {
+summary_table.grouped_df <- function(x, summaries = qsummary(x), by = NULL, qable_args = list(), ...) {
   if (!is.null(by)) {
-    warning("You've passed a grouped_df to summary_table and specified the by argument.  The by argument will be ignored.")
+    warning("You've passed a grouped_df to summary_table and specified the `by` argument.  The `by` argument will be ignored.")
   }
 
   # this assumes dplyr version 0.8.0 or newer
   lbs <- names(attr(x, "groups"))
   lbs <- lbs[-length(lbs)]
-  NextMethod(object = x, by = lbs)
+  warning(paste0("grouped_df detected. Setting `by` argument to\n  c('", paste(lbs, collapse = "', '"), "')"))
+  NextMethod(object = x, by = lbs, qable_args = qable_args, ...)
 }
+
 #' @export
-summary_table.data.frame <- function(x, summaries = qsummary(x), by = NULL) {
+summary_table.data.frame <- function(x, summaries = qsummary(x), by = NULL, qable_args = list(), ...) {
 
   if (!missing(summaries)) {
     if ( any(grepl("\\.data\\$", parse(text = summaries))) ) {
-      warning("Use of the data pronoun is no longer required/encouraged.  The ability to use it has been deprecated.  See the documentation for summary_table, qsummary, and the vignettes for more detail.  The use of the data pronoun will be supported in version 0.5.0 of qwraps2 with this warning.  Eventually an error will be thrown before support is removed from the package completely.")
-      return(summary_table_042(x, summaries = summaries))
+      warning("Use of the data pronoun is no longer required/encouraged.  The ability to use it has been deprecated.  See the documentation for summary_table, qsummary, and the vignettes for more detail.  The use of the data pronoun will be supported in version 0.5.0 of qwraps2 with this warning.")
     }
   }
 
@@ -250,15 +258,26 @@ summary_table.data.frame <- function(x, summaries = qsummary(x), by = NULL) {
   }
 
   rtn <- lapply(subsets, apply_summaries, summaries = summaries)
+
   if (length(rtn) > 1L) {
-    cn <- paste0(names(rtn), " (N = ", sapply(rtn, attr, "n"), ")")
-    rtn <- do.call(cbind, rtn)
-    colnames(rtn) <- cn
+    clnms <- paste0(names(rtn), " (N = ", sapply(rtn, attr, "n"), ")")
   } else {
-    rtn <- rtn[[1]]
-    colnames(rtn) <- paste0(deparse(substitute(x), nlines = 1L, backtick = TRUE), " (N = ", frmt(nrow(x)), ")")
+    clnms <- paste0(deparse(substitute(x), nlines = 1L, backtick = TRUE), " (N = ", frmt(nrow(x)), ")")
   }
 
+  for (i in 1:length(rtn)) {
+    colnames(rtn[[i]]) <- clnms[i]
+    rtn[[i]] <- do.call(qable, c(list(x = rtn[[i]]), list(rgroup = attr(rtn[[i]], "rgroup")), qable_args)
+    )
+  }
+
+  if (length(rtn) > 1) {
+    rtn <- do.call(cbind.qwraps2_qable, rtn)
+  } else {
+    rtn <- rtn[[1]]
+  }
+
+  class(rtn) <- c("qwraps2_summary_table", "qwraps2_qable")
   rtn
 }
 
@@ -271,12 +290,11 @@ apply_summaries <- function(summaries, x) {
   rtn <- lapply(rtn, unlist)
   rtn <- lapply(rtn, as.matrix, ncol = 1)
 
-  rgroups <- sapply(rtn, nrow)
+  rgroup <- sapply(rtn, nrow)
 
   rtn <- do.call(rbind, rtn)
-  attr(rtn, "rgroups") <- rgroups
+  attr(rtn, "rgroup") <- rgroup
   attr(rtn, "n") <- nrow(x)
-  class(rtn) <- c("qwraps2_summary_table", class(rtn))
   rtn
 }
 
@@ -286,7 +304,7 @@ apply_summaries <- function(summaries, x) {
 #' single argument defined by the \code{\%s} symbol.
 #' @param n_perc_args a list of arguments to pass to
 #' \code{\link[qwraps2]{n_perc}} to be used with \code{character} or
-#' \code{factor} variables in \code{.data}.
+#' \code{factor} variables within \code{x}.
 #' @param env environment to assign to the resulting formulae
 
 #' @rdname summary_table
@@ -358,60 +376,20 @@ qsummary.data.frame <- function(x,
   rtn
 }
 
-#' @rdname summary_table
 #' @export
-#' @param ... \code{qwraps2_summary_table} objects to bind together
-#' @param deparse.level integer controlling the construction of labels in the
-#' case of non-matrix-like arguments (for the default method): \code{deparse.level =
-#' 0} constructs no labels; the default, \code{deparse.level = 1} or
-#' \code{deparse.level = 2} constructs labels from the argument names.
-#' @seealso \code{cbind}
-cbind.qwraps2_summary_table <- function(..., deparse.level = 1) {
-  tabs <- list(...)
+print.qwraps2_summary_table <- function(x, qable_args = list(), ...) {
 
-  for(i in seq_along(tabs)[-1]) {
-    if (inherits(tabs[[i-1]], "qwraps2_summary_table") & inherits(tabs[[i]], "qwraps2_summary_table")) {
-      if (!identical(attr(tabs[[i-1]], "rgroups"), attr(tabs[[i]], "rgroups") ) ) {
-        stop("Not all row groups are identical.")
+  for (nm in names(qable_args)) {
+    if (nm == "kable_args") {
+      for (nm2 in names(qable_args$kable_args)) {
+        attr(x, "qable_args")[["kable_args"]][[nm2]] <- qable_args$kable_args[[nm2]]
       }
-
-      if (!identical(rownames(tabs[[i-1]]), rownames(tabs[[i]]))) {
-        stop("Not all rownames are identical.")
-      }
+    } else {
+      attr(x, "qable_args")[[nm]] <- qable_args[[nm]]
     }
   }
 
-  out <- do.call(cbind, args = c(lapply(tabs, unclass), list(deparse.level = deparse.level)))
+  NextMethod(x, ...)
 
-  attr(out, "rgroups") <- attr(tabs[[1]], "rgroups")
-  class(out) <- class(tabs[[1]])
-
-  out
-}
-
-#' @seealso \code{rbind}
-#' @rdname summary_table
-#' @export
-rbind.qwraps2_summary_table <- function(..., deparse.level = 1) {
-  tabs <- list(...)
-
-  for(i in seq_along(tabs)[-1]) {
-    if (inherits(tabs[[i-1]], "qwraps2_summary_table") & inherits(tabs[[i]], "qwraps2_summary_table")) {
-      if (!identical(colnames(tabs[[i-1]]), colnames(tabs[[i]]))) {
-        stop("Not all colnames are identical.")
-      }
-    }
-  }
-
-  out <- do.call(rbind, args = c(lapply(tabs, unclass), list(deparse.level = deparse.level)))
-
-  attr(out, "rgroups") <- do.call(c, lapply(tabs, attr, "rgroups"))
-  class(out) <- class(tabs[[1]])
-
-  out
-}
-
-#' @export
-print.qwraps2_summary_table <- function(x, rgroup = attr(x, "rgroups"), rnames = rownames(x), cnames = colnames(x), ...) {
-  print(qable(x, rgroup = rgroup, rnames = rnames, cnames = cnames, ...))
+  invisible(x)
 }

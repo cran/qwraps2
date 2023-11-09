@@ -1,10 +1,7 @@
 ## ----label = "setup", include = FALSE-----------------------------------------
 knitr::opts_chunk$set(collapse = TRUE)
-
-## -----------------------------------------------------------------------------
 library(qwraps2)
 packageVersion("qwraps2")
-library(ggplot2)
 
 ## -----------------------------------------------------------------------------
 set.seed(42)
@@ -55,21 +52,25 @@ pefr_m1 <-
 ## -----------------------------------------------------------------------------
 cor(pefr_m1)
 
-qplot(x = pefr_m1[, 1],
-      y = pefr_m1[, 2],
-      geom = "point",
-      xlab = "Large Meter",
-      ylab = "Mini Meter",
-      xlim = c(0, 800),
-      ylim = c(0, 800)) +
-geom_abline(slope = 1)
+ggplot2::ggplot(data = as.data.frame(pefr_m1)) +
+  ggplot2::aes(x = Large, y = Mini) +
+  ggplot2::geom_point() +
+  ggplot2::xlab("Large Meter") +
+  ggplot2::ylab("Mini Meter") +
+  ggplot2::xlim(0, 800) +
+  ggplot2::ylim(0, 800) +
+  ggplot2::geom_abline(slope = 1)
 
 ## -----------------------------------------------------------------------------
-qblandaltman(pefr_m1) +
-xlim(0, 800) +
-ylim(-100, 100) +
-xlab("Average of two meters") +
-ylab("Difference in the measurements")
+# default plot
+qblandaltman(pefr_m1)
+
+# modified plot
+ggplot2::last_plot() +
+  ggplot2::xlim(0, 800) +
+  ggplot2::ylim(-100, 100) +
+  ggplot2::xlab("Average of two meters") +
+  ggplot2::ylab("Difference in the measurements")
 
 ## -----------------------------------------------------------------------------
 pefr_mini <-
@@ -91,8 +92,7 @@ survival:::plot.survfit(leukemia.surv, conf.int = TRUE, lty = 2:3, col = 1:2)
 # qkmplot
 qkmplot(leukemia.surv, conf_int = TRUE)
 
-# build a data.frame for plotting km curves, this could be helpful for
-# creating bespoke plots
+## -----------------------------------------------------------------------------
 leukemia_km_data <- qkmplot_bulid_data_frame(leukemia.surv)
 head(leukemia_km_data, 3)
 
@@ -100,50 +100,109 @@ head(leukemia_km_data, 3)
 ## ----fig.width = 5------------------------------------------------------------
 qkmplot(leukemia_km_data)
 
-
 ## ----fig.width = 5------------------------------------------------------------
-# intercept only plot
 intonly_fit <- survival::survfit(survival::Surv(time, status) ~ 1, data = survival::aml)
 survival:::plot.survfit(intonly_fit, conf.int = TRUE)
 qkmplot(intonly_fit, conf_int = TRUE)
 
 ## -----------------------------------------------------------------------------
-data(diamonds, package = "ggplot2")
+set.seed(42)
+tidx <- runif(nrow(spambase)) <= 0.80
+xidx <- which(names(spambase) != "spam")
+yidx <- which(names(spambase) == "spam")
+training_set   <- spambase[tidx, ]
+validating_set <- spambase[!tidx, ]
 
-# Create two logistic regression models
-fit1 <- glm(I(price > 2800) ~ cut * color, data = diamonds, family = binomial())
-fit2 <- glm(I(price > 2800) ~ cut + color + clarity, data = diamonds, family = binomial())
+## -----------------------------------------------------------------------------
+logistic_model <-
+  glm(
+    spam ~ .
+  , data = training_set
+  , family = binomial()
+  )
 
-# Easiest way to get an ROC plot:
-qroc(fit1)
-qroc(fit2)
+ridge_model <-
+  glmnet::cv.glmnet(
+    y = training_set[, yidx]
+  , x = as.matrix(training_set[, xidx])
+  , family = binomial()
+  , alpha = 0
+  )
 
-# Create two data sets, this will also let you get the AUC out
-data1 <- qroc_build_data_frame(fit1)
-data2 <- qroc_build_data_frame(fit2)
+lasso_model <-
+  glmnet::cv.glmnet(
+    y = training_set[, yidx]
+  , x = as.matrix(training_set[, xidx])
+  , family = binomial()
+  , alpha = 1
+  )
 
-auc(data1)
-auc(data2)
+## -----------------------------------------------------------------------------
+validating_set$logistic_model_prediction <-
+  predict(
+    logistic_model
+  , newdata = validating_set
+  , type = "response"
+  )
 
-# Plotting the ROC from the data set can be done too
-qroc(data1)
+validating_set$ridge_model_prediction <-
+  as.numeric(
+    predict(
+      ridge_model
+    , newx = as.matrix(validating_set[, xidx])
+    , type = "response"
+    , s = "lambda.1se"
+    )
+  )
 
-# Add the AUC value to the plot title
-qroc(data2) + ggtitle(paste("Fit 2\nAUC =", round(auc(data2), 2)))
+validating_set$lasso_model_prediction <-
+  as.numeric(
+    predict(
+      lasso_model
+    , newx = as.matrix(validating_set[, xidx])
+    , type = "response"
+    , s = "lambda.1se"
+    )
+  )
 
-# build a data set for plotting to ROCs on one plot
-plot_data <- rbind(cbind(Model = "fit1", data1),
-                   cbind(Model = "fit2", data2))
-qroc(plot_data) + aes(color = Model)
+## -----------------------------------------------------------------------------
+cm1 <- confusion_matrix(spam ~ logistic_model_prediction, data = validating_set)
+cm2 <- confusion_matrix(spam ~ ridge_model_prediction, data = validating_set)
+cm3 <- confusion_matrix(spam ~ lasso_model_prediction, data = validating_set)
 
-# with AUC in the legend
-plot_data <- rbind(cbind(Model = paste("Fit1\nauc =", round(auc(data1), 3)), data1),
-                   cbind(Model = paste("Fit2\nauc =", round(auc(data2), 3)), data2))
-qroc(plot_data) +
-  theme_bw() +
-  aes(color = Model, linetype = Model) +
-  theme(legend.position   = "bottom",
-        legend.text.align = 0.5)
+## -----------------------------------------------------------------------------
+qroc(cm1) + ggplot2::ggtitle("Logisitic Model")
+qroc(cm2) + ggplot2::ggtitle("Ridge Regression Model")
+qroc(cm3) + ggplot2::ggtitle("LASSO Regression Model")
+
+## -----------------------------------------------------------------------------
+roc_plot_data <-
+  rbind(
+      cbind(Model = paste("Logisitic; AUROC =", frmt(cm1$auroc, 3)), cm1$cm_stats)
+    , cbind(Model = paste("Ridge; AUROC =",     frmt(cm2$auroc, 3)), cm2$cm_stats)
+    , cbind(Model = paste("LASSO; AUROC =",     frmt(cm3$auroc, 3)), cm3$cm_stats)
+    )
+
+qroc(roc_plot_data) +
+  ggplot2::aes(color = Model) +
+  ggplot2::theme(legend.position = "bottom")
+
+## -----------------------------------------------------------------------------
+qprc(cm1) + ggplot2::ggtitle("Logisitic Model")
+qprc(cm2) + ggplot2::ggtitle("Ridge Regression Model")
+qprc(cm3) + ggplot2::ggtitle("LASSO Regression Model")
+
+prc_plot_data <-
+  rbind(
+      cbind(Model = paste("Logisitic; AUPRC =", frmt(cm1$auprc, 3)), cm1$cm_stats)
+    , cbind(Model = paste("Ridge; AUPRC =",     frmt(cm2$auprc, 3)), cm2$cm_stats)
+    , cbind(Model = paste("LASSO; AUPRC =",     frmt(cm3$auprc, 3)), cm3$cm_stats)
+    )
+
+qprc(prc_plot_data) +
+  ggplot2::aes(color = Model) +
+  ggplot2::geom_hline(yintercept = cm1$prevalence) +
+  ggplot2::theme(legend.position = "bottom")
 
 ## ----label = "sessioninfo"----------------------------------------------------
 sessionInfo()

@@ -1,12 +1,12 @@
 ---
-title: "Graphics in qwraps2"
-author: "Peter DeWitt"
+title: "qwraps2: Graphics"
+author: "Peter E. DeWitt"
 output:
  rmarkdown::html_vignette:
    toc: true
    number_sections: true
 vignette: >
- %\VignetteIndexEntry{qwraps2-graphics}
+ %\VignetteIndexEntry{qwraps2: Graphics}
  %\VignetteEngine{knitr::rmarkdown}
  %\VignetteEncoding{UTF-8}
 ---
@@ -14,27 +14,25 @@ vignette: >
 
 ```{r label = "setup", include = FALSE}
 knitr::opts_chunk$set(collapse = TRUE)
+library(qwraps2)
+packageVersion("qwraps2")
 ```
 
 
 There are several graphics generated within qwraps2.  The naming convention
-for the "quick" plots was inspired by the ggplot2 function qplot.  The
-development, flexibility, and robustness of these functions vary.  Some "tips
-and tricks" are provided.
-
-```{r }
-library(qwraps2)
-packageVersion("qwraps2")
-library(ggplot2)
-```
-
+for the "quick" plots was inspired by the (deprecated)
+`r  CRANpkg(ggplot2)  `
+function
+`r  backtick(qplot) %s% "."  `
+The development, flexibility, and robustness of these functions vary.  Some
+"tips and tricks" are provided.
 
 
 # qacf: Autocorrelation Plots
 
 Generate an example data set.
 
-```{r }
+```{r}
 set.seed(42)
 n <- 250
 x1 <- x2 <- x3 <- x4 <- vector('numeric', length = n)
@@ -81,10 +79,11 @@ to produce the statistics needed for the plot.  If you want to get at the
 data itself to build your own acf plot you can extract the data frame from
 the qacf return:
 
-```{r }
+```{r}
 acf_plot_data <- qacf(testdf)$data
 head(acf_plot_data)
 ```
+
 
 
 # qblandaltman: Bland Altman Plot
@@ -100,7 +99,7 @@ The following replicates the figures in [@bland1986statistical].
 
 Using the first measurement only:
 
-```{r }
+```{r}
 pefr_m1 <-
   cbind("Large" = pefr[pefr$measurement == 1 & pefr$meter == "Wright peak flow meter", "pefr"],
         "Mini"  = pefr[pefr$measurement == 1 & pefr$meter == "Mini Wright peak flow meter", "pefr"])
@@ -110,34 +109,38 @@ pefr_m1 <-
 A standard x-y style plot and a correlation coefficient suggests that the two
 meters provide reasonably similar results.
 
-```{r }
+```{r}
 cor(pefr_m1)
 
-qplot(x = pefr_m1[, 1],
-      y = pefr_m1[, 2],
-      geom = "point",
-      xlab = "Large Meter",
-      ylab = "Mini Meter",
-      xlim = c(0, 800),
-      ylim = c(0, 800)) +
-geom_abline(slope = 1)
+ggplot2::ggplot(data = as.data.frame(pefr_m1)) +
+  ggplot2::aes(x = Large, y = Mini) +
+  ggplot2::geom_point() +
+  ggplot2::xlab("Large Meter") +
+  ggplot2::ylab("Mini Meter") +
+  ggplot2::xlim(0, 800) +
+  ggplot2::ylim(0, 800) +
+  ggplot2::geom_abline(slope = 1)
 ```
 
 
-However, for many reasons, this the above is misleading.  One simple note:
+However, for many reasons, the above is misleading.  One simple note:
 correlation is not a metric for agreement, i.e., perfect agreement would be
-shown if all the data points fell on the line of equality were as perfect
-correlation occurs when the data points are co-linear.
+shown if all the data points fell on the line of equality whereas perfect
+correlation occurs when the data points are simply co-linear.
 
 The Bland Altman plot plots the average value on the x-axis and the
 difference in the measurements on the y-axis:
 
-```{r }
-qblandaltman(pefr_m1) +
-xlim(0, 800) +
-ylim(-100, 100) +
-xlab("Average of two meters") +
-ylab("Difference in the measurements")
+```{r}
+# default plot
+qblandaltman(pefr_m1)
+
+# modified plot
+ggplot2::last_plot() +
+  ggplot2::xlim(0, 800) +
+  ggplot2::ylim(-100, 100) +
+  ggplot2::xlab("Average of two meters") +
+  ggplot2::ylab("Difference in the measurements")
 ```
 
 
@@ -151,7 +154,7 @@ from the simple x-y plot.
 Reliability, or repeatability, of measurements can also be investigated with
 a Bland Altman plot.
 
-```{r }
+```{r}
 pefr_mini <-
   cbind(m1 = pefr[pefr$measurement == 1 & pefr$meter == "Mini Wright peak flow meter", "pefr"],
         m2 = pefr[pefr$measurement == 2 & pefr$meter == "Mini Wright peak flow meter", "pefr"])
@@ -161,9 +164,11 @@ qblandaltman(pefr_mini)
 
 
 
+
 # qkmplot: Kaplan Meier Plots
 
-```{r }
+
+```{r}
 # create a survfit object
 require(survival)
 leukemia.surv <- survival::survfit(survival::Surv(time, status) ~ x, data = survival::aml)
@@ -175,67 +180,190 @@ survival:::plot.survfit(leukemia.surv, conf.int = TRUE, lty = 2:3, col = 1:2)
 ```{r fig.width = 5}
 # qkmplot
 qkmplot(leukemia.surv, conf_int = TRUE)
+```
 
-# build a data.frame for plotting km curves, this could be helpful for
-# creating bespoke plots
+
+The function
+`r  backtick(qkmplot_bulid_data_frame)  `
+can be used to generate a data.frame needed for building a KM plot.  This
+could be helpful for creating bespoke plots.
+
+```{r}
 leukemia_km_data <- qkmplot_bulid_data_frame(leukemia.surv)
 head(leukemia_km_data, 3)
 
 ```
 ```{r fig.width = 5}
 qkmplot(leukemia_km_data)
-
 ```
+
+
+Intercept only models are easy to plot too.
+
 ```{r fig.width = 5}
-# intercept only plot
 intonly_fit <- survival::survfit(survival::Surv(time, status) ~ 1, data = survival::aml)
 survival:::plot.survfit(intonly_fit, conf.int = TRUE)
 qkmplot(intonly_fit, conf_int = TRUE)
 ```
 
 
-# qroc: Receiver Operating Curve
 
-```{r }
-data(diamonds, package = "ggplot2")
+# qroc and qprc: Receiver Operating Curve and Precision Recall Curve
 
-# Create two logistic regression models
-fit1 <- glm(I(price > 2800) ~ cut * color, data = diamonds, family = binomial())
-fit2 <- glm(I(price > 2800) ~ cut + color + clarity, data = diamonds, family = binomial())
+Starting in
+`r  Rpkg(qwraps2)  `
+version 0.6.0, the methods for building these graphics have been
+fundamentally changed as part of a major refactor of the
+`r  backtick(confusion_matrix)  `
+method which replaces a lot of the code that
+`r  backtick(qroc)  `
+and
+`r  backtick(qprc)  `
+were built on.
 
-# Easiest way to get an ROC plot:
-qroc(fit1)
-qroc(fit2)
+For this work we will consider a couple models for categorizing email and
+spam or not based on the Spambase [@spambase] data.  More details on this
+data set can be found in the
+`r  backtick(vignette('qwraps2-data-sets', package = "qwraps2"))  `
 
-# Create two data sets, this will also let you get the AUC out
-data1 <- qroc_build_data_frame(fit1)
-data2 <- qroc_build_data_frame(fit2)
+Start by defining a training and validation splits of the spambase data
 
-auc(data1)
-auc(data2)
-
-# Plotting the ROC from the data set can be done too
-qroc(data1)
-
-# Add the AUC value to the plot title
-qroc(data2) + ggtitle(paste("Fit 2\nAUC =", round(auc(data2), 2)))
-
-# build a data set for plotting to ROCs on one plot
-plot_data <- rbind(cbind(Model = "fit1", data1),
-                   cbind(Model = "fit2", data2))
-qroc(plot_data) + aes(color = Model)
-
-# with AUC in the legend
-plot_data <- rbind(cbind(Model = paste("Fit1\nauc =", round(auc(data1), 3)), data1),
-                   cbind(Model = paste("Fit2\nauc =", round(auc(data2), 3)), data2))
-qroc(plot_data) +
-  theme_bw() +
-  aes(color = Model, linetype = Model) +
-  theme(legend.position   = "bottom",
-        legend.text.align = 0.5)
+```{r}
+set.seed(42)
+tidx <- runif(nrow(spambase)) <= 0.80
+xidx <- which(names(spambase) != "spam")
+yidx <- which(names(spambase) == "spam")
+training_set   <- spambase[tidx, ]
+validating_set <- spambase[!tidx, ]
 ```
 
 
+
+
+
+Train a few models:
+
+```{r}
+logistic_model <-
+  glm(
+    spam ~ .
+  , data = training_set
+  , family = binomial()
+  )
+
+ridge_model <-
+  glmnet::cv.glmnet(
+    y = training_set[, yidx]
+  , x = as.matrix(training_set[, xidx])
+  , family = binomial()
+  , alpha = 0
+  )
+
+lasso_model <-
+  glmnet::cv.glmnet(
+    y = training_set[, yidx]
+  , x = as.matrix(training_set[, xidx])
+  , family = binomial()
+  , alpha = 1
+  )
+```
+
+
+Generate the predicted values on the validation set:
+
+```{r}
+validating_set$logistic_model_prediction <-
+  predict(
+    logistic_model
+  , newdata = validating_set
+  , type = "response"
+  )
+
+validating_set$ridge_model_prediction <-
+  as.numeric(
+    predict(
+      ridge_model
+    , newx = as.matrix(validating_set[, xidx])
+    , type = "response"
+    , s = "lambda.1se"
+    )
+  )
+
+validating_set$lasso_model_prediction <-
+  as.numeric(
+    predict(
+      lasso_model
+    , newx = as.matrix(validating_set[, xidx])
+    , type = "response"
+    , s = "lambda.1se"
+    )
+  )
+```
+
+
+To build ROC and/or PRC plots start by building the confusion matrix for each
+model.  The qwraps2 function
+`r  backtick(confusion_matrix)  `
+makes this easy.
+
+```{r}
+cm1 <- confusion_matrix(spam ~ logistic_model_prediction, data = validating_set)
+cm2 <- confusion_matrix(spam ~ ridge_model_prediction, data = validating_set)
+cm3 <- confusion_matrix(spam ~ lasso_model_prediction, data = validating_set)
+```
+
+
+The ROC and PRC plots are ggplot objects and can be modified as you would any
+other ggplot object.
+
+```{r}
+qroc(cm1) + ggplot2::ggtitle("Logisitic Model")
+qroc(cm2) + ggplot2::ggtitle("Ridge Regression Model")
+qroc(cm3) + ggplot2::ggtitle("LASSO Regression Model")
+```
+
+
+Graphing all three curves in one image with AUROC in the legend:
+
+```{r}
+roc_plot_data <-
+  rbind(
+      cbind(Model = paste("Logisitic; AUROC =", frmt(cm1$auroc, 3)), cm1$cm_stats)
+    , cbind(Model = paste("Ridge; AUROC =",     frmt(cm2$auroc, 3)), cm2$cm_stats)
+    , cbind(Model = paste("LASSO; AUROC =",     frmt(cm3$auroc, 3)), cm3$cm_stats)
+    )
+
+qroc(roc_plot_data) +
+  ggplot2::aes(color = Model) +
+  ggplot2::theme(legend.position = "bottom")
+```
+
+
+Similar for PRC:
+
+```{r}
+qprc(cm1) + ggplot2::ggtitle("Logisitic Model")
+qprc(cm2) + ggplot2::ggtitle("Ridge Regression Model")
+qprc(cm3) + ggplot2::ggtitle("LASSO Regression Model")
+
+prc_plot_data <-
+  rbind(
+      cbind(Model = paste("Logisitic; AUPRC =", frmt(cm1$auprc, 3)), cm1$cm_stats)
+    , cbind(Model = paste("Ridge; AUPRC =",     frmt(cm2$auprc, 3)), cm2$cm_stats)
+    , cbind(Model = paste("LASSO; AUPRC =",     frmt(cm3$auprc, 3)), cm3$cm_stats)
+    )
+
+qprc(prc_plot_data) +
+  ggplot2::aes(color = Model) +
+  ggplot2::geom_hline(yintercept = cm1$prevalence) +
+  ggplot2::theme(legend.position = "bottom")
+```
+
+
+
+# References
+
+<div id="refs"></div>
 
 # Session Info
 

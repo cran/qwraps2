@@ -83,6 +83,39 @@ pefr$pefr <- do.call(c, pefr_table[, 2:5])
 
 head(pefr)
 
+## -----------------------------------------------------------------------------
+system.file("spambase", package = "qwraps2")
+
+## -----------------------------------------------------------------------------
+nms <-
+  scan(system.file("spambase", "spambase.names", package = "qwraps2")
+       , what = character()
+       , skip = 33
+       , sep = "\n"
+       , quiet = TRUE
+  )
+nms <- sapply(strsplit(nms, split = ":"), getElement, 1)
+nms <- c(nms, "spam")
+
+# clean up char_freq names
+nms <-
+  nms |>
+  sub(";", "semicolon",         x = _, fixed = TRUE) |>
+  sub("(", "parenthesis",       x = _, fixed = TRUE) |>
+  sub("[", "square_bracket",    x = _, fixed = TRUE) |>
+  sub("!", "exclamation_point", x = _, fixed = TRUE) |>
+  sub("$", "dollar_sign",       x = _, fixed = TRUE) |>
+  sub("#", "pound",             x = _, fixed = TRUE)
+
+spambase <- read.csv(
+    file = system.file("spambase", "spambase.data", package = "qwraps2")
+    , header = FALSE
+    , col.names = nms
+)
+
+## -----------------------------------------------------------------------------
+n_perc(spambase$spam) # count and percent of spam messages
+
 ## ----label = "sessioninfo"----------------------------------------------------
 sessionInfo()
 

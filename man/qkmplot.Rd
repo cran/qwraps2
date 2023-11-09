@@ -3,11 +3,23 @@
 \name{qkmplot}
 \alias{qkmplot}
 \alias{qkmplot_bulid_data_frame}
+\alias{qkmplot_bulid_data_frame.survfit}
+\alias{qrmst}
+\alias{qrmst.survfit}
+\alias{qrmst.qkmplot_data}
 \title{Kaplan-Meier Plot}
 \usage{
 qkmplot(x, conf_int = FALSE, ...)
 
 qkmplot_bulid_data_frame(x)
+
+\method{qkmplot_bulid_data_frame}{survfit}(x)
+
+qrmst(x, tau = Inf)
+
+\method{qrmst}{survfit}(x, tau = Inf)
+
+\method{qrmst}{qkmplot_data}(x, tau = Inf)
 }
 \arguments{
 \item{x}{object}
@@ -15,6 +27,8 @@ qkmplot_bulid_data_frame(x)
 \item{conf_int}{logical if TRUE show the CI}
 
 \item{...}{Other arguments passed to survival::plot.survfit}
+
+\item{tau}{upper bound on time for restricted mean survival time estimate}
 }
 \value{
 a ggplot.
@@ -25,16 +39,34 @@ A ggplot2 version of a Kaplan-Meier Plot
 \details{
 Functions to build, explicitly or implicitly, data.frames and then creating a
 ggplot2 KM plot.
+
+More details and examples for graphics within qwraps2 are in the
+vignette(\dQuote{qwraps2-graphics}, package = \dQuote{qwraps2})
 }
 \examples{
-# create a survfit object
 require(survival)
+
 leukemia.surv <- survival::survfit(survival::Surv(time, status) ~ x, data = survival::aml)
 
 qkmplot(leukemia.surv, conf_int = TRUE)
 
-}
-\seealso{
-\code{vignette("qwraps2-graphics", package = "qwraps2")} for
-additional examples.
+qkmplot_bulid_data_frame(leukemia.surv)
+
+qrmst(leukemia.surv) # NaN for rmst.se in Nonmaintained strata as last observation is an event
+qrmst(leukemia.surv, 44)
+
+# pbc examples
+pbc_fit <-
+  survival::survfit(
+      formula = survival::Surv(time, status > 0) ~ trt
+    , data = pbc
+    , subset = !is.na(trt)
+  )
+
+qkmplot(pbc_fit)
+qkmplot(pbc_fit, conf_int = TRUE)
+
+qrmst(pbc_fit)
+qrmst(pbc_fit)
+
 }
