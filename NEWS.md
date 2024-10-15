@@ -1,3 +1,8 @@
+# qwraps2 0.6.1
+
+* bug fix in qroc - use `geom_path` instead of `geom_line`
+* extend return section of `confusion_matrix` to fix CRAN NOTE
+
 # qwraps2 0.6.0
 
 ## General Improvements
